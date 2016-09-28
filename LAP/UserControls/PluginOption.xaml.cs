@@ -36,37 +36,44 @@ namespace LAP.UserControls
 
         private void PluginT_ActiveItemChanged(object sender, EventArgs e)
         {
-            LAPP.LimpidAudioPlayerPlugin plg = GetActiveItem();
+            Utils.PluginManager.Plugin plg = GetActiveItem();
             if(plg == null)
             {
                 InfoGrid.Visibility = Visibility.Hidden;
                 return;
             }
 
-            TitleL.Content = plg.Title;
-            DescL.Content = plg.Description;
-            AuthorL.Content = plg.Author;
+            EnableB.State = plg.Enabled;
+            TitleL.Content = plg.Instance.Title;
+            DescL.Content = plg.Instance.Description;
+            AuthorL.Content = plg.Instance.Author + " - " + plg.Instance.Version.ToString();
 
-            if (string.IsNullOrEmpty(plg.URL))
+            if (string.IsNullOrEmpty(plg.Instance.URL))
                 URLB.Visibility = Visibility.Hidden;
             else
             {
                 URLB.Visibility = Visibility.Visible;
-                URLB.Content = plg.URL;
+                URLB.Content = plg.Instance.URL;
             }
 
             InfoGrid.Visibility = Visibility.Visible;
         }
 
-        private LAPP.LimpidAudioPlayerPlugin GetActiveItem()
+        private LAP.Utils.PluginManager.Plugin GetActiveItem()
         {
             if (PluginT.ActiveIndex < 0) return null;
-            return Utils.PluginManager.InitializedPlugin[PluginT.ActiveIndex].Instance;
+            return Utils.PluginManager.InitializedPlugin[PluginT.ActiveIndex];
         }
 
         private void URLB_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(GetActiveItem().URL);
+            System.Diagnostics.Process.Start(GetActiveItem().Instance.URL);
+        }
+
+        private void EnableB_ToggleStateChanged(object sender, EventArgs e)
+        {
+            if (GetActiveItem() == null) return;
+            GetActiveItem().Enabled = EnableB.State;
         }
     }
 }

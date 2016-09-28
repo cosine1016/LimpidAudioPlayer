@@ -130,7 +130,7 @@ namespace ClearUC
             if (bar.Value == bar.Maximum)
             {
                 st = true;
-                if (ToggleStateChanged != null) ToggleStateChanged(this, new EventArgs());
+                ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
 
@@ -153,7 +153,7 @@ namespace ClearUC
             if (bar.Value == bar.Minimum)
             {
                 st = false;
-                if (ToggleStateChanged != null) ToggleStateChanged(this, new EventArgs());
+                ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
 

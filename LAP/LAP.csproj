@@ -117,9 +117,6 @@
     <Compile Include="Dialogs\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\PluginManager.xaml.cs">
-      <DependentUpon>PluginManager.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\UnhandledExceptionDialog.xaml.cs">
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
@@ -157,6 +154,9 @@
     </Compile>
     <Compile Include="UserControls\AudioOutSelector.xaml.cs">
       <DependentUpon>AudioOutSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\General.xaml.cs">
+      <DependentUpon>General.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\PluginOption.xaml.cs">
       <DependentUpon>PluginOption.xaml</DependentUpon>
@@ -250,10 +250,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\PluginManager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\UnhandledExceptionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -287,6 +283,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Caption.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\General.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
