@@ -29,6 +29,8 @@ namespace LAP
             if (Utils.InstanceData.ErrorRaise)
                 throw new Exception("-ErrorRaiseが引数として与えられました");
 
+            Console.WriteLine("Test Commit");
+
             Lang._.Culture = new System.Globalization.CultureInfo(1041);
             //Console.WriteLine(Lang._.DCreateAlbum);
         }
