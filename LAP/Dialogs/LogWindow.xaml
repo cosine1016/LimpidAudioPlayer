@@ -1,0 +1,18 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LAP.Dialogs"
+        xmlns:UserControls="clr-namespace:LAP.UserControls" x:Class="LAP.Dialogs.LogWindow"
+        mc:Ignorable="d"
+        Title="LogWindow" Height="291.329" Width="465.607" WindowStyle="None" AllowsTransparency="True" Background="#B2000000" StateChanged="Window_StateChanged" Icon="/LAP;component/Limpid Audio Player.ico">
+    <WindowChrome.WindowChrome>
+        <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
+    </WindowChrome.WindowChrome>
+    <Grid x:Name="Root">
+
+        <UserControls:Caption x:Name="Caption" Height="35" Width="Auto" VerticalAlignment="Top" Background="#E5323232" MaximizeButtonVisible="True" MinimizeButtonVisible="True" CloseButtonVisible="True" OptionalButtonVisible="False" Title="Debug Log Window" />
+        <TextBox x:Name="Log" TextWrapping="Wrap" Margin="0,35,0,0" Foreground="White" FontSize="14" FontWeight="Thin" ScrollViewer.HorizontalScrollBarVisibility="Visible" Background="#B2000000" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" IsReadOnly="True" />
+    </Grid>
+</Window>

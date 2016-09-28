@@ -1,0 +1,26 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:ClearUC.ListViewItems"
+             xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="ClearUC.ListViewItems.SearchBox"
+             mc:Ignorable="d" Height="27" Width="219">
+    <Grid>
+        <TextBox x:Name="textBox" TextWrapping="Wrap" Background="#FC000000" BorderBrush="#00ABADB3" Foreground="White" TextAlignment="Center" FontSize="14.667" MouseUp="textBox_MouseUp" TextChanged="textBox_TextChanged" SelectionBrush="#FF969696" Opacity="0" />
+        <Rectangle x:Name="drain" Fill="Black" Opacity="0.5" StrokeThickness="0" />
+        <Path x:Name="clear" Fill="#FFA0A0A0" HorizontalAlignment="Right" Stroke="DimGray" Data="M7.9585,0.5 L9.9584999,0.5 9.9584999,7.9584999 17.417,7.9584999 17.417,9.9584999 9.9584999,9.9584999 9.9584999,17.417 7.9585,17.417 7.9585,9.9584999 0.5,9.9584999 0.5,7.9584999 7.9585,7.9584999 z" Margin="0,4.541,1.551,4.542" RenderTransformOrigin="0.5,0.500000005109825" Stretch="Fill" Width="17.916" Height="17.917" VerticalAlignment="Center" Visibility="Hidden">
+            <Path.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="45" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Path.RenderTransform>
+        </Path>
+        <Rectangle x:Name="clearf" Fill="#02FFFFFF" HorizontalAlignment="Right" Margin="0,6.094,3.109,6.109" Stroke="#02FFFFFF" Width="14.766" StrokeThickness="0" Visibility="Hidden" MouseUp="clearf_MouseUp" MouseEnter="clearf_MouseEnter" MouseLeave="clearf_MouseLeave" MouseDown="clearf_MouseDown" />
+        <Path x:Name="search" Data="M6.375,2.0020001 C3.9598587,2.0019999 2.0019999,3.9598589 2.0019999,6.375 2.0019999,8.7901421 3.9598587,10.748 6.375,10.748 8.7901411,10.748 10.748,8.7901411 10.748,6.375 10.748,3.9598585 8.7901411,2.0019999 6.375,2.0020001 z M6.375,0 C9.8958158,3.4995992E-08 12.75,2.8541849 12.75,6.3750005 12.75,7.6402936 12.381381,8.8194905 11.745675,9.8110609 L11.726507,9.8401814 15.402084,13.131147 14.067979,14.621169 10.389115,11.327262 10.310843,11.390302 C9.2270422,12.242017 7.8603444,12.75 6.375,12.75 2.8541846,12.75 8.8817842E-16,9.8958149 0,6.3749996 8.8817842E-16,2.8541842 2.8541846,3.4995992E-08 6.375,0 z" Stretch="Fill" Fill="#FFA0A0A0" Stroke="#FF6A6A6A" MinWidth="15" MinHeight="15" MaxWidth="15" MaxHeight="15" ScrollViewer.VerticalScrollBarVisibility="Disabled" UseLayoutRounding="False" />
+        <Rectangle x:Name="front" Fill="White" Opacity="0.01" Cursor="IBeam" MouseDown="front_MouseDown" MouseEnter="front_MouseEnter" MouseLeave="front_MouseLeave" />
+    </Grid>
+</UserControl>

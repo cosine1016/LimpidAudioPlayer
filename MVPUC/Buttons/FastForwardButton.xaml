@@ -1,0 +1,13 @@
+﻿<local:ButtonBase x:Class="MVPUC.Buttons.FastForwardButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MVPUC.Buttons"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid x:Name="grid">
+        <Path x:Name="path" Data="M280.5,0.5 L299.5,0.5 299.5,299.5 280.5,299.5 z M140.5,0.5 L279.5,150 140.5,299.5 z M0.5,0.5 L139.5,150 0.5,299.5 z" Fill="#FF646464" Stretch="Fill" Stroke="#FF323232" d:LayoutOverrides="HorizontalAlignment" StrokeThickness="0" />
+        <Rectangle x:Name="rect" Fill="#02F4F4F5" StrokeThickness="0" MouseEnter="rect_MouseEnter" MouseLeave="rect_MouseLeave" MouseDown="rect_MouseDown" MouseUp="rect_MouseUp" />
+    </Grid>
+</local:ButtonBase>

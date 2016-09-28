@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="ClearUC.ColorPicker"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClearUC"
+             mc:Ignorable="d">
+    <Grid Background="#FF323232">
+
+        <Rectangle x:Name="Fill" Fill="#FFF4F4F5" Stroke="Black" Margin="10,10,36,10"/>
+        <local:Button x:Name="DropDownB" HorizontalAlignment="Right" Height="Auto" Width="30" BorderThickness="0" Margin="0,1,1,1" FontFamily="Marlett" Content="6" FontSize="14" Click="DropDownB_Click"/>
+        <local:PickColorPanel x:Name="PickColorPanel" Height="143" Width="Auto" ColorChanged="PickColorPanel_ColorChanged" Margin="1,0,1,-147" RenderTransformOrigin="0.5,0.5" Background="#7F000000" VerticalAlignment="Bottom" Visibility="Hidden"/>
+
+    </Grid>
+</UserControl>

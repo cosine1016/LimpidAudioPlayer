@@ -1,0 +1,44 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:LAP.Utils"
+      xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:LAP="clr-namespace:LAP" xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.Utils.Shapes"
+      mc:Ignorable="d"
+      d:DesignHeight="300" d:DesignWidth="300"
+      Title="Shapes">
+
+    <Grid x:Name="container" Background="#FF253A4B">
+        <Path x:Name="Plus" Data="M24,0.5 L26,0.5 26,24 49.5,24 49.5,26 26,26 26,49.5 24,49.5 24,26 0.5,26 0.5,24 24,24 z" Fill="White" Margin="16.623,16.049,0,0" Stretch="Fill" Stroke="#FF323232" HorizontalAlignment="Left" Width="50.001" Height="50" VerticalAlignment="Top" d:LayoutOverrides="HorizontalAlignment, VerticalAlignment" StrokeThickness="0" />
+        <Path x:Name="Cross" Data="M24,0.5 L26,0.5 26,24 49.5,24 49.5,26 26,26 26,49.5 24,49.5 24,26 0.5,26 0.5,24 24,24 z" Fill="White" Margin="135,16.049,0,0" Stretch="Fill" Stroke="#FF323232" HorizontalAlignment="Left" Width="50.001" Height="50" VerticalAlignment="Top" StrokeThickness="0" RenderTransformOrigin="0.5,0.5">
+            <Path.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="45" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </Path.RenderTransform>
+        </Path>
+        <Path x:Name="Back" Data="M144,96 L120,120 144,144 144,141 123,120 144,99 z" Fill="#FF646464" HorizontalAlignment="Left" Height="48" Margin="91.625,27,0,0" Stretch="Fill" VerticalAlignment="Top" Width="24" Stroke="#FF323232" StrokeThickness="0.5" />
+        <Path x:Name="DirectoryClosed" Data="M48,108 L48,138 96,138 96,108 96,102 78,102 78,108 z" Fill="#FF464646" Height="30" Margin="65.5,108,0,0" Stretch="Fill" Stroke="#FF323232" VerticalAlignment="Top" StrokeThickness="0" HorizontalAlignment="Left" Width="36" />
+        <Path Data="M30.5,7.0000002 C36.851274,7 42,12.148726 42,18.5 42,24.851274 36.851274,30 30.5,30 24.148726,30 19,24.851274 19,18.5 19,12.148726 24.148726,7 30.5,7.0000002 z M30.5,7.0000002 C24.148726,7 19,12.148726 19,18.5 19,24.851274 24.148726,30 30.5,30 36.851274,30 42,24.851274 42,18.5 42,12.148726 36.851274,7 30.5,7.0000002 z M0.5,0.5 L48.5,0.5 48.5,36.5 0.5,36.5 z" Fill="#FF323232" HorizontalAlignment="Right" Height="37" Margin="0,105,59,0" Stretch="Fill" Stroke="Black" VerticalAlignment="Top" Width="49" />
+        <ClearUC:SeekBar Height="9" Margin="81,0,132,61.25" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+            <ClearUC:SeekBar.Background>
+                <LinearGradientBrush EndPoint="0,0.5" MappingMode="RelativeToBoundingBox" StartPoint="1,0.5">
+                    <GradientStop Color="Red" />
+                    <GradientStop Color="#FF0CFF00" Offset="0.5" />
+                </LinearGradientBrush>
+            </ClearUC:SeekBar.Background>
+            <ClearUC:SeekBar.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="270" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </ClearUC:SeekBar.RenderTransform>
+        </ClearUC:SeekBar>
+    </Grid>
+</Page>

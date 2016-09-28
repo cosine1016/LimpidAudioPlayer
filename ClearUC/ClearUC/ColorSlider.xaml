@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="ClearUC.ColorSlider"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ClearUC"
+             mc:Ignorable="d" Height="45" Width="495">
+    <Grid MouseLeave="Grid_MouseLeave" MouseUp="Grid_MouseUp">
+        <Rectangle x:Name="Fill" RenderTransformOrigin="0.5,0.5" Margin="0,5" Stroke="#B2FFFFFF" MouseMove="Thumb_MouseMove" MouseDown="Fill_MouseDown">
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0,1" MappingMode="RelativeToBoundingBox" StartPoint="1,1">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <Rectangle x:Name="Thumb" Fill="Black" HorizontalAlignment="Left" Width="7" Stroke="#FF323232" MouseEnter="Thumb_MouseEnter" MouseLeave="Thumb_MouseLeave" MouseDown="Thumb_MouseDown" MouseUp="Thumb_MouseUp" MouseMove="Thumb_MouseMove" Height="45" Opacity="0.9" StrokeThickness="2"/>
+
+    </Grid>
+</UserControl>

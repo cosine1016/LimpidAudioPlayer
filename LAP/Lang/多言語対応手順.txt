@@ -1,0 +1,16 @@
+﻿最新のen-US.resxを.resxにコピーする
+.resxのコードのResourceManagerプロパティを置き換える
+
+        /// <summary>
+        ///   このクラスで使用されているキャッシュされた ResourceManager インスタンスを返します。
+        /// </summary>
+        internal static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LAP.Lang." + resourceCulture.CompareInfo.Name,
+                        Type.GetType("LAP.Lang." + resourceCulture.CompareInfo.Name).Assembly);
+                    resourceMan = temp;
+                }
+                return resourceMan;
+            }
+        }

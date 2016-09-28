@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="MVPUC.SeekBar.VolumeBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:MVPUC.SeekBar"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="DefaultBrush" Color="#FF646464" />
+        <SolidColorBrush x:Key="DefaultEnterBrush" Color="#FF969696" />
+        <SolidColorBrush x:Key="DefaultClickBrush" Color="#FFC8C8C8" />
+
+        <!-- つまみのデザイン。ここでは円（Ellipse）を描いていますが、他の図形や画像など、お好きにデザインしてください -->
+        <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Ellipse Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Slider}, Mode=FindAncestor}}" Width="15" Height="15" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- このサンプルでは、簡潔に記述する為に全て Foreground を基準に色を決定しています。個別に指定する場合は、適宜書き換えてください -->
+        <Style x:Key="CustomSliderStyle" TargetType="{x:Type Slider}">
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <!-- 横置きの場合 -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="30" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <!-- 上の目盛り -->
+                                    <TickBar Grid.Row="0" x:Name="TopTick" Placement="Top" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Height="8" Opacity="0.64" Margin="0,0,0,2" />
+
+                                    <!-- 下の目盛り -->
+                                    <TickBar Grid.Row="2" x:Name="BottomTick" Placement="Bottom" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Height="8" Opacity="0.64" Margin="0,2,0,0" />
+
+                                    <Track Grid.Row="1" x:Name="PART_Track">
+                                        <!-- 減少側のトラック（レール） -->
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="Slider.DecreaseLarge" Background="{TemplateBinding Foreground}" Height="5" BorderBrush="{x:Null}" Opacity="0.8" />
+                                        </Track.DecreaseRepeatButton>
+
+                                        <!-- 増加側のトラック（レール） -->
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="Slider.IncreaseLarge" Background="{TemplateBinding Foreground}" Height="5" BorderBrush="{x:Null}" Opacity="0.4" />
+                                        </Track.IncreaseRepeatButton>
+
+                                        <!-- つまみ -->
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource SliderThumbStyle}" />
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                                <!-- TickPlacement の設定によって目盛りの表示を切り替え -->
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="Slider.TickPlacement" Value="TopLeft">
+                                        <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                    <Trigger Property="Slider.TickPlacement" Value="BottomRight">
+                                        <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                    <Trigger Property="Slider.TickPlacement" Value="Both">
+                                        <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="Orientation" Value="Vertical">
+                    <!-- 縦置きの場合 -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="25" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <!-- 左の目盛り -->
+                                    <TickBar Grid.Column="0" x:Name="LeftTick" Placement="Left" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Width="8" Opacity="0.64" Margin="0,0,2,0" />
+
+                                    <!-- 右の目盛り -->
+                                    <TickBar Grid.Column="2" x:Name="RightTick" Placement="Right" Visibility="Collapsed" Fill="{TemplateBinding Foreground}" Width="8" Opacity="0.64" Margin="2,0,0,0" />
+
+                                    <Track Grid.Column="1" x:Name="PART_Track" IsDirectionReversed="true">
+                                        <!-- 減少側のトラック（レール） -->
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="Slider.DecreaseLarge" Background="{TemplateBinding Foreground}" Width="5" BorderBrush="{x:Null}" Opacity="0.2" />
+                                        </Track.DecreaseRepeatButton>
+
+                                        <!-- 増加側のトラック（レール） -->
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="Slider.IncreaseLarge" Background="{TemplateBinding Foreground}" Width="5" BorderBrush="{x:Null}" Opacity="0.5" />
+                                        </Track.IncreaseRepeatButton>
+
+                                        <!-- つまみ -->
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource SliderThumbStyle}" />
+                                        </Track.Thumb>
+                                    </Track>
+                                </Grid>
+                                <!-- TickPlacement の設定によって目盛りの表示を切り替え -->
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="Slider.TickPlacement" Value="TopLeft">
+                                        <Setter TargetName="LeftTick" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                    <Trigger Property="Slider.TickPlacement" Value="BottomRight">
+                                        <Setter TargetName="RightTick" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                    <Trigger Property="Slider.TickPlacement" Value="Both">
+                                        <Setter TargetName="LeftTick" Property="Visibility" Value="Visible" />
+                                        <Setter TargetName="RightTick" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Slider x:Name="CustomSlider" Margin="10,0" Maximum="100" SmallChange="1" LargeChange="10" Style="{StaticResource CustomSliderStyle}" Foreground="{DynamicResource DefaultBrush}" ValueChanged="CustomSlider_ValueChanged" />
+</UserControl>

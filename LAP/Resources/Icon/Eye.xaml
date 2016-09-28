@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--This file is NOT compatible with Silverlight-->
+<Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+  <Canvas Name="svg3336" Width="65" Height="33.75">
+    <Canvas.RenderTransform>
+      <TranslateTransform X="0" Y="0"/>
+    </Canvas.RenderTransform>
+    <Canvas.Resources/>
+    <!--Unknown tag: metadata-->
+    <!--Unknown tag: sodipodi:namedview-->
+    <Canvas Name="g3344">
+      <Canvas.RenderTransform>
+        <MatrixTransform Matrix="1.25 0 0 -1.25 0 33.75"/>
+      </Canvas.RenderTransform>
+      <Canvas Name="g3346">
+        <Canvas.RenderTransform>
+          <ScaleTransform ScaleX="0.1" ScaleY="0.1"/>
+        </Canvas.RenderTransform>
+        <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3348" Fill="#FF000000">
+          <Path.Data>
+            <PathGeometry Figures="m 257.93 9.98047 c 162.191 0 250.742 118.24953 254.449 123.28953 l 3.48 4.718 -3.48 4.731 C 508.672 147.762 420.121 266 257.93 266 95.7383 266 7.14844 147.762 3.48047 142.719 L 0 137.988 3.48047 133.27 C 7.14844 128.23 95.7383 9.98047 257.93 9.98047 Z m 0 239.99953 c 135.859 0 219.449 -90.109 237.73 -111.992 C 477.379 116.121 393.789 26 257.93 26 122.07 26 38.4414 116.121 20.1602 137.988 38.4414 159.871 122.07 249.98 257.93 249.98 Z" FillRule="nonzero"/>
+          </Path.Data>
+        </Path>
+        <Path xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3350" Fill="#FF000000">
+          <Path.Data>
+            <PathGeometry Figures="m 257.93 74.0117 c 35.269 0 63.98 28.7073 63.98 63.9763 0 35.313 -28.711 64.032 -63.98 64.032 -35.309 0 -64.02 -28.719 -64.02 -64.032 0 -35.269 28.711 -63.9763 64.02 -63.9763 z m 0 111.9883 c 26.449 0 48.011 -21.52 48.011 -48.012 0 -26.437 -21.562 -48.0075 -48.011 -48.0075 -26.481 0 -48.008 21.5705 -48.008 48.0075 0 26.492 21.527 48.012 48.008 48.012 z" FillRule="nonzero"/>
+          </Path.Data>
+        </Path>
+      </Canvas>
+    </Canvas>
+  </Canvas>
+</Viewbox>
