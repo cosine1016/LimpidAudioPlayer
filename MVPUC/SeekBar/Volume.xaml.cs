@@ -76,8 +76,6 @@ namespace MVPUC.SeekBar
 
         public event EventHandler<RoutedPropertyChangedEventArgs<bool>> MuteChanged;
 
-        private bool enterF = false;
-
         public Volume()
         {
             InitializeComponent();
@@ -218,7 +216,6 @@ namespace MVPUC.SeekBar
 
         private void drain_MouseEnter(object sender, MouseEventArgs e)
         {
-            enterF = true;
             Animate(path14.Fill, MouseEnterBrush, path14);
 
             if (!Mute)
@@ -247,7 +244,6 @@ namespace MVPUC.SeekBar
         private void drain_MouseLeave(object sender, MouseEventArgs e)
         {
             mf = false;
-            enterF = false;
             Animate(path14.Fill, ButtonBrush, path14);
 
             if (!Mute)

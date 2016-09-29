@@ -112,7 +112,7 @@ namespace LAP.Dialogs
                                         Utils.Converter.ToImageSource((System.Drawing.Bitmap)Tag.Artwork);
                                     ClearUC.ListViewItems.ListItem.ImageSourceList ISL
                                         = new ClearUC.ListViewItems.ListItem.ImageSourceList();
-                                    ISL.Items.Add(Image);
+                                    ISL.Add(Image);
                                     MenuItem.ImageSources = ISL;
                                     MenuItem.ImageIndex = 0;
                                 }

@@ -84,7 +84,7 @@ namespace LAP.Page.Album
                         {
                             System.Windows.Media.ImageSource Image = Utility.ArtworkManager.GetArtwork(Tag.ArtworkCachePath);
                             ListItem.ImageSourceList ISL = new ListItem.ImageSourceList();
-                            ISL.Items.Add(Image);
+                            ISL.Add(Image);
                             MI.ImageSources = ISL;
                             MI.ImageIndex = 0;
                             break;

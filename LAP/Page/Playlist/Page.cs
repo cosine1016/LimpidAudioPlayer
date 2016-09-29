@@ -141,7 +141,7 @@ namespace LAP.Page.Playlist
             {
                 lsi.LeftItem = ListSubItem.LeftItems.Image;
                 ClearUC.ListViewItems.ListItem.ImageSourceList isl = new ListItem.ImageSourceList();
-                isl.Items.Add(File.Artwork);
+                isl.Add(File.Artwork);
                 lsi.ImageSources = isl;
                 lsi.ImageIndex = 0;
             }

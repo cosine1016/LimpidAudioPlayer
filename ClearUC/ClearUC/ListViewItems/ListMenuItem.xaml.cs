@@ -18,7 +18,7 @@ namespace ClearUC.ListViewItems
 
         private void ListMenuItem_ImageIndexChanged(object sender, EventArgs e)
         {
-            if (ImageIndex > -1) image.Source = ImageSources.Items[ImageIndex];
+            if (ImageIndex > -1) image.Source = ImageSources[ImageIndex];
             else image.Source = null;
         }
 

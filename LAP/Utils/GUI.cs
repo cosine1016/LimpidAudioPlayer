@@ -233,13 +233,7 @@ namespace LAP.Utils
             if(e.LeftButton == MouseButtonState.Pressed)
             {
                 if (e.StylusDevice != null)
-                {
-                    if(e.Timestamp - lastTimestamp < 700)
-                    {
-                        mirmlf = true;
-                    }
-                }
-                lastTimestamp = e.Timestamp;
+                    mirmlf = true;
             }
         }
 

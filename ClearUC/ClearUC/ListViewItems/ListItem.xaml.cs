@@ -27,10 +27,7 @@ namespace ClearUC.ListViewItems
             public MouseButtonEventArgs MouseButtonEventArgs { get; set; }
         }
 
-        public class ImageSourceList
-        {
-            public List<ImageSource> Items = new List<ImageSource>();
-        }
+        public class ImageSourceList : List<ImageSource> { }
 
         internal event EventHandler<ItemClickedEventArgs> ItemClicked;
 
