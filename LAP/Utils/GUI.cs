@@ -145,7 +145,6 @@ namespace LAP.Utils
             };
 
             MW.MediaInformationRoot.PreviewMouseUp += MediaInformationRoot_PreviewMouseUp;
-
             MW.MediaInformationRoot.PreviewMouseDown += MediaInformationRoot_PreviewMouseDown;
 
             MW.MC.FFButton.FastForward += FFButton_FastForward;
@@ -187,7 +186,7 @@ namespace LAP.Utils
             }
             mirmrf = false;
 
-            if (mirmcf)
+            if (mirmcf || mirmlf)
             {
                 Animation.Visible va = new Animation.Visible();
 
@@ -220,15 +219,28 @@ namespace LAP.Utils
                 }
             }
             mirmcf = false;
+            mirmlf = false;
         }
 
-        private bool mirmrf = false, mirmcf = false;
+        private bool mirmrf = false, mirmcf = false, mirmlf = false;
+        private int lastTimestamp = -1;
         private void MediaInformationRoot_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.MiddleButton == MouseButtonState.Pressed)
                 mirmcf = true;
             if (e.RightButton == MouseButtonState.Pressed)
                 mirmrf = true;
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (e.StylusDevice != null)
+                {
+                    if(e.Timestamp - lastTimestamp < 700)
+                    {
+                        mirmlf = true;
+                    }
+                }
+                lastTimestamp = e.Timestamp;
+            }
         }
 
         private void PluginManager_PluginEnableChanged(object sender, EventArgs e)

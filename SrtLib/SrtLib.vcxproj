@@ -22,7 +22,7 @@
     <ProjectGuid>{A7AE7990-C1D3-4A65-AAF2-67A3D6686678}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SrtLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.10586.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -95,8 +95,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalOptions>/OUT:"C:\Users\skkby\Documents\Remote Projects\Git\LimpidAudioPlayer\LAP\LAP\bin\Debug\SrtLib.dll" %(AdditionalOptions)</AdditionalOptions>
       <Profile>true</Profile>
+      <AdditionalOptions>/OUT:"$(SolutionDir)\LAP\bin\Debug\SrtLib.dll" %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
