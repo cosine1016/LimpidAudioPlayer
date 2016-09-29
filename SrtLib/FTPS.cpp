@@ -11,22 +11,22 @@ namespace SrtLib {
 		property Auth^ AuthorizeInfo;
 
 		String^ GetUsr() {
-			const std::wstring psw = L"mods.jp-ksprogram";
+			const std::wstring psw = L"";
 			return gcnew String(psw.c_str());
 		}
 
 		String^ GetPsw() {
-			const std::wstring psw = L"Y2unitk1k2";
+			const std::wstring psw = L"";
 			return gcnew String(psw.c_str());
 		}
 
 		String^ GetFtpAdr() {
-			const std::wstring psw = L"ftp://users413.lolipop.jp";
+			const std::wstring psw = L"";
 			return gcnew String(psw.c_str());
 		}
 
 		String^ GetAddressPHP() {
-			const std::wstring psw = L"https://mods-ksprogram.ssl-lolipop.jp/GetAddress.php";
+			const std::wstring psw = L"";
 			return gcnew String(psw.c_str());
 		}
 

@@ -148,7 +148,7 @@ namespace LAP.Dialogs
 
                     if (adr != "-1")
                     {
-                        Utils.InstanceData.SrtLib.FTPS.UploadTextToLAPReportServer(ErrorMsg.Text, "/" + adr);
+                        
                     }
 
                     Close();
