@@ -24,11 +24,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -496,6 +497,7 @@
     <Compile Include="Utils\NotifyPropertyChangedEx.cs" />
     <Compile Include="Utils\TagReader.cs" />
     <Compile Include="Wave\Plugin.cs" />
+    <Compile Include="Wave\RawWaveReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NAudio\Gui\Fader.resx">

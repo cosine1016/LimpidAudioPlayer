@@ -82,7 +82,8 @@ namespace LAP.Utils
                             {
                                 try
                                 {
-                                    if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(System.IO.Path.GetExtension(fileName).ToLower()))
+                                    if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(System.IO.Path.GetExtension(fileName).ToLower()) ||
+                                        plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
                                     {
                                         readerStream = new PluginWaveStream(plg.Instance.WaveStreams[s]);
                                         LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
