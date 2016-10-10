@@ -81,6 +81,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClientUpdater">
+      <HintPath>..\..\..\ClientUpdater\ClientUpdater\bin\Debug\ClientUpdater.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Effects, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
@@ -168,6 +171,7 @@
     <Compile Include="Utils\GUI.cs" />
     <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\PluginManager.cs" />
+    <Compile Include="Utils\Update.cs" />
     <Compile Include="Utils\WaveOut.cs" />
     <Compile Include="Visualize\Spectrum.xaml.cs">
       <DependentUpon>Spectrum.xaml</DependentUpon>

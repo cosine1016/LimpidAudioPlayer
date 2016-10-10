@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using cnf = LAP.Utils.Config;
+using LAPP.Setting;
 
 namespace LAP.Dialogs
 {
@@ -11,10 +12,10 @@ namespace LAP.Dialogs
     /// </summary>
     public partial class Config : Window
     {
-        private readonly ICategoryItem[] Category = null;
+        private readonly ISettingItem[] Category = null;
         private MainWindow MW;
 
-        internal Config(MainWindow MainWindow, ICategoryItem[] Category = null)
+        internal Config(MainWindow MainWindow, ISettingItem[] Category = null)
         {
             InitializeComponent();
 
@@ -25,7 +26,7 @@ namespace LAP.Dialogs
                 this.Category = Category;
             else
             {
-                this.Category = new ICategoryItem[3];
+                this.Category = new ISettingItem[3];
                 
                 OutputCategory output = new OutputCategory();
                 this.Category[0] = output;
@@ -88,16 +89,7 @@ namespace LAP.Dialogs
         }
     }
 
-    internal interface ICategoryItem : IDisposable
-    {
-        UIElement UIControl { get; set; }
-        Border Border { get; set; }
-        string Header { get; set; }
-
-        void Apply();
-    }
-
-    internal class OutputCategory : ICategoryItem
+    internal class OutputCategory : ISettingItem
     {
         public OutputCategory()
         {
@@ -126,7 +118,7 @@ namespace LAP.Dialogs
         }
     }
 
-    internal class PSE : ICategoryItem
+    internal class PSE : ISettingItem
     {
         public PSE()
         {
@@ -149,7 +141,7 @@ namespace LAP.Dialogs
         public void Dispose() { }
     }
 
-    internal class Plugin : ICategoryItem
+    internal class Plugin : ISettingItem
     {
         public Plugin()
         {

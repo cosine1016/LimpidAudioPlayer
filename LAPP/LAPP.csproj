@@ -485,6 +485,7 @@
     <Compile Include="NAudio\Wave\WaveStreams\WaveOffsetStream.cs" />
     <Compile Include="NAudio\Wave\WaveStreams\WaveOutBuffer.cs" />
     <Compile Include="NAudio\Wave\WaveStreams\WaveStream.cs" />
+    <Compile Include="Setting\ISettingItem.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\File.cs" />
     <Compile Include="LimpidAudioPlayerPlugin.cs" />

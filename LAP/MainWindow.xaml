@@ -34,10 +34,12 @@
                 <ClearUC:ListView x:Name="library" Margin="0,0,0,57" />
                 <ClearUC:Tab x:Name="Tab" Height="57" VerticalAlignment="Bottom" Width="Auto" Background="#B2000000" />
             </Grid>
-            <Grid x:Name="QueueWindow" HorizontalAlignment="Right" Width="300" Visibility="Hidden" Opacity="0">
-                <ClearUC:ListView x:Name="PlayQueue" DockPanel.Dock="Bottom" Margin="4,41,0,0" Background="#B2000000" />
-                <Label x:Name="PlayQueueL" Content="Queue" Height="41" DockPanel.Dock="Top" Margin="4,0,0,0" VerticalAlignment="Top" Background="#B2000000" Foreground="White" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin"/>
-                <Rectangle Fill="#B22424FF" HorizontalAlignment="Left" Stroke="Black" Width="4"/>
+            <Grid x:Name="QueueWindow" HorizontalAlignment="Right" Width="300" Opacity="0" Visibility="Hidden">
+                <ClearUC:ListView x:Name="PlayQueue" DockPanel.Dock="Bottom" Margin="0,41,0,0" Background="#B2000000" />
+                <Label x:Name="PlayQueueL" Content="Queue" Height="41" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#B2000000" Foreground="White" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin"/>
+            </Grid>
+            <Grid x:Name="PluginPanel">
+                <Grid x:Name="SidePanel" HorizontalAlignment="Left" Width="264"/>
             </Grid>
         </Grid>
         <Grid x:Name="CaptionRoot" Height="35" VerticalAlignment="Top">
