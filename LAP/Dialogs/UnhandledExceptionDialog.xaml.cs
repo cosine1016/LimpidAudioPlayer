@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
+using static LAP.Utils.Update;
 
 namespace LAP.Dialogs
 {
@@ -28,6 +29,8 @@ namespace LAP.Dialogs
         private const int VK_F4 = 0x73;
         private const int WM_SYSCOMMAND = 0x0112;
         private const int SC_CLOSE = 0xF060;
+
+        public const string ErrorPostValue = "LAP_ErrorPost";
 
         /// <summary>
         /// Loadedイベントハンドラ
@@ -144,20 +147,23 @@ namespace LAP.Dialogs
             {
                 try
                 {
-                    string adr = Utils.InstanceData.SrtLib.FTPS.GetResponseForLAPReport();
+                    string adr = Utils.NetworkTools.ReadString(new Utils.NetworkTools.PHP(GetAddressPHP,
+                        new Utils.NetworkTools.PHP.Argument[] { new Utils.NetworkTools.PHP.Argument(TitleName, ErrorPostValue) }));
 
                     if (adr != "-1")
                     {
-                        
+                        string path = Path.GetTempFileName();
+
+                        FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Write);
+                        byte[] buffer = Encoding.UTF8.GetBytes(Msg);
+                        fs.Write(buffer, 0, buffer.Length);
+                        fs.Close();
+
+                        WebClient wc = new WebClient();
+                        wc.UploadFile(adr, path);
                     }
 
                     Close();
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    MessageBox.Show("アセンブリのハッシュが一致しませんでした。アプリケーションを再インストールしてください\n" +
-                        "The application's hash is not correct. Please reinstall this application.", "LAP",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 catch (Exception)
                 {

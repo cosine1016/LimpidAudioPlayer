@@ -123,10 +123,6 @@
       <Project>{c04626b1-395c-473c-b52e-20e2074369c4}</Project>
       <Name>ClearUC</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MVPUC\MVPUC.csproj">
-      <Project>{10fbdffc-2dbc-49fc-bcc1-6c2f97781335}</Project>
-      <Name>MVPUC</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

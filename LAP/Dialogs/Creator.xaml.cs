@@ -19,6 +19,8 @@ namespace LAP.Dialogs
             LicenseTab.Items.Add(new ClearUC.Tab.TabItem("Icons"));
 
             LicenseTab.ActiveIndex = 0;
+
+            LVersion.Content = "バージョン:" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void LicenseTab_ActiveItemChanged(object sender, System.EventArgs e)

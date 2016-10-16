@@ -14,6 +14,11 @@ namespace LAP
 
         internal static ExceptionInfo ExceptionInformation { get; set; } = new ExceptionInfo();
 
+        internal const int UpdateModeExitCode = 10;
+
+        static App App = null;
+        internal static Utils.Update UpdateMan = new Utils.Update();
+
         [STAThread]
         public static void Main(string[] arg)
         {
@@ -113,35 +118,20 @@ namespace LAP
                     Dialogs.LogWindow.Append(Arg + " : Processed");
             }
 
-            try
-            {
-                if (Utils.InstanceData.SrtLib.Auth.GetAuthorizeState() == false)
-                {
-                    System.Windows.MessageBox.Show("アセンブリのハッシュが一致しませんでした。アプリケーションを再インストールしてください\n" +
-                        "The application's hash is not correct. Please reinstall this application.", "LAP",
-                        System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                    return;
-                }
-            }
-            catch (Exception)
-            {
-                System.Windows.MessageBox.Show("SrtLib.dllが破損しているか可能性があるため、起動できません。\n Cannot boot this application because SrtLib.dll is damaged or missing", "LAP",
-                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
-                return;
-            }
-
             if (Utils.InstanceData.DoNotInitialize == false)
             {
-                App app = new App();
-                app.ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
-                app.Exit += App_Exit;
-                app.DispatcherUnhandledException += App_DispatcherUnhandledException;
-                app.InitializeComponent();
+                App = new App();
+                App.ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
+                App.Exit += App_Exit;
+                App.DispatcherUnhandledException += App_DispatcherUnhandledException;
+                App.InitializeComponent();
 
                 LAPP.Events.AppendLog += Events_AppendLog;
                 Dialogs.LogWindow.Append("LAP Initialized");
+                
+                UpdateMan.AutoUpdateAsync();
 
-                app.Run();
+                App.Run();
             }
         }
 
@@ -152,9 +142,16 @@ namespace LAP
 
         private static void App_Exit(object sender, System.Windows.ExitEventArgs e)
         {
-            Dialogs.LogWindow.Append("Application Exit Code : " + e.ApplicationExitCode);
+            Dialogs.LogWindow.Append("Application is Shutting Down(Code " + e.ApplicationExitCode + ")");
+
+            if (Utils.InstanceData.DoNotInitialize == false)
+                App.DispatcherUnhandledException -= App_DispatcherUnhandledException;
+
             if (Utils.InstanceData.LogExp)
                 Dialogs.LogWindow.ExportLog(Utils.InstanceData.LogExpPath);
+
+            if(e.ApplicationExitCode == UpdateModeExitCode)
+                Process.Start(Utils.InstanceData.UpdateProcessInfo);
         }
 
         private static void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)

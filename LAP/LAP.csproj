@@ -74,15 +74,16 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Limpid Audio Player.ico</ApplicationIcon>
+    <ApplicationIcon>Properties\Limpid Audio Player.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClientUpdater">
-      <HintPath>..\..\..\ClientUpdater\ClientUpdater\bin\Debug\ClientUpdater.dll</HintPath>
+    <Reference Include="ClientUpdater, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ClientUpdater\ClientUpdater\bin\x86\Release\ClientUpdater.exe</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Effects, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
@@ -123,21 +124,6 @@
     <Compile Include="Dialogs\UnhandledExceptionDialog.xaml.cs">
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Lang\.Designer.cs">
-      <DependentUpon>.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Lang\en-US.Designer.cs">
-      <DependentUpon>en-US.resx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Lang\ja-JP.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ja-JP.resx</DependentUpon>
-    </Compile>
     <Compile Include="Page\Album\Data.cs" />
     <Compile Include="Page\Album\Page.cs" />
     <Compile Include="Page\Manager.cs" />
@@ -150,6 +136,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ResourceServices.cs" />
     <Compile Include="Resources\Shapes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -332,18 +319,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Lang\.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Lang\en-US.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>en-US.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Lang\ja-JP.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ja-JP.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.ja-JP.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -359,8 +335,8 @@
       <LastGenOutput>Taskbar.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="app.manifest" />
-    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="Properties\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -370,14 +346,14 @@
     <EmbeddedResource Include="Resources\License\Ms-PL.lic" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Properties\App.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DebugWindow\" />
     <Folder Include="Page\Other\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Limpid Audio Player.ico" />
+    <Resource Include="Properties\Limpid Audio Player.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
@@ -390,9 +366,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Lang\多言語対応手順.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ClearUC\ClearUC\ClearUC.csproj">

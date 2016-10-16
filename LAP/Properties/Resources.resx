@@ -122,7 +122,7 @@
     <value>..\resources\license\icon.lic;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>
   </data>
   <data name="Limpid_Audio_Player" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\limpid audio player.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>limpid audio player.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Ms_PL" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\license\ms-pl.lic;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;shift_jis</value>

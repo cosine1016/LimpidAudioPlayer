@@ -14,6 +14,7 @@
         <UserControls:Caption x:Name="Caption" Height="35" Width="Auto" VerticalAlignment="Top" Background="#E5323232" MaximizeButtonVisible="False" MinimizeButtonVisible="False" CloseButtonVisible="True" OptionalButtonVisible="False" />
         <TextBox x:Name="License" TextWrapping="Wrap" FontWeight="Thin" VerticalScrollBarVisibility="Visible" Background="{x:Null}" Foreground="White" SelectionBrush="{x:Null}" IsReadOnly="True" BorderBrush="{x:Null}" FontSize="14" Height="173" VerticalAlignment="Bottom" />
         <ClearUC:Tab x:Name="LicenseTab" Margin="0,107,0,0" Height="40" Width="Auto" VerticalAlignment="Top" />
-        <Label x:Name="label" Content="製作者：砂賀開晴" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" Height="45" Width="265" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
+        <Label x:Name="label" Content="製作者：砂賀開晴" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" Height="45" Width="159" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
+        <Label x:Name="LVersion" Content="バージョン:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="174,40,0,0" Height="45" Width="265" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
     </Grid>
 </Window>

@@ -25,21 +25,8 @@ namespace LAP.Utils
 
         public static bool DoNotInitialize { get; set; } = false;
 
-        public static class SrtLib
-        {
-            static SrtLib()
-            {
-                Asm = Assembly.LoadFrom("SrtLib.dll");
+        public static bool UpdateMode { get; set; } = false;
 
-                Auth = Activator.CreateInstance(Asm.GetType("SrtLib.Auth"));
-                Auth.AuthorizeLAP();
-
-                FTPS = Activator.CreateInstance(Asm.GetType("SrtLib.FTPS"), new object[] { Auth });
-            }
-
-            public static Assembly Asm { get; set; }
-            public static dynamic Auth { get; set; }
-            public static dynamic FTPS { get; set; }
-        }
+        public static System.Diagnostics.ProcessStartInfo UpdateProcessInfo { get; set; } = null;
     }
 }

@@ -14,9 +14,7 @@ namespace ClearUC.ListViewItems
     public partial class ListSubItem : ListItem
     {
         public event EventHandler MainLabelTextChanged;
-
         public event EventHandler SubLabelTextChanged;
-
         public event EventHandler StatusLabelTextChanged;
 
         public class Config
@@ -82,7 +80,7 @@ namespace ClearUC.ListViewItems
                 TitleL.Content = value;
                 SearchText = value;
                 ChangeMainLabel();
-                if (MainLabelTextChanged != null) MainLabelTextChanged(this, new EventArgs());
+                MainLabelTextChanged?.Invoke(this, new EventArgs());
             }
         }
 
@@ -92,7 +90,7 @@ namespace ClearUC.ListViewItems
             set
             {
                 subL.Content = value;
-                if (SubLabelTextChanged != null) SubLabelTextChanged(this, new EventArgs());
+                SubLabelTextChanged?.Invoke(this, new EventArgs());
             }
         }
 
