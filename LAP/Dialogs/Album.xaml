@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:LAP.Dialogs"
         xmlns:UserControls="clr-namespace:LAP.UserControls" xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.Dialogs.Album"
         mc:Ignorable="d"
-        Title="Album" Height="293.352" Width="707.438" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="#B2000000" Icon="/LAP;component/Limpid Audio Player.ico">
+        Title="Album" Height="293.352" Width="707.438" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="#B2000000" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
     </WindowChrome.WindowChrome>

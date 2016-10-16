@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LAP" xmlns:ListViewItems="clr-namespace:ClearUC.ListViewItems;assembly=ClearUC"  xmlns:Buttons="clr-namespace:MVPUC.Buttons;assembly=MVPUC"
         xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" xmlns:UserControls="clr-namespace:LAP.UserControls" xmlns:ListViewItems1="clr-namespace:LAP.UserControls.ListViewItems" xmlns:SeekBar="clr-namespace:MVPUC.SeekBar;assembly=MVPUC" xmlns:Toggles="clr-namespace:MVPUC.Toggles;assembly=MVPUC" xmlns:Visualize="clr-namespace:LAP.Visualize" x:Class="LAP.MainWindow"
         mc:Ignorable="d"
-        Title="Limpid Audio Player" Height="586.241" Width="1019.03" Background="#FF282828" MinWidth="500" MinHeight="300" Foreground="#FFAAAAAA" Loaded="Window_Loaded" StateChanged="Window_StateChanged" Icon="Limpid Audio Player.ico" Activated="Window_Activated" Deactivated="Window_Deactivated">
+        Title="Limpid Audio Player" Height="586.241" Width="1019.03" Background="#FF282828" MinWidth="500" MinHeight="300" Foreground="#FFAAAAAA" Loaded="Window_Loaded" StateChanged="Window_StateChanged" Activated="Window_Activated" Deactivated="Window_Deactivated" Icon="Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
     </WindowChrome.WindowChrome>

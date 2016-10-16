@@ -242,7 +242,7 @@ namespace LAP
             Renderer.PSEMicMixer.PSE.ExtractedDegreeOfRisk += PSE_ExtractedDegreeOfRisk;
             Renderer.PlaybackStopped += Renderer_PlaybackStopped;
             
-            Dialogs.LogWindow.Append("Renderer Initialized : " + FilePath);
+            Dialogs.LogWindow.Append("Renderer : " + Renderer.WaveStream.ToString());
         }
 
         private void Renderer_PlaybackStopped(object sender, NAudio.Wave.StoppedEventArgs e)

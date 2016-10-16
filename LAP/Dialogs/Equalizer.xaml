@@ -7,7 +7,7 @@
         xmlns:UserControls="clr-namespace:LAP.UserControls"
         xmlns:Equalizer="clr-namespace:MVPUC.Equalizer;assembly=MVPUC" xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.Dialogs.Equalizer"
         mc:Ignorable="d"
-        Title="Equalizer" Height="333" Width="747.122" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="#B2000000" Topmost="True" Icon="/LAP;component/Limpid Audio Player.ico">
+        Title="Equalizer" Height="333" Width="747.122" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="#B2000000" Topmost="True" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
     </WindowChrome.WindowChrome>

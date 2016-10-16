@@ -75,5 +75,10 @@ namespace TestPlugin
 
             return bytesRead;
         }
+
+        public override string ToString()
+        {
+            return "TestReader";
+        }
     }
 }

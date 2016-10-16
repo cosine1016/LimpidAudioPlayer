@@ -137,6 +137,11 @@ namespace LAP.Utils
                 {
                     return new WaveFormat(Format.SampleRate, Format.BitsPerSample, Format.Channels);
                 }
+
+                public override string ToString()
+                {
+                    return bs.ToString();
+                }
             }
         }
     }

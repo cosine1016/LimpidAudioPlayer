@@ -12,5 +12,7 @@ namespace LAPP.Wave
         {
             return SupportedExtensions.Contains(Path.GetExtension(FilePath).ToLower());
         }
+
+        public override abstract string ToString();
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LAP.Dialogs"
         mc:Ignorable="d"
-        Title="UnhandledExceptionDialog" Height="283.194" Width="563.025" ResizeMode="NoResize" Icon="/LAP;component/Limpid Audio Player.ico">
+        Title="UnhandledExceptionDialog" Height="283.194" Width="563.025" ResizeMode="NoResize" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
     <Grid>
         <Button x:Name="English" Content="English" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="83" Height="23" Click="English_Click" />
         <Button x:Name="Japanese" Content="Japanese" HorizontalAlignment="Left" Margin="98,10,0,0" VerticalAlignment="Top" Width="83" Height="23" Click="Japanese_Click" />

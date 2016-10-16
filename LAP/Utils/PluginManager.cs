@@ -36,6 +36,11 @@ namespace LAP.Utils
                     plg.EnableChanged += Plg_EnableChanged;
                     InitializedPlugin.Add(plg);
                 }
+                catch(ReflectionTypeLoadException ex)
+                {
+                    LAP.Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
+                    LAP.Dialogs.LogWindow.Append(ex.LoaderExceptions.ToString());
+                }
                 catch (Exception)
                 {
                     LAP.Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);

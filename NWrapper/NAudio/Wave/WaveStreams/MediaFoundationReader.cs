@@ -107,7 +107,7 @@ namespace NAudio.Wave
             if (audioSubType == AudioSubtypes.MFAudioFormat_Float)
                 return WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, channels);
             var subTypeDescription = FieldDescriptionHelper.Describe(typeof(AudioSubtypes), audioSubType);
-            throw new InvalidDataException(String.Format("Unsupported audio sub Type {0}", subTypeDescription));
+            throw new InvalidDataException(string.Format("Unsupported audio sub Type {0}", subTypeDescription));
         }
 
         private static MediaType GetCurrentMediaType(IMFSourceReader reader)
