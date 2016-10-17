@@ -28,6 +28,8 @@ namespace LAP.Page
 
         public event EventHandler RendererDisposeRequest;
 
+        public event EventHandler<Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag>> GetTagEvent;
+
         public bool Loop { get; set; } = false;
         public bool Opened { get; set; } = false;
         public List<Utils.Classes.File> Order { get; protected set; } = new List<Utils.Classes.File>();
@@ -84,6 +86,14 @@ namespace LAP.Page
 
             if (Shuffle) PlayFile?.Invoke(this, new PlayFileEventArgs(ShuffledOrder[PlayingIndex]));
             else PlayFile?.Invoke(this, new PlayFileEventArgs(Order[PlayingIndex]));
+        }
+
+        protected Utils.Classes.Tag GetTag(string FilePath)
+        {
+            Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag> args
+                = new Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag>(FilePath);
+            GetTagEvent?.Invoke(this, args);
+            return args.Return;
         }
 
         protected void OnRendererDisposeRequest()
@@ -163,6 +173,8 @@ namespace LAP.Page
         private ClearUC.ListView QV;
 
         private ClearUC.Tab Tab;
+
+        private Utils.BackgroundScanner bs = new Utils.BackgroundScanner();
 
         public Manager(ClearUC.ListView ListView, ClearUC.ListView QueueView, ClearUC.Tab Tab)
         {
@@ -387,6 +399,7 @@ namespace LAP.Page
                     NewItem.PlayFile += NewItem_PlayFile;
                     NewItem.RendererDisposeRequest += NewItem_RendererDisposeRequest;
                     NewItem.OrderEnded += NewItem_OrderEnded;
+                    NewItem.GetTagEvent += NewItem_GetTagEvent;
 
                     Tab.Items.Add(new ClearUC.Tab.TabItem(NewItem.Title, NewItem.Border));
                     break;
@@ -398,6 +411,7 @@ namespace LAP.Page
                     OldItem.PlayFile -= NewItem_PlayFile;
                     OldItem.RendererDisposeRequest -= NewItem_RendererDisposeRequest;
                     OldItem.OrderEnded -= NewItem_OrderEnded;
+                    OldItem.GetTagEvent -= NewItem_GetTagEvent;
                     OldItem.Dispose();
                     Tab.Items.RemoveAt(e.OldStartingIndex);
                     break;
@@ -412,10 +426,16 @@ namespace LAP.Page
                         OldItems[i].PlayFile -= NewItem_PlayFile;
                         OldItems[i].RendererDisposeRequest -= NewItem_RendererDisposeRequest;
                         OldItems[i].OrderEnded -= NewItem_OrderEnded;
+                        OldItems[i].GetTagEvent -= NewItem_GetTagEvent;
                         OldItems[i].Dispose();
                     }
                     break;
             }
+        }
+
+        private void NewItem_GetTagEvent(object sender, Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag> e)
+        {
+            e.Return = bs.GetTag(e.Value);
         }
 
         private void NewItem_OrderEnded(object sender, EventArgs e)
@@ -426,6 +446,11 @@ namespace LAP.Page
         private void NewItem_RendererDisposeRequest(object sender, EventArgs e)
         {
             RendererDisposeRequest?.Invoke(sender, e);
+        }
+
+        public Utils.Classes.Tag GetTag(string FilePath)
+        {
+            return bs.GetTag(FilePath);
         }
     }
 

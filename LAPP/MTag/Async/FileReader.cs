@@ -12,10 +12,7 @@ namespace LAPP.MTag.Async
         {
             Tag t = await Task.Run(() =>
             {
-                if (FromFile)
-                    return TagReader.GetTagFromFile(FilePath);
-                else
-                    return TagReader.GetTag(FilePath);
+                return TagReader.GetTag(FilePath);
             });
 
             return t;

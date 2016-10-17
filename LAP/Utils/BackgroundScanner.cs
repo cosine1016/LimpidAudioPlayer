@@ -86,6 +86,20 @@ namespace LAP.Utils
 
         public Classes.Tag GetTag(string FilePath)
         {
+            if (InstanceData.SafeMode)
+            {
+                LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTag(FilePath);
+                Classes.Tag Ret = new Classes.Tag();
+                Ret.Album = OTag.Album;
+                Ret.Artist = OTag.Artist;
+                Ret.Title = OTag.Title;
+                Ret.Lyrics = OTag.Lyrics;
+                Ret.Track = OTag.Track;
+                Ret.FilePath = OTag.FilePath;
+                Ret.LastWriteTime = File.GetLastWriteTime(OTag.FilePath).ToString();
+                return Ret;
+            }
+
             if (Directory.Exists(Config.Setting.Paths.Cache + @"\artwork") == false)
                 Directory.CreateDirectory(Config.Setting.Paths.Cache + @"\artwork");
 
@@ -117,6 +131,7 @@ namespace LAP.Utils
                         {
                             File.Delete(Config.Library.Files[i].XMLPath);
                             i--;
+                            break;
                         }
                         finally
                         {
@@ -131,7 +146,7 @@ namespace LAP.Utils
                                 {
                                     if (File.Exists(Alb.Track[ai].ArtworkCachePath) == false)
                                     {
-                                        LAPP.MTag.Tag FArt = LAPP.MTag.TagReader.GetTagFromFile(FilePath);
+                                        LAPP.MTag.Tag FArt = LAPP.MTag.TagReader.GetTag(FilePath);
                                         if (FArt.Artwork != null)
                                         {
                                             try
@@ -158,7 +173,7 @@ namespace LAP.Utils
             {
                 LAP.Dialogs.LogWindow.Append("Creating Cache");
 
-                LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTagFromFile(FilePath);
+                LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTag(FilePath);
                 Classes.Tag Ret = new Classes.Tag();
                 Ret.Album = OTag.Album;
                 Ret.Artist = OTag.Artist;
@@ -299,7 +314,7 @@ namespace LAP.Utils
                         string[] files = Directory.GetFiles(dir, Config.Setting.Paths.ScanFilters[fili], System.IO.SearchOption.AllDirectories);
                         foreach (string File in files)
                         {
-                            LAPP.MTag.Tag t = LAPP.MTag.TagReader.GetTagFromFile(File);
+                            LAPP.MTag.Tag t = LAPP.MTag.TagReader.GetTag(File);
                             Cache(t);
                             PartOfTask?.Invoke(this, new TaskStateChangedArgs() { IsDirectory = false, Path = File });
                         }

@@ -37,7 +37,7 @@ namespace LAP
 
             if (PlayingFile != null) LastFile = (Utils.Classes.File)PlayingFile.Clone();
 
-            Utils.Classes.File file = new Utils.Classes.File(FilePath, new Utils.BackgroundScanner().GetTag(FilePath));
+            Utils.Classes.File file = new Utils.Classes.File(FilePath, Manager.GetTag(FilePath));
             file.Artwork = Utils.Utility.ArtworkManager.GetArtwork(file.Tag.ArtworkCachePath);
             RenderFile(file);
         }

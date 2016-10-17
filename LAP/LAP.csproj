@@ -83,7 +83,7 @@
   <ItemGroup>
     <Reference Include="ClientUpdater, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ClientUpdater\ClientUpdater\bin\x86\Release\ClientUpdater.exe</HintPath>
+      <HintPath>..\..\ClientUpdater\ClientUpdater\bin\Debug\ClientUpdater.exe</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Effects, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">

@@ -132,7 +132,7 @@ namespace LAPP.Utils
                                 {
                                     if (System.IO.File.Exists(Alb.Track[ai].ArtworkCachePath) == false)
                                     {
-                                        LAPP.MTag.Tag FArt = LAPP.MTag.TagReader.GetTagFromFile(FilePath);
+                                        LAPP.MTag.Tag FArt = LAPP.MTag.TagReader.GetTag(FilePath);
                                         if (FArt.Artwork != null)
                                         {
                                             try
@@ -159,7 +159,7 @@ namespace LAPP.Utils
             {
                 Log.Append("Creating Cache");
 
-                LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTagFromFile(FilePath);
+                LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTag(FilePath);
                 Tag Ret = new Tag();
                 Ret.Album = OTag.Album;
                 Ret.Artist = OTag.Artist;
@@ -300,7 +300,7 @@ namespace LAPP.Utils
                         string[] files = Directory.GetFiles(dir, Config.Setting.Paths.ScanFilters[fili], System.IO.SearchOption.AllDirectories);
                         foreach (string File in files)
                         {
-                            LAPP.MTag.Tag t = LAPP.MTag.TagReader.GetTagFromFile(File);
+                            LAPP.MTag.Tag t = LAPP.MTag.TagReader.GetTag(File);
                             Cache(t);
                             PartOfTask?.Invoke(this, new TaskStateChangedArgs() { IsDirectory = false, Path = File });
                         }

@@ -101,7 +101,7 @@ namespace LAP.Dialogs
 
                     if (LAPP.MTag.TagReader.SupportedExtension.Contains(System.IO.Path.GetExtension(p).ToLower()))
                     {
-                        LAPP.MTag.Tag Tag = LAPP.MTag.TagReader.GetTagFromFile(p);
+                        LAPP.MTag.Tag Tag = LAPP.MTag.TagReader.GetTag(p);
                         if (Tag != null)
                         {
                             if (MenuItem.ImageSources == null)

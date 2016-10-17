@@ -11,7 +11,6 @@ namespace LAP.Page.Playlist
 {
     public class Page : ListViewPage
     {
-        private BackgroundScanner BS = new BackgroundScanner();
         private ListSubItem CreatePlaylistItem = null;
         private List<ListItem> TopPage = new List<ListItem>();
         private List<ListItem> OnlyFiles = new List<ListItem>();
@@ -97,7 +96,7 @@ namespace LAP.Page.Playlist
             bool IsFile = FileMode;
             ListAnimativeItem Lai = new ListAnimativeItem(true);
 
-            Classes.Tag tag = BS.GetTag(Path);
+            Classes.Tag tag = GetTag(Path);
             Classes.File File = new Classes.File(Path, tag);
             File.Artwork = Utility.ArtworkManager.GetArtwork(tag.ArtworkCachePath);
 

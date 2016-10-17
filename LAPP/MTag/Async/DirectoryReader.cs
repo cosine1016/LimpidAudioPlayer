@@ -27,10 +27,7 @@ namespace LAPP.MTag.Async
                 {
                     if (SearchExtensions.Contains(System.IO.Path.GetExtension(Paths[i])))
                     {
-                        if (FromFile)
-                            Tags.Add(TagReader.GetTagFromFile(Paths[i]));
-                        else
-                            Tags.Add(TagReader.GetTag(Paths[i]));
+                        Tags.Add(TagReader.GetTag(Paths[i]));
                     }
                 }
 

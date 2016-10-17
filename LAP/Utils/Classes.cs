@@ -31,6 +31,23 @@ namespace LAP.Utils
             }
         }
 
+        public class TypeEventArgs<T> : EventArgs
+        {
+            public TypeEventArgs(T Value)
+            {
+                this.Value = Value;
+            }
+
+            public T Value { get; set; }
+        }
+
+        public class ReturnableEventArgs<TValue, TRet> : TypeEventArgs<TValue>
+        {
+            public ReturnableEventArgs(TValue Value) : base(Value) { }
+
+            public TRet Return { get; set; }
+        }
+
         public class PlaylistEventArgs : EventArgs
         {
             public PlaylistEventArgs(string Path, Page.Playlist.Playlist.PlaylistData Data)

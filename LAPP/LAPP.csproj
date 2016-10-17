@@ -56,7 +56,6 @@
     <Compile Include="MTag\Ext\LRC\Reader.cs" />
     <Compile Include="MTag\Ext\MP4\Reader.cs" />
     <Compile Include="MTag\Tag.cs" />
-    <Compile Include="MTag\TagCache.cs" />
     <Compile Include="MTag\TagReader.cs" />
     <Compile Include="NAudio\Codecs\ALawDecoder.cs" />
     <Compile Include="NAudio\Codecs\ALawEncoder.cs" />

@@ -12,8 +12,6 @@ namespace LAP.Page.Album
 {
     internal class Page : ListViewPage
     {
-        private BackgroundScanner BS = new BackgroundScanner();
-
         private ListSubItem CreateAlbumItem = null;
         private List<ListItem> TopPage = new List<ListItem>();
         private List<ListItem> PageItem = new List<ListItem>();
@@ -79,7 +77,7 @@ namespace LAP.Page.Album
                 {
                     if (MI.ImageSources == null)
                     {
-                        Classes.Tag Tag = BS.GetTag(Data.Tracks[i].Path);
+                        Classes.Tag Tag = GetTag(Data.Tracks[i].Path);
                         if (string.IsNullOrEmpty(Tag.ArtworkCachePath) == false)
                         {
                             System.Windows.Media.ImageSource Image = Utility.ArtworkManager.GetArtwork(Tag.ArtworkCachePath);
@@ -129,7 +127,7 @@ namespace LAP.Page.Album
 
                 Lai.SecondItem = lbi;
 
-                Classes.Tag tag = BS.GetTag(Data.Tracks[i].Path);
+                Classes.Tag tag = GetTag(Data.Tracks[i].Path);
                 Utils.Classes.File File = new Utils.Classes.File(Data.Tracks[i].Path, tag);
                 File.Artwork = Utility.ArtworkManager.GetArtwork(tag.ArtworkCachePath);
 
@@ -139,12 +137,6 @@ namespace LAP.Page.Album
                 Files.Add(File);
 
                 PageItem.Add(Lai);
-            }
-
-            if (LAPP.MTag.TagReader.BaseCompareImage != null)
-            {
-                LAPP.MTag.TagReader.BaseCompareImage.Dispose();
-                LAPP.MTag.TagReader.BaseCompareImage = null;
             }
         }
 
