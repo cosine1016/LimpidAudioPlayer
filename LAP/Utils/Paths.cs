@@ -16,6 +16,7 @@ namespace LAP.Utils
             Album = Album.Replace("{Base}", BaseSettingPath);
             Cache = Cache.Replace("{Base}", BaseSettingPath);
             LibraryPath = LibraryPath.Replace("{Base}", BaseSettingPath);
+            PluginInfoPath = PluginInfoPath.Replace("{Base}", BaseSettingPath);
         }
 
         public static string SettingFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"/LAP/Config/Setting.limpidcnf";
@@ -39,6 +40,8 @@ namespace LAP.Utils
         public string AlbumExtension { get; set; } = @".limpidal";
 
         public string LibraryPath { get; set; } = @"{Base}\LAP\Library.limpidlb";
+
+        public string PluginInfoPath { get; set; } = @"{Base}\LAP\PluginInfo.xml";
 
         public string PlaylistCache { get; set; } = "PlaylistCache";
 

@@ -24,10 +24,13 @@ namespace LAP.Utils
                             {
                                 for (int pc = 0; PluginManager.InitializedPlugin.Count > pc; pc++)
                                 {
-                                    foreach(LAPP.Page.Plugin p in PluginManager.InitializedPlugin[pc].Instance.Pages)
+                                    if (PluginManager.InitializedPlugin[pc].Enabled)
                                     {
-                                        Page.ListViewPage lvp = new Page.Plugin.Page(p);
-                                        if (lvp != null) pages.Add(lvp);
+                                        foreach (LAPP.Page.Plugin p in PluginManager.InitializedPlugin[pc].Instance.Pages)
+                                        {
+                                            Page.ListViewPage lvp = new Page.Plugin.Page(p);
+                                            if (lvp != null) pages.Add(lvp);
+                                        }
                                     }
                                 }
                             }

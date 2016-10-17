@@ -95,8 +95,8 @@ namespace LAP.Utils
                 Ret.Title = OTag.Title;
                 Ret.Lyrics = OTag.Lyrics;
                 Ret.Track = OTag.Track;
-                Ret.FilePath = OTag.FilePath;
-                Ret.LastWriteTime = File.GetLastWriteTime(OTag.FilePath).ToString();
+                Ret.FilePath = FilePath;
+                Ret.LastWriteTime = File.GetLastWriteTime(FilePath).ToString();
                 return Ret;
             }
 
@@ -180,8 +180,8 @@ namespace LAP.Utils
                 Ret.Title = OTag.Title;
                 Ret.Lyrics = OTag.Lyrics;
                 Ret.Track = OTag.Track;
-                Ret.FilePath = OTag.FilePath;
-                Ret.LastWriteTime = File.GetLastWriteTime(OTag.FilePath).ToString();
+                Ret.FilePath = FilePath;
+                Ret.LastWriteTime = File.GetLastWriteTime(FilePath).ToString();
 
                 char[] invailedchar = Path.GetInvalidFileNameChars();
                 string albn = OTag.Album;

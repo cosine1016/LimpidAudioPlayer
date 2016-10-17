@@ -223,7 +223,6 @@ namespace LAP.Utils
         }
 
         private bool mirmrf = false, mirmcf = false, mirmlf = false;
-        private int lastTimestamp = -1;
         private void MediaInformationRoot_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.MiddleButton == MouseButtonState.Pressed)

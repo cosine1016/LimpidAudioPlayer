@@ -214,6 +214,7 @@ namespace NWrapper
 
             Stop();
             CloseFile();
+
             if (WavePlayer != null)
             {
                 WavePlayer.Dispose();

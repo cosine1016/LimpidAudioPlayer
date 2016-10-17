@@ -92,24 +92,27 @@ namespace LAP.Utils
                     try
                     {
                         PluginManager.Plugin plg = PluginManager.InitializedPlugin[i];
-                        plg.Instance.SetFilePath(fileName);
-                        if (plg.Instance?.WaveStreams.Count > 0)
+                        if (plg.Enabled)
                         {
-                            for (int s = 0; plg.Instance.WaveStreams.Count > s; s++)
+                            plg.Instance.SetFilePath(fileName);
+                            if (plg.Instance?.WaveStreams.Count > 0)
                             {
-                                try
+                                for (int s = 0; plg.Instance.WaveStreams.Count > s; s++)
                                 {
-                                    if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(System.IO.Path.GetExtension(fileName).ToLower()) ||
-                                        plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
+                                    try
                                     {
-                                        readerStream = new PluginWaveStream(plg.Instance.WaveStreams[s]);
-                                        LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
-                                        return;
+                                        if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(System.IO.Path.GetExtension(fileName).ToLower()) ||
+                                            plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
+                                        {
+                                            readerStream = new PluginWaveStream(plg.Instance.WaveStreams[s]);
+                                            LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
+                                            return;
+                                        }
                                     }
-                                }
-                                catch (Exception ex)
-                                {
-                                    LAP.Dialogs.LogWindow.Append(plg.Instance.Title + " Error : " + ex.Message);
+                                    catch (Exception ex)
+                                    {
+                                        LAP.Dialogs.LogWindow.Append(plg.Instance.Title + " Error : " + ex.Message);
+                                    }
                                 }
                             }
                         }

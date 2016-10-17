@@ -66,6 +66,11 @@ namespace LAP
                         Utils.InstanceData.DoNotInitialize = true;
                         break;
 
+                    case "-InitPluginDir":
+                        Utils.InstanceData.DoNotInitialize = true;
+                        System.IO.Directory.CreateDirectory(Utils.PluginManager.PluginDirectory);
+                        break;
+
                     case "-Hash":
 #if DEBUG == false
                         byte[] hash = Utils.InstanceData.SrtLib.Auth.ComputeHash(new System.Security.Cryptography.SHA256Managed(),

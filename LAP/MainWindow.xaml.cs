@@ -199,14 +199,10 @@ namespace LAP
                     Renderer.SampleAggregator.PerformFFT = false;
 
                     Spectrum.SampleAggreator = null;
-
-                    Spectrum.SampleAggreator = null;
                 }
 
                 if (Renderer.PSEMicMixer != null)
-                {
                     Renderer.PSEMicMixer.PSE.ExtractedDegreeOfRisk -= PSE_ExtractedDegreeOfRisk;
-                }
 
                 Renderer.PlaybackStopped -= Renderer_PlaybackStopped;
 

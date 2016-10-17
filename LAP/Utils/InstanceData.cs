@@ -11,7 +11,7 @@ namespace LAP.Utils
     {
         public static bool UseDefaultSetting { get; set; } = false;
 
-        public static bool SafeMode { get; set; } = true;
+        public static bool SafeMode { get; set; } = false;
 
         public static bool AutoSave { get; set; } = true;
 

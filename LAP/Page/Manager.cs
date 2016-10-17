@@ -418,16 +418,19 @@ namespace LAP.Page
 
                 case NotifyCollectionChangedAction.Reset:
                     Tab.Items.Clear();
-                    ListViewPage[] OldItems = (ListViewPage[])e.NewItems;
-                    for (int i = 0; OldItems.Length > i; i++)
+                    if(e.OldItems != null)
                     {
-                        OldItems[i].PageItemChanged -= PageItemChanged;
-                        OldItems[i].ClearPageRequested -= ClearPageRequested;
-                        OldItems[i].PlayFile -= NewItem_PlayFile;
-                        OldItems[i].RendererDisposeRequest -= NewItem_RendererDisposeRequest;
-                        OldItems[i].OrderEnded -= NewItem_OrderEnded;
-                        OldItems[i].GetTagEvent -= NewItem_GetTagEvent;
-                        OldItems[i].Dispose();
+                        ListViewPage[] OldItems = (ListViewPage[])e.OldItems;
+                        for (int i = 0; OldItems.Length > i; i++)
+                        {
+                            OldItems[i].PageItemChanged -= PageItemChanged;
+                            OldItems[i].ClearPageRequested -= ClearPageRequested;
+                            OldItems[i].PlayFile -= NewItem_PlayFile;
+                            OldItems[i].RendererDisposeRequest -= NewItem_RendererDisposeRequest;
+                            OldItems[i].OrderEnded -= NewItem_OrderEnded;
+                            OldItems[i].GetTagEvent -= NewItem_GetTagEvent;
+                            OldItems[i].Dispose();
+                        }
                     }
                     break;
             }
