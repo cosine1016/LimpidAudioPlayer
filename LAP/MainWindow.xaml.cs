@@ -14,9 +14,9 @@ namespace LAP
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal Utils.Classes.File LastFile = null;
+        internal LAPP.MTag.File LastFile = null;
         internal Page.Manager Manager;
-        internal Utils.Classes.File PlayingFile = null;
+        internal LAPP.MTag.File PlayingFile = null;
         internal Audio Renderer = null;
         internal Timer seekt = new Timer();
         internal Utils.Taskbar TaskbarManager;
@@ -35,14 +35,14 @@ namespace LAP
             StopFile(false);
             Manager.OnPlayStateChanged(Audio.Status.Stopped, null);
 
-            if (PlayingFile != null) LastFile = (Utils.Classes.File)PlayingFile.Clone();
+            if (PlayingFile != null) LastFile = (LAPP.MTag.File)PlayingFile.Clone();
 
-            Utils.Classes.File file = new Utils.Classes.File(FilePath, Manager.GetTag(FilePath));
+            LAPP.MTag.File file = new LAPP.MTag.File(FilePath, Manager.GetTag(FilePath));
             file.Artwork = Utils.Utility.ArtworkManager.GetArtwork(file.Tag.ArtworkCachePath);
             RenderFile(file);
         }
 
-        public void RenderFile(Utils.Classes.File File, bool KeepState = false, bool AutoRun = true)
+        public void RenderFile(LAPP.MTag.File File, bool KeepState = false, bool AutoRun = true)
         {
             try
             {
@@ -53,11 +53,6 @@ namespace LAP
                 AlbumT.Content = File.Tag.Album;
                 LyricsT.Text = File.Tag.Lyrics;
                 ArtworkI.Source = File.Artwork;
-
-                //if (string.IsNullOrEmpty(File.Tag.Lyrics) && !string.IsNullOrEmpty(File.Tag.Title) && !string.IsNullOrEmpty(File.Tag.Artist))
-                //{
-                //    LyricsMan.GetLyricAsync(File.Tag.Title, File.Tag.Artist);
-                //}
             }
             catch (Audio.ASIOException)
             {
@@ -254,9 +249,9 @@ namespace LAP
             else Manager.PlayNextFile();
         }
 
-        internal void PlayFile(Utils.Classes.File File)
+        internal void PlayFile(LAPP.MTag.File File)
         {
-            if (PlayingFile != null) LastFile = (Utils.Classes.File)PlayingFile.Clone();
+            if (PlayingFile != null) LastFile = (LAPP.MTag.File)PlayingFile.Clone();
             RenderFile(File);
         }
 

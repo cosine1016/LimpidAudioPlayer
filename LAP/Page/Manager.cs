@@ -20,7 +20,7 @@ namespace LAP.Page
         public ClearUC.ListViewItems.ListItem Item { get; set; } = null;
     }
 
-    public abstract class ListViewPage : Page<ClearUC.ListViewItems.ListItem, ItemSelectedEventArgs>
+    public abstract class ListViewPage : Page<ListItem, ItemSelectedEventArgs>
     {
         public event EventHandler OrderEnded;
 
@@ -28,33 +28,32 @@ namespace LAP.Page
 
         public event EventHandler RendererDisposeRequest;
 
-        public event EventHandler<Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag>> GetTagEvent;
+        public event EventHandler<LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx>> GetTagEvent;
 
         public bool Loop { get; set; } = false;
         public bool Opened { get; set; } = false;
-        public List<Utils.Classes.File> Order { get; protected set; } = new List<Utils.Classes.File>();
+        public List<LAPP.MTag.File> Order { get; protected set; } = new List<LAPP.MTag.File>();
 
         public bool Search { get; protected set; } = true;
         public bool Playing { get; private set; } = false;
         public int PlayingIndex { get; private set; } = -1;
         public bool Shuffle { get; set; } = false;
-        public List<Utils.Classes.File> ShuffledOrder { get; private set; } = new List<Utils.Classes.File>();
+        public List<LAPP.MTag.File> ShuffledOrder { get; private set; } = new List<LAPP.MTag.File>();
 
         /// <summary>
         /// オーダーをすべて初期化した後
         /// ファイルを再生します。
         /// </summary>
         /// <param name="File">ファイル</param>
-        public void OnPlayFile(Utils.Classes.File[] Files, int Index)
+        public void OnPlayFile(LAPP.MTag.File[] Files, int Index)
         {
             MakeOrder(Files, Index);
 
             RendererDisposeRequest?.Invoke(this, new EventArgs());
 
             Playing = true;
-
-            if (Shuffle) PlayFile?.Invoke(this, new PlayFileEventArgs(ShuffledOrder[Index]));
-            else PlayFile?.Invoke(this, new PlayFileEventArgs(Order[Index]));
+            
+            PlayFile?.Invoke(this, new PlayFileEventArgs(Order[Index]));
         }
 
         public void OnStopFile()
@@ -88,10 +87,10 @@ namespace LAP.Page
             else PlayFile?.Invoke(this, new PlayFileEventArgs(Order[PlayingIndex]));
         }
 
-        protected Utils.Classes.Tag GetTag(string FilePath)
+        protected LAPP.MTag.TagEx GetTag(string FilePath)
         {
-            Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag> args
-                = new Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag>(FilePath);
+            LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx> args
+                = new LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx>(FilePath);
             GetTagEvent?.Invoke(this, args);
             return args.Return;
         }
@@ -139,7 +138,7 @@ namespace LAP.Page
 
         public abstract void PlayAnyFile();
 
-        protected void MakeOrder(Utils.Classes.File[] Files, int Index)
+        protected void MakeOrder(LAPP.MTag.File[] Files, int Index)
         {
             Order.Clear();
             Order.AddRange(Files);
@@ -148,12 +147,12 @@ namespace LAP.Page
 
             ShuffledOrder.Clear();
 
-            Utils.Classes.File[] sorder = Order.OrderBy(i => Guid.NewGuid()).ToArray();
+            LAPP.MTag.File[] sorder = Order.OrderBy(i => Guid.NewGuid()).ToArray();
             {
                 for (int i = 0; sorder.Length > i; i++)
                     if (sorder[i] == Order[PlayingIndex])
                     {
-                        Utils.Classes.File bk = sorder[0];
+                        LAPP.MTag.File bk = sorder[0];
                         sorder[0] = Order[PlayingIndex];
                         sorder[i] = bk;
 
@@ -200,7 +199,7 @@ namespace LAP.Page
 
         public event EventHandler OrderEnded;
 
-        public void OnPlayStateChanged(NWrapper.Audio.Status Status, Utils.Classes.File File)
+        public void OnPlayStateChanged(NWrapper.Audio.Status Status, LAPP.MTag.File File)
         {
             int Index = -1;
             ListViewPage lvp = GetPlayingPage(out Index);
@@ -219,12 +218,12 @@ namespace LAP.Page
             }
         }
 
-        private void UpdateQueue(bool UpdateOrder, Utils.Classes.File File, NWrapper.Audio.Status Status)
+        private void UpdateQueue(bool UpdateOrder, LAPP.MTag.File File, NWrapper.Audio.Status Status)
         {
             if (UpdateOrder)
             {
                 QV.Items.Clear();
-                Utils.Classes.File[] Files = GetOrder();
+                LAPP.MTag.File[] Files = GetOrder();
                 if(Files != null)
                 {
                     for(int i = 0;Files.Length > i; i++)
@@ -242,7 +241,7 @@ namespace LAP.Page
                 if(lsi != null)
                 {
                     lsi.StatusLabelText = "";
-                    Utils.Classes.File itemf = lsi.Data as Utils.Classes.File;
+                    LAPP.MTag.File itemf = lsi.Data as LAPP.MTag.File;
                     if(itemf != null)
                     {
                         if(itemf.Path == File.Path)
@@ -262,7 +261,7 @@ namespace LAP.Page
             }
         }
 
-        private ListSubItem GetItemFromFile(Utils.Classes.File File)
+        private ListSubItem GetItemFromFile(LAPP.MTag.File File)
         {
             ListSubItem lsi = new ListSubItem();
 
@@ -293,7 +292,7 @@ namespace LAP.Page
             for (int i = 0; Pages.Count > i; i++) Pages[i].Dispose();
         }
 
-        public Utils.Classes.File[] GetOrder()
+        public LAPP.MTag.File[] GetOrder()
         {
             ListViewPage lvp = GetPlayingPage();
             if (lvp != null) return lvp.Order.ToArray();
@@ -436,7 +435,7 @@ namespace LAP.Page
             }
         }
 
-        private void NewItem_GetTagEvent(object sender, Utils.Classes.ReturnableEventArgs<string, Utils.Classes.Tag> e)
+        private void NewItem_GetTagEvent(object sender, LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx> e)
         {
             e.Return = bs.GetTag(e.Value);
         }
@@ -451,7 +450,7 @@ namespace LAP.Page
             RendererDisposeRequest?.Invoke(sender, e);
         }
 
-        public Utils.Classes.Tag GetTag(string FilePath)
+        public LAPP.MTag.TagEx GetTag(string FilePath)
         {
             return bs.GetTag(FilePath);
         }
@@ -557,9 +556,9 @@ namespace LAP.Page
 
     public class PlayFileEventArgs : EventArgs
     {
-        public Utils.Classes.File File;
+        public LAPP.MTag.File File;
 
-        public PlayFileEventArgs(Utils.Classes.File File)
+        public PlayFileEventArgs(LAPP.MTag.File File)
         {
             this.File = File;
         }

@@ -84,26 +84,17 @@ namespace LAP.Utils
             }
         }
 
-        public Classes.Tag GetTag(string FilePath)
+        public LAPP.MTag.TagEx GetTag(string FilePath)
         {
             if (InstanceData.SafeMode)
             {
-                LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTag(FilePath);
-                Classes.Tag Ret = new Classes.Tag();
-                Ret.Album = OTag.Album;
-                Ret.Artist = OTag.Artist;
-                Ret.Title = OTag.Title;
-                Ret.Lyrics = OTag.Lyrics;
-                Ret.Track = OTag.Track;
-                Ret.FilePath = FilePath;
-                Ret.LastWriteTime = File.GetLastWriteTime(FilePath).ToString();
-                return Ret;
+                return Utility.ToLAPTag(LAPP.MTag.TagReader.GetTag(FilePath), FilePath, null);
             }
 
             if (Directory.Exists(Config.Setting.Paths.Cache + @"\artwork") == false)
                 Directory.CreateDirectory(Config.Setting.Paths.Cache + @"\artwork");
 
-            Classes.Tag nulltag = new Classes.Tag();
+            LAPP.MTag.TagEx nulltag = new LAPP.MTag.TagEx();
             nulltag.Title = Path.GetFileName(FilePath);
 
             if (!LAPP.MTag.TagReader.SupportedExtension.Contains(Path.GetExtension(FilePath).ToLower()))
@@ -144,7 +135,8 @@ namespace LAP.Utils
                             {
                                 if (Alb.Track[ai].LastWriteTime == File.GetLastWriteTime(FilePath).ToString())
                                 {
-                                    if (File.Exists(Alb.Track[ai].ArtworkCachePath) == false)
+                                    LAP.Dialogs.LogWindow.Append(Alb.Track[ai].ArtworkCachePath);
+                                    if (!File.Exists(Alb.Track[ai].ArtworkCachePath))
                                     {
                                         LAPP.MTag.Tag FArt = LAPP.MTag.TagReader.GetTag(FilePath);
                                         if (FArt.Artwork != null)
@@ -174,14 +166,7 @@ namespace LAP.Utils
                 LAP.Dialogs.LogWindow.Append("Creating Cache");
 
                 LAPP.MTag.Tag OTag = LAPP.MTag.TagReader.GetTag(FilePath);
-                Classes.Tag Ret = new Classes.Tag();
-                Ret.Album = OTag.Album;
-                Ret.Artist = OTag.Artist;
-                Ret.Title = OTag.Title;
-                Ret.Lyrics = OTag.Lyrics;
-                Ret.Track = OTag.Track;
-                Ret.FilePath = FilePath;
-                Ret.LastWriteTime = File.GetLastWriteTime(FilePath).ToString();
+                LAPP.MTag.TagEx Ret = Utility.ToLAPTag(OTag, FilePath, null);
 
                 char[] invailedchar = Path.GetInvalidFileNameChars();
                 string albn = OTag.Album;
@@ -335,7 +320,7 @@ namespace LAP.Utils
         /// </summary>
         /// <param name="MTag">キャッシュするタグ</param>
         /// <returns>キャッシュされたタグ</returns>
-        public Classes.Tag Cache(LAPP.MTag.Tag MTag)
+        public LAPP.MTag.TagEx Cache(LAPP.MTag.Tag MTag)
         {
             char[] invailedchar = System.IO.Path.GetInvalidFileNameChars();
             string albn = MTag.Album;
@@ -346,7 +331,7 @@ namespace LAP.Utils
 
             string AlbumCachePath = Config.Setting.Paths.Cache + @"\" + albn + ".xml";
 
-            Classes.Tag Ret = new Classes.Tag();
+            LAPP.MTag.TagEx Ret = new LAPP.MTag.TagEx();
 
             if (MTag.Album.Length == 0 || MTag.Title.Length == 0)
                 return Ret;
@@ -535,7 +520,7 @@ namespace LAP.Utils
         {
             public string Title { get; set; } = "";
 
-            public List<Classes.Tag> Track { get; set; } = new List<Classes.Tag>();
+            public List<LAPP.MTag.TagEx> Track { get; set; } = new List<LAPP.MTag.TagEx>();
 
             public string XMLPath { get; set; } = "";
         }

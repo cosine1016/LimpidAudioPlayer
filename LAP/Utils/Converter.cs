@@ -8,27 +8,6 @@ namespace LAP.Utils
 {
     public class Converter
     {
-        public static Classes.File PluginFileToFile(LAPP.Utils.File File)
-        {
-            Classes.Tag tag = PluginTagToTag(File.Tag);
-            Classes.File f = new Classes.File(File.Path, tag);
-            return f;
-        }
-
-        public static Classes.Tag PluginTagToTag(LAPP.Utils.Tag Tag)
-        {
-            Classes.Tag tag = new Classes.Tag();
-            tag.Album = Tag.Album;
-            tag.Artist = Tag.Artist;
-            tag.ArtworkCachePath = Tag.ArtworkCachePath;
-            tag.FilePath = Tag.FilePath;
-            tag.LastWriteTime = Tag.LastWriteTime;
-            tag.Lyrics = Tag.Lyrics;
-            tag.Title = Tag.Title;
-            tag.Track = Tag.Track;
-
-            return tag;
-        }
 
         public static ImageSource ToImageSource(Bitmap bmp)
         {

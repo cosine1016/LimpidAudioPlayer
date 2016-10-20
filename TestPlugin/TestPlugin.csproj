@@ -49,6 +49,10 @@
     <Compile Include="WaveStreamPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ClearUC\ClearUC\ClearUC.csproj">
+      <Project>{c04626b1-395c-473c-b52e-20e2074369c4}</Project>
+      <Name>ClearUC</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LAPP\LAPP.csproj">
       <Project>{ea8497da-00de-4fd3-a4bb-18690fec9271}</Project>
       <Name>LAPP</Name>
@@ -56,7 +60,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetFileName) "C:\Users\skkby\Documents\Remote Projects\Git\LAP\LAP\LAP\bin\Debug\Plugin\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetFileName) "$(SolutionDir)\LAP\bin\Debug\Plugin\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

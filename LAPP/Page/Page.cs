@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using ClearUC.ListViewItems;
 
 namespace LAPP.Page
 {
     public class ItemSelectedEventArgs : EventArgs
     {
-        public ItemSelectedEventArgs(int Index, ListItems.ListItem Item)
+        public ItemSelectedEventArgs(int Index, ListItem Item)
         {
             this.Index = Index;
             this.Item = Item;
@@ -17,47 +19,67 @@ namespace LAPP.Page
 
         public int Index { get; set; } = -1;
 
-        public ListItems.ListItem Item { get; set; } = null;
+        public ListItem Item { get; set; } = null;
     }
 
     public class OnPlayFileEventArgs : EventArgs
     {
-        public Utils.File[] Files;
+        public LAPP.MTag.File[] Files;
 
         public int Index;
     }
 
-    public abstract class Plugin : Page<ListItems.ListItem, ItemSelectedEventArgs>
+    public abstract class Plugin : Page<ListItem, ItemSelectedEventArgs>
     {
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler OrderEnded;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler<PlayFileEventArgs> PlayFile;
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler RendererDisposeRequest;
-
+        
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler<OnPlayFileEventArgs> OnPlayFileEvent;
+        
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public event EventHandler<Utils.ReturnableEventArgs<string, MTag.TagEx>> GetTagEvent;
 
         public bool Loop { get; set; } = false;
         public bool Opened { get; set; } = false;
-        public List<Utils.File> Order { get; protected set; } = new List<Utils.File>();
+        public List<LAPP.MTag.File> Order { get; protected set; } = new List<LAPP.MTag.File>();
 
         public bool Search { get; protected set; } = true;
         public bool Playing { get; private set; } = false;
         public int PlayingIndex { get; private set; } = -1;
         public bool Shuffle { get; set; } = false;
-        public List<Utils.File> ShuffledOrder { get; private set; } = new List<Utils.File>();
+        public List<LAPP.MTag.File> ShuffledOrder { get; private set; } = new List<LAPP.MTag.File>();
+
+        private void Plugin_ItemSelected(object sender, ItemSelectedEventArgs e)
+        {
+            ItemClicked(e.Index, e.Item);
+        }
+
+        protected MTag.TagEx GetTag(string FilePath)
+        {
+            Utils.ReturnableEventArgs<string, MTag.TagEx> TagEvent
+                = new Utils.ReturnableEventArgs<string, MTag.TagEx>(FilePath);
+            GetTagEvent?.Invoke(this, TagEvent);
+            return TagEvent.Return;
+        }
 
         /// <summary>
         /// オーダーをすべて初期化した後
         /// ファイルを再生します。
         /// </summary>
         /// <param name="File">ファイル</param>
-        public void OnPlayFile(Utils.File[] Files, int Index)
+        public void OnPlayFile(LAPP.MTag.File[] Files, int Index)
         {
+            RendererDisposeRequest?.Invoke(this, new EventArgs());
+
             OnPlayFileEvent?.Invoke(this, new OnPlayFileEventArgs() { Files = Files, Index = Index });
             MakeOrder(Files, Index);
-
-            RendererDisposeRequest?.Invoke(this, new EventArgs());
 
             Playing = true;
 
@@ -123,8 +145,9 @@ namespace LAPP.Page
         }
 
         public abstract void PlayAnyFile();
+        public abstract void ItemClicked(int Index, ListItem Item);
 
-        protected void MakeOrder(Utils.File[] Files, int Index)
+        protected void MakeOrder(LAPP.MTag.File[] Files, int Index)
         {
             Order.Clear();
             Order.AddRange(Files);
@@ -133,12 +156,12 @@ namespace LAPP.Page
 
             ShuffledOrder.Clear();
 
-            Utils.File[] sorder = Order.OrderBy(i => Guid.NewGuid()).ToArray();
+            LAPP.MTag.File[] sorder = Order.OrderBy(i => Guid.NewGuid()).ToArray();
             {
                 for (int i = 0; sorder.Length > i; i++)
                     if (sorder[i] == Order[PlayingIndex])
                     {
-                        Utils.File bk = sorder[0];
+                        LAPP.MTag.File bk = sorder[0];
                         sorder[0] = Order[PlayingIndex];
                         sorder[i] = bk;
 
@@ -251,9 +274,9 @@ namespace LAPP.Page
 
     public class PlayFileEventArgs : EventArgs
     {
-        public Utils.File File;
+        public LAPP.MTag.File File;
 
-        public PlayFileEventArgs(Utils.File File)
+        public PlayFileEventArgs(LAPP.MTag.File File)
         {
             this.File = File;
         }

@@ -125,6 +125,8 @@ namespace LAP
 
             if (Utils.InstanceData.DoNotInitialize == false)
             {
+                UpdateMan.AutoUpdate(true);
+
                 App = new App();
                 App.ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
                 App.Exit += App_Exit;
@@ -133,8 +135,6 @@ namespace LAP
 
                 LAPP.Events.AppendLog += Events_AppendLog;
                 Dialogs.LogWindow.Append("LAP Initialized");
-                
-                UpdateMan.AutoUpdateAsync();
 
                 App.Run();
             }

@@ -36,6 +36,11 @@ namespace LAP.Utils
             get { return Assembly.GetExecutingAssembly().GetName().Version; }
         }
 
+        public static VersionInfo Maintenance()
+        {
+            return new VersionInfo(new Exception("Server is Being Maintenance"));
+        }
+
         /// <summary>
         /// バージョンを比較したときにCurrentが最新か古いかを判断します
         /// </summary>
@@ -108,9 +113,16 @@ namespace LAP.Utils
                             latest = (Latest)des.Deserialize(sr);
                         }
 
-                        Version Latest = new Version(latest.Major, latest.Minor, latest.Build, latest.Revision);
-                        VersionInfo vi = new VersionInfo(Latest, latest.ShortMessage);
-                        return vi;
+                        if (latest.Maintenance)
+                        {
+                            return VersionInfo.Maintenance();
+                        }
+                        else
+                        {
+                            Version Latest = new Version(latest.Major, latest.Minor, latest.Build, latest.Revision);
+                            VersionInfo vi = new VersionInfo(Latest, latest.ShortMessage);
+                            return vi;
+                        }
                     }
                     catch (Exception ex) { return new VersionInfo(ex); }
                 }
@@ -139,40 +151,42 @@ namespace LAP.Utils
             catch (Exception) { return null; }
         }
 
-        public void AutoUpdateAsync(bool Silent = true)
+        public void AutoUpdate(bool Silent = false)
         {
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            VersionInfo vi = CheckUpdate();
+            if (!vi.AccessFailed && vi.CompareVersions() == VersionInfo.ComparingResult.Older)
             {
-                VersionInfo vi = CheckUpdate();
-                if (!vi.AccessFailed && vi.CompareVersions() == VersionInfo.ComparingResult.Older)
+                LAP.Dialogs.LogWindow.Append("Newer version available : " + vi.LatestVersion + " > " + vi.CurrentVersion);
+                //TODO Dialog Translate
+                if (ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.YesNo,
+                    "Newer Version Available",
+                    "New Version of LAP is Available(" + vi.LatestVersion.ToString() + ")\r\n\r\nDo You Want to Update LAP?" +
+                    "Message : " + vi.ShortMessage)
+                    == ClearUC.Dialogs.Dialog.ClickedButton.Yes)
                 {
-                    LAP.Dialogs.LogWindow.Append("Newer version available");
-                    //TODO Dialog
-                    if (ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.YesNo,
-                        "Newer Version Available",
-                        "New Version of LAP is Available(" + vi.LatestVersion.ToString() + ")\r\nDo You Want to Update It?")
-                        == ClearUC.Dialogs.Dialog.ClickedButton.Yes)
+                    System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(ClientUpdaterFile);
+                    psi.Arguments = GenerateArgsForUpdater(GetUpdateFiles());
+                    psi.UseShellExecute = false;
+
+                    InstanceData.UpdateProcessInfo = psi;
+                    InstanceData.UpdateMode = true;
+
+                    System.Windows.Application.Current.Shutdown(Program.UpdateModeExitCode);
+                }
+            }
+            else
+            {
+                LAP.Dialogs.LogWindow.Append("You're using latest version");
+                //TODO UpdateNotAvailableDialog Translate
+                if (!Silent)
+                {
+                    if (vi.AccessFailed)
                     {
-                        System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(ClientUpdaterFile);
-                        psi.Arguments = GenerateArgsForUpdater(GetUpdateFiles());
-                        psi.UseShellExecute = false;
-
-                        InstanceData.UpdateProcessInfo = psi;
-                        InstanceData.UpdateMode = true;
-
-                        System.Windows.Application.Current.Shutdown(Program.UpdateModeExitCode);
+                        ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.OKOnly,
+                            "Failed to Check Update", vi.UnhandledException.Message);
                     }
                 }
-                else
-                {
-                    LAP.Dialogs.LogWindow.Append("You're using latest version");
-                    //TODO UpdateNotAvailableDialog
-                    if (!Silent)
-                    {
-
-                    }
-                }
-            }));
+            }
         }
 
         private string GenerateArgsForUpdater(UpdateFiles Files, bool ExportIcon = true, bool UseUIXML = true)
@@ -350,6 +364,8 @@ namespace LAP.Utils
         public string ShortMessage { get; set; }
         [XmlElement("LongMsg")]
         public string LongMessage { get; set; }
+        [XmlElement("Maintenance")]
+        public bool Maintenance { get; set; }
     }
     
     [XmlRoot("UpdateFiles")]

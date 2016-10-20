@@ -488,7 +488,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="NAudio\Gui\Fader.resx">
       <DependentUpon>Fader.cs</DependentUpon>

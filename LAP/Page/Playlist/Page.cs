@@ -18,7 +18,7 @@ namespace LAP.Page.Playlist
         private PlaylistData ShowingPlaylist;
         private PlaylistData PlayingPlaylist;
 
-        private List<Classes.File> Files = new List<Classes.File>();
+        private List<LAPP.MTag.File> Files = new List<LAPP.MTag.File>();
 
         internal Page()
         {
@@ -43,9 +43,9 @@ namespace LAP.Page.Playlist
                     ShowingPlaylist = (PlaylistData)e.Item.Data;
                 }
 
-                if (e.Item.DataType == typeof(Classes.File))
+                if (e.Item.DataType == typeof(LAPP.MTag.File))
                 {
-                    int ind = Files.IndexOf((Classes.File)e.Item.Data);
+                    int ind = Files.IndexOf((LAPP.MTag.File)e.Item.Data);
                     OnPlayFile(Files.ToArray(), ind);
                     PlayingPlaylist = ShowingPlaylist;
                 }
@@ -96,12 +96,12 @@ namespace LAP.Page.Playlist
             bool IsFile = FileMode;
             ListAnimativeItem Lai = new ListAnimativeItem(true);
 
-            Classes.Tag tag = GetTag(Path);
-            Classes.File File = new Classes.File(Path, tag);
+            LAPP.MTag.TagEx tag = GetTag(Path);
+            LAPP.MTag.File File = new LAPP.MTag.File(Path, tag);
             File.Artwork = Utility.ArtworkManager.GetArtwork(tag.ArtworkCachePath);
 
             Lai.Data = File;
-            Lai.DataType = typeof(Classes.File);
+            Lai.DataType = typeof(LAPP.MTag.File);
 
             ListSubItem lsi = new ListSubItem();
             Lai.ItemsHeight = lsi.Height;
@@ -186,9 +186,9 @@ namespace LAP.Page.Playlist
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
             if (lb != null)
             {
-                if (lb.ParentItem.DataType == typeof(Classes.File))
+                if (lb.ParentItem.DataType == typeof(LAPP.MTag.File))
                 {
-                    Classes.File File = (Classes.File)lb.ParentItem.Data;
+                    LAPP.MTag.File File = (LAPP.MTag.File)lb.ParentItem.Data;
                     List<Playlist.PlaylistData.Path> Paths = new List<Playlist.PlaylistData.Path>();
                     Paths.AddRange(ShowingPlaylist.Data.Paths);
 
@@ -201,7 +201,7 @@ namespace LAP.Page.Playlist
 
                     if (PlayingPlaylist != null && ShowingPlaylist == PlayingPlaylist)
                     {
-                        Files.Remove((Classes.File)lb.ParentItem.Data);
+                        Files.Remove((LAPP.MTag.File)lb.ParentItem.Data);
                         MakeOrder(Files.ToArray(), PlayingIndex);
                     }
                 }
@@ -213,9 +213,9 @@ namespace LAP.Page.Playlist
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
             if (lb != null)
             {
-                if (lb.ParentItem.DataType == typeof(Classes.File))
+                if (lb.ParentItem.DataType == typeof(LAPP.MTag.File))
                 {
-                    Classes.File File = (Classes.File)lb.ParentItem.Data;
+                    LAPP.MTag.File File = (LAPP.MTag.File)lb.ParentItem.Data;
                     Utility.ShowExplorerWithFile(File.Path);
                 }
             }

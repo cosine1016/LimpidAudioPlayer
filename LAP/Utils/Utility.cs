@@ -18,6 +18,33 @@ namespace LAP.Utils
         [DllImport("gdi32.dll", SetLastError = true)]
         private static extern bool DeleteObject(IntPtr hObject);
 
+        public static LAPP.MTag.TagEx ToLAPTag(LAPP.MTag.Tag BaseTag, string FilePath, string ArtworkPath)
+        {
+            LAPP.MTag.TagEx Ret = new LAPP.MTag.TagEx();
+            Ret.ArtworkCachePath = ArtworkPath;
+            Ret.Album = BaseTag.Album;
+            Ret.Artist = BaseTag.Artist;
+            Ret.Title = BaseTag.Title;
+            Ret.Lyrics = BaseTag.Lyrics;
+            Ret.Track = BaseTag.Track;
+            Ret.FilePath = FilePath;
+            Ret.LastWriteTime = System.IO.File.GetLastWriteTime(FilePath).ToString();
+            return Ret;
+        }
+
+        public static LAPP.MTag.Tag ToMTag(LAPP.MTag.TagEx BaseTag)
+        {
+            LAPP.MTag.Tag Ret = new LAPP.MTag.Tag();
+            if(!string.IsNullOrEmpty(BaseTag.ArtworkCachePath) && File.Exists(BaseTag.ArtworkCachePath))
+                Ret.Artwork = Image.FromFile(BaseTag.ArtworkCachePath);
+            Ret.Album = BaseTag.Album;
+            Ret.Artist = BaseTag.Artist;
+            Ret.Title = BaseTag.Title;
+            Ret.Lyrics = BaseTag.Lyrics;
+            Ret.Track = BaseTag.Track;
+            return Ret;
+        }
+
         public static ImageSource ToImageSource(Icon icon)
         {
             Bitmap bitmap = icon.ToBitmap();

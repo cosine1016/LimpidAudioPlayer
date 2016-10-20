@@ -21,14 +21,24 @@ namespace LAP.Page.Plugin
             Plg.PlayFile += Plg_PlayFile;
             Plg.RendererDisposeRequest += Plg_RendererDisposeRequest;
             Plg.OrderEnded += Plg_OrderEnded;
+            Plg.GetTagEvent += Plg_GetTagEvent;
+
+            ItemSelected += Page_ItemSelected;
+        }
+
+        private void Page_ItemSelected(object sender, ItemSelectedEventArgs e)
+        {
+            Plg.ItemClicked(e.Index, e.Item);
+        }
+
+        private void Plg_GetTagEvent(object sender, LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx> e)
+        {
+            e.Return = GetTag(e.Value);
         }
 
         private void Plg_OnPlayFileEvent(object sender, OnPlayFileEventArgs e)
         {
-            Utils.Classes.File[] files = new Utils.Classes.File[e.Files.Length];
-            for (int i = 0; files.Length > i; i++)
-                files[i] = Utils.Converter.PluginFileToFile(e.Files[i]);
-            OnPlayFile(files, e.Index);
+            OnPlayFile(e.Files, e.Index);
         }
 
         private void Plg_OrderEnded(object sender, EventArgs e)
@@ -43,7 +53,7 @@ namespace LAP.Page.Plugin
 
         private void Plg_PlayFile(object sender, LAPP.Page.PlayFileEventArgs e)
         {
-            OnPlayFile(new PlayFileEventArgs(Utils.Converter.PluginFileToFile(e.File)));
+            OnPlayFile(new PlayFileEventArgs(e.File));
         }
 
         public override Border Border
@@ -78,25 +88,18 @@ namespace LAP.Page.Plugin
             Plg.PlayFile -= Plg_PlayFile;
             Plg.RendererDisposeRequest -= Plg_RendererDisposeRequest;
             Plg.OrderEnded -= Plg_OrderEnded;
+            Plg.GetTagEvent -= Plg_GetTagEvent;
             Plg.Dispose();
         }
 
         public override ListItem[] GetPageItems()
         {
-            LAPP.ListItems.ListItem[] lis = Plg.GetPageItems();
-            if (lis == null) return null;
-            ListItem[] olis = new ListItem[lis.Length];
-            for (int i = 0; olis.Length > i; i++) olis[i] = GetItemFromPlugin(lis[i]);
-            return olis;
+            return Plg.GetPageItems();
         }
 
         public override ListItem[] GetTopPageItems()
         {
-            LAPP.ListItems.ListItem[] lis = Plg.GetTopPageItems();
-            if (lis == null) return null;
-            ListItem[] olis = new ListItem[lis.Length];
-            for (int i = 0; olis.Length > i; i++) olis[i] = GetItemFromPlugin(lis[i]);
-            return olis;
+            return Plg.GetTopPageItems();
         }
 
         public override void PlayAnyFile()
@@ -107,30 +110,6 @@ namespace LAP.Page.Plugin
         public override void Update()
         {
             Plg.Update();
-        }
-
-        public ListItem GetItemFromPlugin(LAPP.ListItems.ListItem Item)
-        {
-            if(Item is LAPP.ListItems.ListSubItem)
-            {
-                LAPP.ListItems.ListSubItem blsi = Item as LAPP.ListItems.ListSubItem;
-                ListSubItem lsi = new ListSubItem(Item.IncludeSearchTarget, Item.ExcludeResult);
-                lsi.TitleLabelVisible = blsi.TitleLabelVisible;
-                lsi.MainLabelText = blsi.MainLabelText;
-                lsi.SubLabelText = blsi.SubLabelText;
-                lsi.StatusLabelText = blsi.StatusLabelText;
-                lsi.NumberLabelText = blsi.NumberLabelText;
-                lsi.SubLabelVisibility = blsi.SubLabelVisibility;
-                lsi.StatusLabelVisibility = blsi.StatusLabelVisibility;
-                lsi.LeftItem = (ListSubItem.LeftItems)blsi.LeftItem;
-                lsi.ShapeItem = blsi.ShapeItem;
-                lsi.Stretch = blsi.Stretch;
-                lsi.StretchDirection = blsi.StretchDirection;
-
-                return lsi;
-            }
-
-            return null;
         }
     }
 }

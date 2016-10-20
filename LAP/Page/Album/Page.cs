@@ -16,7 +16,7 @@ namespace LAP.Page.Album
         private List<ListItem> TopPage = new List<ListItem>();
         private List<ListItem> PageItem = new List<ListItem>();
 
-        private List<Classes.File> Files = new List<Classes.File>();
+        private List<LAPP.MTag.File> Files = new List<LAPP.MTag.File>();
 
         internal Page()
         {
@@ -44,9 +44,9 @@ namespace LAP.Page.Album
                         Add(PageItem[i]);
                 }
 
-                if (e.Item.DataType == typeof(Classes.File))
+                if (e.Item.DataType == typeof(LAPP.MTag.File))
                 {
-                    int ind = Files.IndexOf((Classes.File)e.Item.Data);
+                    int ind = Files.IndexOf((LAPP.MTag.File)e.Item.Data);
                     OnPlayFile(Files.ToArray(), ind);
                 }
             }
@@ -77,7 +77,7 @@ namespace LAP.Page.Album
                 {
                     if (MI.ImageSources == null)
                     {
-                        Classes.Tag Tag = GetTag(Data.Tracks[i].Path);
+                        LAPP.MTag.TagEx Tag = GetTag(Data.Tracks[i].Path);
                         if (string.IsNullOrEmpty(Tag.ArtworkCachePath) == false)
                         {
                             System.Windows.Media.ImageSource Image = Utility.ArtworkManager.GetArtwork(Tag.ArtworkCachePath);
@@ -127,12 +127,12 @@ namespace LAP.Page.Album
 
                 Lai.SecondItem = lbi;
 
-                Classes.Tag tag = GetTag(Data.Tracks[i].Path);
-                Utils.Classes.File File = new Utils.Classes.File(Data.Tracks[i].Path, tag);
+                LAPP.MTag.TagEx tag = GetTag(Data.Tracks[i].Path);
+                LAPP.MTag.File File = new LAPP.MTag.File(Data.Tracks[i].Path, tag);
                 File.Artwork = Utility.ArtworkManager.GetArtwork(tag.ArtworkCachePath);
 
                 Lai.Data = File;
-                Lai.DataType = typeof(Utils.Classes.File);
+                Lai.DataType = typeof(LAPP.MTag.File);
 
                 Files.Add(File);
 
@@ -202,9 +202,9 @@ namespace LAP.Page.Album
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
             if (lb != null)
             {
-                if (lb.ParentItem.DataType == typeof(Classes.File))
+                if (lb.ParentItem.DataType == typeof(LAPP.MTag.File))
                 {
-                    Classes.File File = (Classes.File)lb.ParentItem.Data;
+                    LAPP.MTag.File File = (LAPP.MTag.File)lb.ParentItem.Data;
                     Utility.ShowExplorerWithFile(File.Path);
                 }
             }

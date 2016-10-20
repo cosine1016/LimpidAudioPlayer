@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events.cs" />
-    <Compile Include="ListItems\ListSubItem.cs" />
     <Compile Include="MTag\Async\DirectoryReader.cs" />
     <Compile Include="MTag\Async\FileReader.cs" />
     <Compile Include="MTag\Ext\Flac\Reader.cs" />
@@ -486,16 +485,14 @@
     <Compile Include="NAudio\Wave\WaveStreams\WaveStream.cs" />
     <Compile Include="Setting\ISettingItem.cs" />
     <Compile Include="Utils\Config.cs" />
-    <Compile Include="Utils\File.cs" />
+    <Compile Include="Utils\EventArgs.cs" />
     <Compile Include="LimpidAudioPlayerPlugin.cs" />
-    <Compile Include="ListItems\ListItem.cs" />
     <Compile Include="Page\Page.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\Converter.cs" />
     <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\NotifyPropertyChangedEx.cs" />
-    <Compile Include="Utils\TagReader.cs" />
     <Compile Include="Wave\Plugin.cs" />
     <Compile Include="Wave\RawWaveReader.cs" />
   </ItemGroup>
@@ -519,7 +516,12 @@
       <DependentUpon>ProgressLog.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ClearUC\ClearUC\ClearUC.csproj">
+      <Project>{c04626b1-395c-473c-b52e-20e2074369c4}</Project>
+      <Name>ClearUC</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
