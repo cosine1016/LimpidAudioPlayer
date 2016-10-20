@@ -12,13 +12,13 @@
     </WindowChrome.WindowChrome>
     <Grid x:Name="Parent" ClipToBounds="True">
         <Grid.RowDefinitions>
-            <RowDefinition Height="91*" />
-            <RowDefinition Height="324*" />
+            <RowDefinition Height="85" />
+            <RowDefinition Height="332*" />
             <RowDefinition Height="40*" />
             <RowDefinition Height="10*"/>
         </Grid.RowDefinitions>
 
-        <ClearUC:Tab x:Name="Tab" Height="Auto" Width="Auto" Margin="0,35,0,0" />
+        <ClearUC:Tab x:Name="Tab" Height="Auto" Width="Auto" Margin="0,35,0,0" BorderBrush="#FF899297" BorderThickness="0,0,0,1" />
         <Grid x:Name="TabContent" Grid.Row="1" />
         <ClearUC:Button x:Name="Apply" Margin="0,0,153,0" Height="Auto" Width="138" Content="Apply" FontSize="14" HorizontalAlignment="Right" Grid.Row="2" Click="Apply_Click" />
         <ClearUC:Button x:Name="Cancel" Margin="0,0,10,0" Height="Auto" Width="138" Content="Cancel" FontSize="14" HorizontalAlignment="Right" Grid.Row="2" Click="Cancel_Click" />

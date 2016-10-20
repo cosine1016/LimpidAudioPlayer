@@ -47,6 +47,20 @@ namespace LAP.Dialogs
                 TabContent.Children.Add(this.Category[i].UIControl);
                 Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
             }
+
+            for(int i = 0; Utils.PluginManager.InitializedPlugin.Count > i; i++)
+            {
+                Utils.PluginManager.Plugin plg = Utils.PluginManager.InitializedPlugin[i];
+                if (plg.Enabled)
+                {
+                    for(int s = 0;plg.Instance.SettingItems.Count > s; s++)
+                    {
+                        plg.Instance.SettingItems[s].UIControl.Visibility = Visibility.Hidden;
+                        Tab.Items.Add(new ClearUC.Tab.TabItem(plg.Instance.SettingItems[s].Header, plg.Instance.SettingItems[s].Border));
+                    }
+                }
+            }
+
             Tab.ActiveItemChanged += Tab_ActiveItemChanged;
 
             if (Tab.Items.Count > 0) Tab.ActiveIndex = 0;

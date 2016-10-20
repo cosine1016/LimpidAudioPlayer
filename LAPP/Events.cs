@@ -18,7 +18,13 @@ namespace LAPP
             AppendLog?.Invoke(null, new LogEventArgs(Msg));
         }
 
+        internal static void DoNotice(NotificationEventArgs e)
+        {
+            Noticed?.Invoke(null, e);
+        }
+
         public static event EventHandler<LogEventArgs> AppendLog;
+        public static event EventHandler<NotificationEventArgs> Noticed;
 
         public class LogEventArgs : EventArgs
         {
@@ -28,6 +34,13 @@ namespace LAPP
             }
 
             public string Msg;
+        }
+
+
+        public class NotificationEventArgs : EventArgs
+        {
+            public System.Windows.Media.Brush FillBrush { get; set; }
+            public string Text { get; set; }
         }
     }
 }

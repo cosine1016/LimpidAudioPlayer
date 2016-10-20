@@ -2,8 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
 using ClearUC.ListViewItems;
 
@@ -24,7 +22,7 @@ namespace LAPP.Page
 
     public class OnPlayFileEventArgs : EventArgs
     {
-        public LAPP.MTag.File[] Files;
+        public MTag.File[] Files;
 
         public int Index;
     }
@@ -39,10 +37,10 @@ namespace LAPP.Page
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler RendererDisposeRequest;
-        
+
         [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler<OnPlayFileEventArgs> OnPlayFileEvent;
-        
+
         [EditorBrowsable(EditorBrowsableState.Never)]
         public event EventHandler<Utils.ReturnableEventArgs<string, MTag.TagEx>> GetTagEvent;
 

@@ -82,7 +82,7 @@ namespace LAP.Utils
 
         private void NB_Click(object sender, EventArgs e)
         {
-            if (Click != null) Click(this, e);
+            Click?.Invoke(this, e);
         }
 
         private void NB_MessageMinimized(object sender, EventArgs e)

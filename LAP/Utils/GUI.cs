@@ -125,6 +125,9 @@ namespace LAP.Utils
         {
             Program.NotImplementedException += Program_NotImplementedException;
             PluginManager.PluginEnableChanged += PluginManager_PluginEnableChanged;
+
+            LAPP.Events.Noticed += Events_Noticed;
+
             MW.MC.StopButton.MouseClicked += (sender, e) => { MW.StopFile(true); };
             MW.MC.LibraryButton.MouseClicked += LibraryButton_MouseClicked;
             MW.MC.FFButton.MouseClicked += (sender, e) => { MW.Manager.PlayNextFile(); };
@@ -167,6 +170,12 @@ namespace LAP.Utils
             MW.Caption.OptionalButtonClick += Caption_OptionalButtonClick;
 
             MW.Closing += Window_Closing;
+        }
+
+        private void Events_Noticed(object sender, LAPP.Events.NotificationEventArgs e)
+        {
+            Notification notif = new Notification(MW.ParentGrid, e.Text, e.FillBrush);
+            notif.ShowMessage();
         }
 
         FrameworkElement itemhidden;

@@ -25,6 +25,9 @@ namespace LAPP
         public virtual DisposableItemCollection<Wave.WaveStreamPlugin> WaveStreams { get; set; }
             = new DisposableItemCollection<Wave.WaveStreamPlugin>();
 
+        public virtual Collection<Setting.ISettingItem> SettingItems { get; set; }
+            = new Collection<Setting.ISettingItem>();
+
         /// <summary>
         /// プラグインに割り当てられたフォルダパスを取得します。このフォルダを利用するかどうかは自由です
         /// </summary>

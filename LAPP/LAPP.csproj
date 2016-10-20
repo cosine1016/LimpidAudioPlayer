@@ -493,6 +493,7 @@
     <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\NotifyPropertyChangedEx.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Compile Include="Wave\Plugin.cs" />
     <Compile Include="Wave\RawWaveReader.cs" />
   </ItemGroup>

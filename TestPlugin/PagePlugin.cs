@@ -54,16 +54,20 @@ namespace TestPlugin
         private void GetItems()
         {
             Items.Clear();
-            string[] files
-                = System.IO.Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)
-                + @"\Echosmith\Talking Dreams");
-            foreach(string f in files)
+            try
             {
-                LAPP.MTag.File file = new LAPP.MTag.File(f, GetTag(f));
-                file.Artwork = file.Tag.GetArtwork();
-                Items.Add(new ListSubItem() { MainLabelText = file.Tag.Title, SubLabelVisibility = System.Windows.Visibility.Hidden });
-                Files.Add(file);
+                string[] files
+                    = System.IO.Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)
+                    + @"\Echosmith\Talking Dreams");
+                foreach (string f in files)
+                {
+                    LAPP.MTag.File file = new LAPP.MTag.File(f, GetTag(f));
+                    file.Artwork = file.Tag.GetArtwork();
+                    Items.Add(new ListSubItem() { MainLabelText = file.Tag.Title, SubLabelVisibility = System.Windows.Visibility.Hidden });
+                    Files.Add(file);
+                }
             }
+            catch (Exception) { LAPP.Utils.Player.Notice("Directory Not Found", System.Windows.Media.Brushes.Red); }
         }
     }
 }
