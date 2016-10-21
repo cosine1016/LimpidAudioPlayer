@@ -20,14 +20,15 @@ namespace ClearUC
         public bool Animate { get; set; } = false;
 
         public double AnimationDuration { get; set; } = 100;
-
-        private bool st = false;
+        
+        public static readonly DependencyProperty StateProperty = DependencyProperty.Register("State", typeof(bool), typeof(ToggleButton));
 
         public bool State
         {
-            get { return st; }
+            get { return (bool)GetValue(StateProperty); }
             set
             {
+                SetValue(StateProperty, value);
                 switch (value)
                 {
                     case true:
@@ -129,7 +130,7 @@ namespace ClearUC
         {
             if (bar.Value == bar.Maximum)
             {
-                st = true;
+                State = true;
                 ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
@@ -138,21 +139,21 @@ namespace ClearUC
             {
                 Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
                 da.Animate(bar.Value, bar.Maximum, AnimationDuration, null, SeekBar.ValueProperty, bar);
-                st = true;
+                State = true;
             }
             else
             {
                 bar.Value = bar.Maximum;
-                st = true;
+                State = true;
             }
-            if (ToggleStateChanged != null) ToggleStateChanged(this, new EventArgs());
+            ToggleStateChanged?.Invoke(this, new EventArgs());
         }
 
         private void ToOff()
         {
             if (bar.Value == bar.Minimum)
             {
-                st = false;
+                State = false;
                 ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
@@ -161,14 +162,14 @@ namespace ClearUC
             {
                 Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
                 da.Animate(bar.Value, bar.Minimum, AnimationDuration, null, SeekBar.ValueProperty, bar);
-                st = false;
+                State = false;
             }
             else
             {
                 bar.Value = bar.Minimum;
-                st = false;
+                State = false;
             }
-            if (ToggleStateChanged != null) ToggleStateChanged(this, new EventArgs());
+            ToggleStateChanged?.Invoke(this, new EventArgs());
         }
     }
 }

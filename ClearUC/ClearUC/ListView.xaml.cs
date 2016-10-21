@@ -9,50 +9,54 @@ using System.Windows.Media.Animation;
 
 namespace ClearUC
 {
+    public class ListItemCollection : System.Collections.ObjectModel.ObservableCollection<ListItem>
+    {
+        public event EventHandler<NotifyCollectionChangedEventArgs> CollectionChangeNotice;
+
+        public new void Add(ListItem item)
+        {
+            CollectionChangeNotice?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
+            base.Add(item);
+        }
+
+        public void AddRange(ListItem[] items)
+        {
+            for (int i = 0; items.Length > i; i++) Add(items[i]);
+        }
+
+        public new void Clear()
+        {
+            CollectionChangeNotice?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            base.Clear();
+        }
+
+        public new void Remove(ListItem item)
+        {
+            CollectionChangeNotice?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
+            base.Remove(item);
+        }
+    }
+
     /// <summary>
     /// ListView.xaml の相互作用ロジック
     /// </summary>
     public partial class ListView : UserControl
     {
-        public class SearchBox
-        {
-            public enum SearchStyle
-            {
-                Begin, Part
-            }
-        }
-
-        public class ItemChangedEventArgs : EventArgs
-        {
-            public ItemChangedEventArgs(ListItem ChangedItem, bool Added)
-            {
-                this.ChangedItem = ChangedItem;
-                this.Added = Added;
-            }
-
-            public ListItem ChangedItem;
-
-            public bool Added = true;
-        }
-
         public event EventHandler<ListItem.ItemClickedEventArgs> ItemClicked;
 
-        protected virtual void OnItemClicked(ListItem.ItemClickedEventArgs e)
-        {
-            ItemClicked?.Invoke(this, e);
-        }
+        public static readonly DependencyProperty SearchBoxVisibleProperty = DependencyProperty.Register("SearchBoxVisible", typeof(bool), typeof(ListView));
+
+        public static readonly DependencyProperty SearchStyleProperty = DependencyProperty.Register("SearchStyle", typeof(SearchBox.SearchStyle), typeof(ListView), new PropertyMetadata(SearchBox.SearchStyle.Partly));
 
         public EventHandler<RoutedEventArgs> SearchBoxLostFocus;
 
-        protected virtual void OnTextBoxLostFocus(RoutedEventArgs e)
-        {
-            SearchBoxLostFocus?.Invoke(this, e);
-        }
-
         private Brush ibf;
+
         private Brush ibs;
 
         private ListViewItems.SearchBox SB = new ListViewItems.SearchBox();
+
+        private bool sbadded = false;
 
         public ListView()
         {
@@ -70,47 +74,55 @@ namespace ClearUC
             ibs = new SolidColorBrush(cl);
         }
 
-        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public double BackgroundFillOpacity
         {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    for (int i = 0; e.NewItems.Count > i; i++)
-                        additem((ListItem)e.NewItems[i]);
-                    break;
-            }
-
-            RefreshItems();
+            get { return bg.Fill.Opacity; }
+            set { bg.Fill.Opacity = value; }
         }
 
-        private void Items_CollectionChangeNotice(object sender, NotifyCollectionChangedEventArgs e)
+        public double BackgroundStrokeOpacity
         {
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Remove:
-                    removeitem((ListItem)e.OldItems[0]);
-                    break;
+            get { return bg.Stroke.Opacity; }
+            set { bg.Stroke.Opacity = value; }
+        }
 
-                case NotifyCollectionChangedAction.Reset:
-                    cleartitem();
-                    return;
-            }
+        public bool ClearSearchBoxWhenItemsClicked { get; set; } = true;
+
+        public IEasingFunction EasingFunction { get; set; } = new CircleEase();
+
+        public ScrollBarVisibility HorizontalScrollBarVisibility
+        {
+            get { return sc.HorizontalScrollBarVisibility; }
+            set { sc.HorizontalScrollBarVisibility = value; }
+        }
+
+        public Brush ItemFillBrush
+        {
+            get { return ibf; }
+            set { ibf = value; }
         }
 
         public ListItemCollection Items { get; set; } = new ListItemCollection();
 
-        private bool ssb = false;
-        private bool sbadded = false;
+        public Brush ItemStrokeBrush
+        {
+            get { return ibs; }
+            set { ibs = value; }
+        }
+
+        public double SearchBoxAnimationDuration { get; set; } = 100;
 
         public bool SearchBoxVisible
         {
             get
             {
-                return ssb;
+                bool val = (bool)GetValue(SearchBoxVisibleProperty);
+                return val;
             }
             set
             {
-                ssb = value;
+                bool ssb = SearchBoxVisible;
+                SetValue(SearchBoxVisibleProperty, value);
                 if (ssb == true)
                 {
                     if (sbadded == false)
@@ -129,52 +141,10 @@ namespace ClearUC
             }
         }
 
-        private void SBRemove_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
-        {
-            parent.Children.Remove(SB);
-            RefreshItems();
-        }
-
-        private SearchBox.SearchStyle SS = SearchBox.SearchStyle.Part;
-
         public SearchBox.SearchStyle SearchStyle
         {
-            get { return SS; }
-            set
-            {
-                if (SS != value) SB.ClearText();
-                SS = value;
-            }
-        }
-
-        public Brush ItemFillBrush
-        {
-            get { return ibf; }
-            set { ibf = value; }
-        }
-
-        public Brush ItemStrokeBrush
-        {
-            get { return ibs; }
-            set { ibs = value; }
-        }
-
-        public double BackgroundFillOpacity
-        {
-            get { return bg.Fill.Opacity; }
-            set { bg.Fill.Opacity = value; }
-        }
-
-        public double BackgroundStrokeOpacity
-        {
-            get { return bg.Stroke.Opacity; }
-            set { bg.Stroke.Opacity = value; }
-        }
-
-        public ScrollBarVisibility HorizontalScrollBarVisibility
-        {
-            get { return sc.HorizontalScrollBarVisibility; }
-            set { sc.HorizontalScrollBarVisibility = value; }
+            get { return (SearchBox.SearchStyle)GetValue(SearchStyleProperty); }
+            set { SetValue(SearchStyleProperty, value); }
         }
 
         public ScrollBarVisibility VerticalScrollBarVisibility
@@ -183,11 +153,15 @@ namespace ClearUC
             set { sc.VerticalScrollBarVisibility = value; }
         }
 
-        public bool ClearSearchBoxWhenItemsClicked { get; set; } = true;
+        protected virtual void OnItemClicked(ListItem.ItemClickedEventArgs e)
+        {
+            ItemClicked?.Invoke(this, e);
+        }
 
-        public double SearchBoxAnimationDuration { get; set; } = 100;
-
-        public IEasingFunction EasingFunction { get; set; } = new CircleEase();
+        protected virtual void OnTextBoxLostFocus(RoutedEventArgs e)
+        {
+            SearchBoxLostFocus?.Invoke(this, e);
+        }
 
         private void additem(ListItem Item)
         {
@@ -227,63 +201,6 @@ namespace ClearUC
             RefreshItems();
             sbadded = true;
             SB.TextChanged += SB_TextChanged;
-        }
-
-        private void Ta_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
-        {
-            RefreshItems();
-        }
-
-        private void SB_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (SB.Text.Length > 0)
-            {
-                RevisibleItems();
-                search(SB.Text.ToLower());
-
-                for (int i = 0; Items.Count > i; i++)
-                {
-                    Items[i].Margin = CalcMargin(i, true);
-                }
-            }
-            else
-            {
-                RevisibleItems();
-                for (int i = 0; Items.Count > i; i++)
-                {
-                    Items[i].Margin = CalcMargin(i);
-                }
-            }
-        }
-
-        private void search(string Text)
-        {
-            for (int i = 0; Items.Count > i; i++)
-            {
-                ListItem li = Items[i];
-                if (li.IncludeSearchTarget == true)
-                {
-                    string tex = li.SearchText.ToLower();
-
-                    switch (SearchStyle)
-                    {
-                        case SearchBox.SearchStyle.Begin:
-                            if (tex.StartsWith(Text) == false) Items[i].Visibility = Visibility.Hidden;
-                            break;
-
-                        case SearchBox.SearchStyle.Part:
-                            if (tex.Contains(Text) == false) Items[i].Visibility = Visibility.Hidden;
-                            break;
-                    }
-                }
-                else
-                {
-                    if (li.ExcludeResult == true)
-                    {
-                        li.Visibility = Visibility.Hidden;
-                    }
-                }
-            }
         }
 
         private Thickness CalcMargin(int Index, bool CheckVisibility)
@@ -353,6 +270,77 @@ namespace ClearUC
             return CalcMargin(Index, false);
         }
 
+        private void cleartitem()
+        {
+            if (Items == null) return;
+
+            for (int i = 0; parent.Children.Count > i; i++)
+            {
+                ListItem Item = parent.Children[i] as ListItem;
+                if (Item != null)
+                {
+                    Item.ItemStatus = ListItem.State.Removing;
+                    Item.Index = -1;
+                    Item.ItemClicked -= Item_ItemClicked;
+                    parent.Children.Remove(Item);
+                    Item.ItemStatus = ListItem.State.Removed;
+                    i--;
+                }
+            }
+
+            sc.ScrollToTop();
+        }
+
+        private void insertitem(int Index, ListItem Item)
+        {
+            Item.Width = parent.ActualWidth;
+
+            Item.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Item.VerticalAlignment = VerticalAlignment.Top;
+            Item.Width = double.NaN;
+            Item.Index = Items.Count;
+
+            parent.Children.Insert(Index, Item);
+            Items.Insert(Index, Item);
+            Item.ItemClicked += Item_ItemClicked;
+        }
+
+        private void Item_ItemClicked(object sender, ListItem.ItemClickedEventArgs e)
+        {
+            if (e.MouseButtonEventArgs.ChangedButton == MouseButton.Left)
+            {
+                OnItemClicked(e);
+                if (ClearSearchBoxWhenItemsClicked == true || string.IsNullOrEmpty(SB.Text) == true) SB.ClearText();
+            }
+        }
+
+        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    for (int i = 0; e.NewItems.Count > i; i++)
+                        additem((ListItem)e.NewItems[i]);
+                    break;
+            }
+
+            RefreshItems();
+        }
+
+        private void Items_CollectionChangeNotice(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Remove:
+                    removeitem((ListItem)e.OldItems[0]);
+                    break;
+
+                case NotifyCollectionChangedAction.Reset:
+                    cleartitem();
+                    return;
+            }
+        }
+
         private void RefreshIndexes()
         {
             int ind = 0;
@@ -420,12 +408,12 @@ namespace ClearUC
             }
         }
 
-        private void RevisibleItems()
+        private void removeatitem(int Index)
         {
-            for (int i = 0; Items.Count > i; i++)
-            {
-                Items[i].Visibility = Visibility.Visible;
-            }
+            Items[Index].ItemClicked -= Item_ItemClicked;
+            Items[Index].ItemStatus = ListItem.State.Removing;
+            parent.Children.Remove(Items[Index]);
+            Items[Index].ItemStatus = ListItem.State.Removed;
         }
 
         private void removeitem(ListItem Item)
@@ -436,84 +424,96 @@ namespace ClearUC
             Item.ItemStatus = ListItem.State.Removed;
         }
 
-        private void removeatitem(int Index)
+        private void RevisibleItems()
         {
-            Items[Index].ItemClicked -= Item_ItemClicked;
-            Items[Index].ItemStatus = ListItem.State.Removing;
-            parent.Children.Remove(Items[Index]);
-            Items[Index].ItemStatus = ListItem.State.Removed;
+            for (int i = 0; Items.Count > i; i++)
+            {
+                Items[i].Visibility = Visibility.Visible;
+            }
         }
 
-        private void cleartitem()
+        private void SB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Items == null) return;
-
-            for (int i = 0; parent.Children.Count > i; i++)
+            if (SB.Text.Length > 0)
             {
-                ListItem Item = parent.Children[i] as ListItem;
-                if (Item != null)
+                RevisibleItems();
+                search(SB.Text.ToLower());
+
+                for (int i = 0; Items.Count > i; i++)
                 {
-                    Item.ItemStatus = ListItem.State.Removing;
-                    Item.Index = -1;
-                    Item.ItemClicked -= Item_ItemClicked;
-                    parent.Children.Remove(Item);
-                    Item.ItemStatus = ListItem.State.Removed;
-                    i--;
+                    Items[i].Margin = CalcMargin(i, true);
                 }
             }
-
-            sc.ScrollToTop();
-        }
-
-        private void insertitem(int Index, ListItem Item)
-        {
-            Item.Width = parent.ActualWidth;
-
-            Item.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Item.VerticalAlignment = VerticalAlignment.Top;
-            Item.Width = double.NaN;
-            Item.Index = Items.Count;
-
-            parent.Children.Insert(Index, Item);
-            Items.Insert(Index, Item);
-            Item.ItemClicked += Item_ItemClicked;
-        }
-
-        private void Item_ItemClicked(object sender, ListItem.ItemClickedEventArgs e)
-        {
-            if (e.MouseButtonEventArgs.ChangedButton == MouseButton.Left)
+            else
             {
-                OnItemClicked(e);
-                if (ClearSearchBoxWhenItemsClicked == true || string.IsNullOrEmpty(SB.Text) == true) SB.ClearText();
+                RevisibleItems();
+                for (int i = 0; Items.Count > i; i++)
+                {
+                    Items[i].Margin = CalcMargin(i);
+                }
             }
         }
-    }
 
-    public class ListItemCollection : System.Collections.ObjectModel.ObservableCollection<ListItem>
-    {
-        public event EventHandler<NotifyCollectionChangedEventArgs> CollectionChangeNotice;
-
-        public new void Add(ListItem item)
+        private void SBRemove_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
         {
-            CollectionChangeNotice?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
-            base.Add(item);
+            parent.Children.Remove(SB);
+            RefreshItems();
         }
 
-        public new void Remove(ListItem item)
+        private void search(string Text)
         {
-            CollectionChangeNotice?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
-            base.Remove(item);
+            for (int i = 0; Items.Count > i; i++)
+            {
+                ListItem li = Items[i];
+                if (li.IncludeSearchTarget == true)
+                {
+                    string tex = li.SearchText.ToLower();
+
+                    switch (SearchStyle)
+                    {
+                        case SearchBox.SearchStyle.FromBegin:
+                            if (tex.StartsWith(Text) == false) Items[i].Visibility = Visibility.Hidden;
+                            break;
+
+                        case SearchBox.SearchStyle.Partly:
+                            if (tex.Contains(Text) == false) Items[i].Visibility = Visibility.Hidden;
+                            break;
+                    }
+                }
+                else
+                {
+                    if (li.ExcludeResult == true)
+                    {
+                        li.Visibility = Visibility.Hidden;
+                    }
+                }
+            }
         }
 
-        public void AddRange(ListItem[] items)
+        private void Ta_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
         {
-            for (int i = 0; items.Length > i; i++) Add(items[i]);
+            RefreshItems();
         }
 
-        public new void Clear()
+        public class ItemChangedEventArgs : EventArgs
         {
-            CollectionChangeNotice?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            base.Clear();
+            public bool Added = true;
+
+            public ListItem ChangedItem;
+
+            public ItemChangedEventArgs(ListItem ChangedItem, bool Added)
+            {
+                this.ChangedItem = ChangedItem;
+                this.Added = Added;
+            }
+        }
+
+        public class SearchBox
+        {
+            public enum SearchStyle
+            {
+                FromBegin, Partly
+            }
         }
     }
 }

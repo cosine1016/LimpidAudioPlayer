@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:ClearUC"
-             mc:Ignorable="d" Height="33.954" Width="168.58">
+             mc:Ignorable="d" Height="33.954" Width="168.58" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
-        <local:NumericBox x:Name="TotalDiscsN" Height="Auto" Background="Black" BorderBrush="#FF323232" Foreground="White" VerticalContentAlignment="Center" Value="1" Minimum="1" BorderThickness="1" Margin="0,0,96,0" />
+        <local:NumericBox x:Name="NumN" x:FieldModifier="private" Height="Auto" Background="Black" BorderBrush="#FF323232" Foreground="White" VerticalContentAlignment="Center" BorderThickness="1" Margin="0,0,96,0" />
         <local:Button x:Name="NumUp" Content="5" Width="48" Margin="0,0,48,0" Height="Auto" Background="Black" Foreground="White" HorizontalAlignment="Right" FontFamily="Marlett" FontSize="20" Click="NumUp_Click" BorderThickness="0,1" BorderBrush="#FF323232" />
         <local:Button x:Name="NumDown" Content="6" Width="48" Height="Auto" Background="Black" Foreground="White" FontFamily="Marlett" FontSize="20" Click="NumDown_Click" BorderThickness="0,1,1,1" BorderBrush="#FF323232" HorizontalAlignment="Right" />
     </Grid>

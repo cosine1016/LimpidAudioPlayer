@@ -22,7 +22,7 @@ namespace ClearUC
     /// </summary>
     public partial class Tab : UserControl
     {
-        public class TabItem
+        public class TabItem : DependencyObject
         {
             public event EventHandler MouseClick;
 
@@ -114,19 +114,24 @@ namespace ClearUC
                 set { TitleLabel.Content = value; }
             }
 
-            private Border s = null;
+
+            public static readonly DependencyProperty BorderProperty = DependencyProperty.Register("Border", typeof(Border), typeof(TabItem));
 
             public Border Border
             {
-                get { return s; }
+                get
+                {
+                    Border val = (Border)GetValue(BorderProperty);
+                    return val;
+                }
                 set
                 {
-                    s = value;
                     if (value != null)
                     {
-                        s.HorizontalAlignment = HorizontalAlignment.Center;
-                        s.VerticalAlignment = VerticalAlignment.Top;
+                        value.HorizontalAlignment = HorizontalAlignment.Center;
+                        value.VerticalAlignment = VerticalAlignment.Top;
                     }
+                    SetValue(BorderProperty, value);
                 }
             }
 
@@ -185,7 +190,7 @@ namespace ClearUC
             }
         }
 
-        public class TabItemCollection : System.Collections.ObjectModel.ObservableCollection<TabItem>
+        public class TabItemCollection : ObservableCollection<TabItem>
         {
             public void AddRange(TabItem[] items)
             {
@@ -217,25 +222,25 @@ namespace ClearUC
             UpdateItems();
         }
 
-        private void Items_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Add:
                     Items[e.NewStartingIndex].BG.Visibility = Visibility.Hidden;
                     Items[e.NewStartingIndex].MouseClick += Tab_MouseClick;
                     Items[e.NewStartingIndex].VisibleChanged += Tab_VisibleChanged;
                     Base.Children.Add(Items[e.NewStartingIndex].BG);
                     break;
 
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Remove:
                     ((TabItem)e.OldItems[0]).MouseClick -= Tab_MouseClick;
                     ((TabItem)e.OldItems[0]).VisibleChanged -= Tab_VisibleChanged;
                     if (((TabItem)e.OldItems[0]).IsActive) ActiveIndex = -1;
                     Base.Children.Remove(((TabItem)e.OldItems[0]).BG);
                     break;
 
-                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                case NotifyCollectionChangedAction.Reset:
                     if (e.OldItems != null)
                     {
                         for (int i = 0; e.OldItems.Count > i; i++)
@@ -297,15 +302,19 @@ namespace ClearUC
             }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
 
-        private int ai = -1;
+
+        public static readonly DependencyProperty ActiveIndexProperty = DependencyProperty.Register("ActiveIndex", typeof(int), typeof(Tab));
 
         public int ActiveIndex
         {
-            get { return ai; }
+            get
+            {
+                int val = (int)GetValue(ActiveIndexProperty);
+                return val;
+            }
             set
             {
-                if (ai == value) return;
-                ai = value;
+                SetValue(ActiveIndexProperty, value);
                 ActiveItemChanged?.Invoke(this, new EventArgs());
             }
         }

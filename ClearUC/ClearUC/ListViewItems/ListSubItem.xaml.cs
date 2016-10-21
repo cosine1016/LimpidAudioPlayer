@@ -14,19 +14,24 @@ namespace ClearUC.ListViewItems
     public partial class ListSubItem : ListItem
     {
         public event EventHandler MainLabelTextChanged;
-        public event EventHandler SubLabelTextChanged;
+
         public event EventHandler StatusLabelTextChanged;
 
-        public class Config
-        {
-            public Brush Background { get; set; } = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-            public Brush BackgroundMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
-            public Brush BackgroundMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
-            public double AnimationDuration { get; set; } = 50;
-        }
+        public event EventHandler SubLabelTextChanged;
+
+        private Brush af;
 
         private Config cnf = new Config();
+
+        private Brush defs;
+
+        private bool flag = false;
+
         private Shape lefts = null;
+
+        private LeftItems litem = LeftItems.Nothing;
+
+        private bool tl = false;
 
         public ListSubItem() : base(true, true)
         {
@@ -52,112 +57,21 @@ namespace ClearUC.ListViewItems
             ImageIndexChanged += ListSubItem_ImageIndexChanged;
         }
 
-        private void ListSubItem_ImageIndexChanged(object sender, EventArgs e)
-        {
-            if (ImageIndex > -1) image.Source = ImageSources[ImageIndex];
-            else image.Source = null;
-        }
-
-        private bool tl = false;
-
-        public bool TitleLabelVisible
-        {
-            get { return tl; }
-            set
-            {
-                tl = value;
-                ChangeMainLabel();
-            }
-        }
-
-        public string MainLabelText
-        {
-            get { return (string)mainL.Content; }
-            set
-            {
-                mainL.Content = value;
-                mainLsubH.Content = value;
-                TitleL.Content = value;
-                SearchText = value;
-                ChangeMainLabel();
-                MainLabelTextChanged?.Invoke(this, new EventArgs());
-            }
-        }
-
-        public string SubLabelText
-        {
-            get { return (string)subL.Content; }
-            set
-            {
-                subL.Content = value;
-                SubLabelTextChanged?.Invoke(this, new EventArgs());
-            }
-        }
-
-        public string StatusLabelText
-        {
-            get { return (string)staL.Content; }
-            set
-            {
-                staL.Content = value;
-                if (StatusLabelTextChanged != null) StatusLabelTextChanged(this, new EventArgs());
-            }
-        }
-
-        public string NumberLabelText
-        {
-            get { return (string)numL.Content; }
-            set { numL.Content = value; }
-        }
-
-        public Brush MainLabelBrush
-        {
-            get { return mainL.Foreground; }
-            set
-            {
-                mainL.Foreground = value;
-                mainLsubH.Foreground = value;
-                TitleL.Foreground = value;
-            }
-        }
-
-        public Brush SubLabelBrush
-        {
-            get { return subL.Foreground; }
-            set { subL.Foreground = value; }
-        }
-
-        public Brush StatusLabelBrush
-        {
-            get { return staL.Foreground; }
-            set { staL.Foreground = value; }
-        }
-
-        public Brush NumberLabelBrush
-        {
-            get { return numL.Foreground; }
-            set { numL.Foreground = value; }
-        }
-
-        public Visibility SubLabelVisibility
-        {
-            get { return subL.Visibility; }
-            set
-            {
-                subL.Visibility = value;
-                ChangeMainLabel();
-            }
-        }
-
-        public Visibility StatusLabelVisibility
-        {
-            get { return staL.Visibility; }
-            set { staL.Visibility = value; }
-        }
-
         public enum LeftItems { Image, Number, Shape, Nothing }
 
-        private LeftItems litem = LeftItems.Nothing;
+        public double BackgroundFillOpacity
+        {
+            get { return background.Fill.Opacity; }
+            set { background.Fill.Opacity = value; }
+        }
+
+        public double BackgroundStrokeOpacity
+        {
+            get { return background.Stroke.Opacity; }
+            set { background.Stroke.Opacity = value; }
+        }
+
+        public bool ChangeStroke { get; set; } = true;
 
         public LeftItems LeftItem
         {
@@ -187,6 +101,43 @@ namespace ClearUC.ListViewItems
 
         public double LeftItemWidth { get { return shapecontainer.Width; } }
 
+        public Brush MainLabelBrush
+        {
+            get { return mainL.Foreground; }
+            set
+            {
+                mainL.Foreground = value;
+                mainLsubH.Foreground = value;
+                TitleL.Foreground = value;
+            }
+        }
+
+        public string MainLabelText
+        {
+            get { return (string)mainL.Content; }
+            set
+            {
+                mainL.Content = value;
+                mainLsubH.Content = value;
+                TitleL.Content = value;
+                SearchText = value;
+                ChangeMainLabel();
+                MainLabelTextChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
+        public Brush NumberLabelBrush
+        {
+            get { return numL.Foreground; }
+            set { numL.Foreground = value; }
+        }
+
+        public string NumberLabelText
+        {
+            get { return (string)numL.Content; }
+            set { numL.Content = value; }
+        }
+
         public Shape ShapeItem
         {
             get { return lefts; }
@@ -198,22 +149,26 @@ namespace ClearUC.ListViewItems
             }
         }
 
-        public double BackgroundFillOpacity
+        public Brush StatusLabelBrush
         {
-            get { return background.Fill.Opacity; }
-            set { background.Fill.Opacity = value; }
+            get { return staL.Foreground; }
+            set { staL.Foreground = value; }
         }
 
-        public double BackgroundStrokeOpacity
+        public string StatusLabelText
         {
-            get { return background.Stroke.Opacity; }
-            set { background.Stroke.Opacity = value; }
+            get { return (string)staL.Content; }
+            set
+            {
+                staL.Content = value;
+                if (StatusLabelTextChanged != null) StatusLabelTextChanged(this, new EventArgs());
+            }
         }
 
-        public Brush Stroke
+        public Visibility StatusLabelVisibility
         {
-            get { return background.Stroke; }
-            set { background.Stroke = value; }
+            get { return staL.Visibility; }
+            set { staL.Visibility = value; }
         }
 
         public Stretch Stretch
@@ -228,13 +183,117 @@ namespace ClearUC.ListViewItems
             set { image.StretchDirection = value; }
         }
 
+        public Brush Stroke
+        {
+            get { return background.Stroke; }
+            set { background.Stroke = value; }
+        }
+
+        public Brush SubLabelBrush
+        {
+            get { return subL.Foreground; }
+            set { subL.Foreground = value; }
+        }
+
+        public string SubLabelText
+        {
+            get { return (string)subL.Content; }
+            set
+            {
+                subL.Content = value;
+                SubLabelTextChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
+        public Visibility SubLabelVisibility
+        {
+            get { return subL.Visibility; }
+            set
+            {
+                subL.Visibility = value;
+                ChangeMainLabel();
+            }
+        }
+
+        public bool TitleLabelVisible
+        {
+            get { return tl; }
+            set
+            {
+                tl = value;
+                ChangeMainLabel();
+            }
+        }
+
         public void ApplyConfig(Config Config)
         {
             cnf = Config;
             background.Fill = Config.Background;
         }
 
-        public bool ChangeStroke { get; set; } = true;
+        private void AnimateBackground(Brush Before, Brush After, double Duration)
+        {
+            if (Before == null | After == null) return;
+            this.af = After;
+
+            Storyboard s = new Storyboard();
+            ColorAnimation ca = new ColorAnimation();
+
+            Color be = ((SolidColorBrush)Before).Color;
+            Color af = ((SolidColorBrush)After).Color;
+
+            ca.From = be;
+            ca.To = af;
+            ca.Duration = TimeSpan.FromMilliseconds(Duration);
+
+            PropertyPath pp = new PropertyPath("(0).(1)", Shape.FillProperty, SolidColorBrush.ColorProperty);
+            Storyboard.SetTargetProperty(ca, pp);
+            s.Children.Add(ca);
+
+            background.BeginStoryboard(s);
+            s.Completed += S_Completed;
+        }
+
+        private void background_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                AnimateBackground(background.Fill, cnf.BackgroundMouseClick, cnf.AnimationDuration);
+
+                if (ChangeStroke == true) background.Stroke = cnf.BackgroundMouseClick;
+            }
+            flag = true;
+        }
+
+        private void background_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AnimateBackground(background.Fill, cnf.BackgroundMouseEnter, cnf.AnimationDuration);
+
+            defs = background.Stroke;
+            if (ChangeStroke == true) background.Stroke = cnf.BackgroundMouseEnter;
+        }
+
+        private void background_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AnimateBackground(background.Fill, cnf.Background, cnf.AnimationDuration);
+
+            background.Stroke = defs;
+        }
+
+        private void background_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (flag == true)
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                {
+                    AnimateBackground(background.Fill, cnf.BackgroundMouseEnter, cnf.AnimationDuration);
+
+                    if (ChangeStroke == true) background.Stroke = cnf.BackgroundMouseEnter;
+                }
+
+                flag = false;
+            }
+        }
 
         private void ChangeMainLabel()
         {
@@ -283,78 +342,23 @@ namespace ClearUC.ListViewItems
             }
         }
 
-        private Brush defs;
-        private bool flag = false;
-
-        private void background_MouseEnter(object sender, MouseEventArgs e)
+        private void ListSubItem_ImageIndexChanged(object sender, EventArgs e)
         {
-            AnimateBackground(background.Fill, cnf.BackgroundMouseEnter, cnf.AnimationDuration);
-
-            defs = background.Stroke;
-            if (ChangeStroke == true) background.Stroke = cnf.BackgroundMouseEnter;
-        }
-
-        private void background_MouseLeave(object sender, MouseEventArgs e)
-        {
-            AnimateBackground(background.Fill, cnf.Background, cnf.AnimationDuration);
-
-            background.Stroke = defs;
-        }
-
-        private void background_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-            {
-                AnimateBackground(background.Fill, cnf.BackgroundMouseClick, cnf.AnimationDuration);
-
-                if (ChangeStroke == true) background.Stroke = cnf.BackgroundMouseClick;
-            }
-            flag = true;
-        }
-
-        private void background_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (flag == true)
-            {
-                if (e.ChangedButton == MouseButton.Left)
-                {
-                    AnimateBackground(background.Fill, cnf.BackgroundMouseEnter, cnf.AnimationDuration);
-
-                    if (ChangeStroke == true) background.Stroke = cnf.BackgroundMouseEnter;
-                }
-
-                flag = false;
-            }
-        }
-
-        private Brush af;
-
-        private void AnimateBackground(Brush Before, Brush After, double Duration)
-        {
-            if (Before == null | After == null) return;
-            this.af = After;
-
-            Storyboard s = new Storyboard();
-            ColorAnimation ca = new ColorAnimation();
-
-            Color be = ((SolidColorBrush)Before).Color;
-            Color af = ((SolidColorBrush)After).Color;
-
-            ca.From = be;
-            ca.To = af;
-            ca.Duration = TimeSpan.FromMilliseconds(Duration);
-
-            PropertyPath pp = new PropertyPath("(0).(1)", Shape.FillProperty, SolidColorBrush.ColorProperty);
-            Storyboard.SetTargetProperty(ca, pp);
-            s.Children.Add(ca);
-
-            background.BeginStoryboard(s);
-            s.Completed += S_Completed;
+            if (ImageIndex > -1) image.Source = ImageSources[ImageIndex];
+            else image.Source = null;
         }
 
         private void S_Completed(object sender, EventArgs e)
         {
             background.Fill = af;
+        }
+
+        public class Config
+        {
+            public double AnimationDuration { get; set; } = 50;
+            public Brush Background { get; set; } = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+            public Brush BackgroundMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+            public Brush BackgroundMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
         }
     }
 }

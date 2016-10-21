@@ -19,7 +19,7 @@ namespace ClearUC
 
         protected virtual void OnValueChanged(ValueChangedEventArgs e)
         {
-            if (ValueChanged != null) ValueChanged(this, e);
+            ValueChanged?.Invoke(this, e);
         }
 
         public class Config
@@ -92,22 +92,36 @@ namespace ClearUC
             }
         }
 
+
+        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(long), typeof(SeekBar));
+
         public long Maximum
         {
-            get { return max; }
+            get
+            {
+                long val = (long)GetValue(MaximumProperty);
+                return val;
+            }
             set
             {
-                max = value;
+                SetValue(MaximumProperty, value);
                 CalcMargin();
             }
         }
 
+
+        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(long), typeof(SeekBar));
+
         public long Minimum
         {
-            get { return min; }
+            get
+            {
+                long val = (long)GetValue(MinimumProperty);
+                return val;
+            }
             set
             {
-                min = value;
+                SetValue(MinimumProperty, value);
                 CalcMargin();
             }
         }
@@ -129,15 +143,20 @@ namespace ClearUC
             Vertical, Horizonal
         }
 
-        private Direction d = Direction.Horizonal;
+
+        public static readonly DependencyProperty BarDirectionProperty = DependencyProperty.Register("BarDirection", typeof(Direction), typeof(SeekBar),
+            new PropertyMetadata(Direction.Horizonal));
 
         public Direction BarDirection
         {
-            get { return d; }
+            get
+            {
+                Direction val = (Direction)GetValue(BarDirectionProperty);
+                return val;
+            }
             set
             {
-                d = value;
-                CalcMargin();
+                SetValue(BarDirectionProperty, value);
             }
         }
 

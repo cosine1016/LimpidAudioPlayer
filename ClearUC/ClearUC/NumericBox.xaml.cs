@@ -58,21 +58,35 @@ namespace ClearUC
 
         public bool EnableKeyDown { get; set; } = true;
 
-        private int val = 0;
+        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(int), typeof(NumericUpDown), new PropertyMetadata(0));
+
+        public int Minimum
+        {
+            get { return (int)GetValue(MinimumProperty); }
+            set { SetValue(MinimumProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(int), typeof(NumericUpDown), new PropertyMetadata(100));
+
+        public int Maximum
+        {
+            get { return (int)GetValue(MaximumProperty); }
+            set { SetValue(MaximumProperty, value); }
+        }
+
+
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(int), typeof(NumericUpDown), new PropertyMetadata(0));
 
         public int Value
         {
-            get { return val; }
+            get { return (int)GetValue(ValueProperty); }
             set
             {
-                val = value;
+                SetValue(ValueProperty, value);
                 OnValueChanged(new EventArgs());
             }
         }
-
-        public int Maximum { get; set; } = 100;
-
-        public int Minimum { get; set; } = 0;
 
         private Regex reg = new Regex("^[0-9\\-]*$");
 

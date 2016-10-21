@@ -38,51 +38,76 @@ namespace ClearUC
 
         public enum GradientMode { Lightness, Saturation, Hue }
 
-        private byte brg = 0, sat = 0;
+        private byte sat = 0;
         private int hue = 0;
+
+
+        public static readonly DependencyProperty LightnessProperty = DependencyProperty.Register("Lightness", typeof(byte), typeof(ColorSlider));
+
         public byte Lightness
         {
-            get { return brg; }
+            get { return (byte)GetValue(LightnessProperty); }
             set
             {
-                brg = value;
+                SetValue(LightnessProperty, value);
                 UpdateFill();
                 UpdatePos();
                 LightnessChanged?.Invoke(this, new EventArgs());
             }
         }
 
+
+        public static readonly DependencyProperty HueProperty = DependencyProperty.Register("Hue", typeof(int), typeof(ColorSlider));
+
         public int Hue
         {
-            get { return hue; }
+            get
+            {
+                int val = (int)GetValue(HueProperty);
+
+                return val;
+            }
             set
             {
-                hue = value;
+                SetValue(HueProperty, value);
                 UpdateFill();
                 UpdatePos();
                 HueChanged?.Invoke(this, new EventArgs());
             }
         }
 
+
+        public static readonly DependencyProperty SaturationProperty = DependencyProperty.Register("Saturation", typeof(byte), typeof(ColorSlider));
+
         public byte Saturation
         {
-            get { return sat; }
+            get
+            {
+                byte val = (byte)GetValue(SaturationProperty);
+                return val;
+            }
             set
             {
-                sat = value;
+                SetValue(SaturationProperty, value);
                 UpdateFill();
                 UpdatePos();
                 SaturationChanged?.Invoke(this, new EventArgs());
             }
         }
 
-        private GradientMode gm = GradientMode.Lightness;
+
+        public static readonly DependencyProperty FillGradientProperty = DependencyProperty.Register("FillGradient", typeof(GradientMode), typeof(ColorSlider));
+
         public GradientMode FillGradient
         {
-            get { return gm; }
+            get
+            {
+                GradientMode val = (GradientMode)GetValue(FillGradientProperty);
+                return val;
+            }
             set
             {
-                gm = value;
+                SetValue(FillGradientProperty, value);
                 UpdateFill();
                 UpdatePos();
             }

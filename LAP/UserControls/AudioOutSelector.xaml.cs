@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace LAP.UserControls
 {
@@ -36,18 +26,14 @@ namespace LAP.UserControls
             }
         }
 
+        public Utils.WaveOut.ASIOConfig ASIOConfig { get; set; }
         public Brush DisabledButtonBrush { get; set; } = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
 
+        public Utils.WaveOut.DirectSoundConfig DSConfig { get; set; }
         public Brush EnabledButtonBrush { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
 
         public Utils.WaveOut.Devices SelectedDevice { get; set; }
-
-        public Utils.WaveOut.ASIOConfig ASIOConfig { get; set; }
-
         public Utils.WaveOut.WASAPIConfig WASAPIConfig { get; set; }
-
-        public Utils.WaveOut.DirectSoundConfig DSConfig { get; set; }
-
         private bool DisableUpdate { get; set; } = false;
 
         public void SwitchButton()
@@ -85,7 +71,7 @@ namespace LAP.UserControls
 
                     comboBox.Items.Add("<" + Utils.Config.Language.Strings.Default + ">");
 
-                    for(int i = 0;col.Count > i; i++)
+                    for (int i = 0; col.Count > i; i++)
                     {
                         comboBox.Items.Add(col[i].FriendlyName);
                     }
@@ -99,7 +85,7 @@ namespace LAP.UserControls
                         checkBox.IsChecked = true;
                     else
                         checkBox.IsChecked = false;
-                    
+
                     Latency.Value = WASAPIConfig.Latency;
 
                     WASAPI.Background = EnabledButtonBrush;
@@ -151,62 +137,10 @@ namespace LAP.UserControls
             DisableUpdate = false;
         }
 
-        private void DirectSound_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedDevice = Utils.WaveOut.Devices.DirectSound;
-            SwitchButton();
-        }
-
-        private void WASAPI_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedDevice = Utils.WaveOut.Devices.WASAPI;
-            SwitchButton();
-        }
-
         private void ASIO_Click(object sender, RoutedEventArgs e)
         {
             SelectedDevice = Utils.WaveOut.Devices.ASIO;
             SwitchButton();
-        }
-
-        private void Wave_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedDevice = Utils.WaveOut.Devices.Wave;
-            SwitchButton();
-        }
-
-        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (DisableUpdate) return;
-            if (comboBox.SelectedItem == null) return;
-            switch (SelectedDevice)
-            {
-                case Utils.WaveOut.Devices.ASIO:
-                    ASIOConfig.DriverName = comboBox.SelectedItem.ToString();
-                    break;
-                case Utils.WaveOut.Devices.WASAPI:
-                    if (comboBox.SelectedIndex > 0)
-                        WASAPIConfig.DeviceFriendlyName = comboBox.SelectedItem.ToString();
-                    else
-                        WASAPIConfig.DeviceFriendlyName = null;
-                    WASAPIConfig.DeviceIndex = comboBox.SelectedIndex;
-                    break;
-            }
-        }
-
-        private void Latency_ValueChanged(object sender, EventArgs e)
-        {
-            if (DisableUpdate) return;
-
-            switch (SelectedDevice)
-            {
-                case Utils.WaveOut.Devices.DirectSound:
-                    DSConfig.Latency = Latency.Value;
-                    break;
-                case Utils.WaveOut.Devices.WASAPI:
-                    WASAPIConfig.Latency = Latency.Value;
-                    break;
-            }
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
@@ -221,6 +155,60 @@ namespace LAP.UserControls
             if (DisableUpdate) return;
 
             WASAPIConfig.ShareMode = NAudio.CoreAudioApi.AudioClientShareMode.Shared;
+        }
+
+        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DisableUpdate) return;
+            if (comboBox.SelectedItem == null) return;
+            switch (SelectedDevice)
+            {
+                case Utils.WaveOut.Devices.ASIO:
+                    ASIOConfig.DriverName = comboBox.SelectedItem.ToString();
+                    break;
+
+                case Utils.WaveOut.Devices.WASAPI:
+                    if (comboBox.SelectedIndex > 0)
+                        WASAPIConfig.DeviceFriendlyName = comboBox.SelectedItem.ToString();
+                    else
+                        WASAPIConfig.DeviceFriendlyName = null;
+                    WASAPIConfig.DeviceIndex = comboBox.SelectedIndex;
+                    break;
+            }
+        }
+
+        private void DirectSound_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedDevice = Utils.WaveOut.Devices.DirectSound;
+            SwitchButton();
+        }
+
+        private void Latency_ValueChanged(object sender, EventArgs e)
+        {
+            if (DisableUpdate) return;
+
+            switch (SelectedDevice)
+            {
+                case Utils.WaveOut.Devices.DirectSound:
+                    DSConfig.Latency = Latency.Value;
+                    break;
+
+                case Utils.WaveOut.Devices.WASAPI:
+                    WASAPIConfig.Latency = Latency.Value;
+                    break;
+            }
+        }
+
+        private void WASAPI_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedDevice = Utils.WaveOut.Devices.WASAPI;
+            SwitchButton();
+        }
+
+        private void Wave_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedDevice = Utils.WaveOut.Devices.Wave;
+            SwitchButton();
         }
     }
 }

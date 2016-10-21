@@ -11,7 +11,7 @@ namespace ClearUC
         public NumericUpDown()
         {
             InitializeComponent();
-            TotalDiscsN.ValueChanged += TotalDiscsN_ValueChanged;
+            NumN.ValueChanged += TotalDiscsN_ValueChanged;
         }
 
         private void TotalDiscsN_ValueChanged(object sender, System.EventArgs e)
@@ -23,12 +23,12 @@ namespace ClearUC
 
         private void NumUp_Click(object sender, RoutedEventArgs e)
         {
-            if (TotalDiscsN.Maximum >= TotalDiscsN.Value + 1) TotalDiscsN.Value += 1;
+            if (NumN.Maximum >= NumN.Value + 1) NumN.Value += 1;
         }
 
         private void NumDown_Click(object sender, RoutedEventArgs e)
         {
-            if (TotalDiscsN.Value - 1 >= TotalDiscsN.Minimum) TotalDiscsN.Value -= 1;
+            if (NumN.Value - 1 >= NumN.Minimum) NumN.Value -= 1;
         }
 
         public new bool IsEnabled
@@ -38,26 +38,26 @@ namespace ClearUC
             {
                 NumUp.IsEnabled = value;
                 NumDown.IsEnabled = value;
-                TotalDiscsN.IsEnabled = value;
+                NumN.IsEnabled = value;
             }
         }
 
         public int Minimum
         {
-            get { return TotalDiscsN.Minimum; }
-            set { TotalDiscsN.Minimum = value; }
+            get { return NumN.Minimum; }
+            set { NumN.Minimum = value; }
         }
 
         public int Maximum
         {
-            get { return TotalDiscsN.Maximum; }
-            set { TotalDiscsN.Maximum= value; }
+            get { return NumN.Maximum; }
+            set { NumN.Maximum = value; }
         }
 
         public int Value
         {
-            get { return TotalDiscsN.Value; }
-            set { TotalDiscsN.Value = value; }
+            get { return NumN.Value; }
+            set { NumN.Value = value; }
         }
     }
 }

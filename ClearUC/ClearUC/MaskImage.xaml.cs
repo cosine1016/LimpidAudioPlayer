@@ -90,7 +90,7 @@ namespace ClearUC
             set { ImageBlur.RenderingBias = value; }
         }
 
-        public System.Windows.Media.Brush Mask
+        public Brush Mask
         {
             get { return mask.Fill; }
             set

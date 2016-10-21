@@ -121,7 +121,7 @@ namespace ClearUC
 
         private void Ta_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
         {
-            if (MessageMinimized != null) MessageMinimized(this, new EventArgs());
+            MessageMinimized?.Invoke(this, new EventArgs());
         }
 
         public void Maximize()
@@ -135,7 +135,7 @@ namespace ClearUC
             else
             {
                 Margin = MaximizedMargin;
-                if (MessageMaximized != null) MessageMaximized(this, new EventArgs());
+                MessageMaximized?.Invoke(this, new EventArgs());
             }
         }
 
@@ -193,7 +193,7 @@ namespace ClearUC
             bg.Opacity = EnterOpacity;
             if (downf == true)
             {
-                if (Click != null) Click(this, new EventArgs());
+                Click?.Invoke(this, new EventArgs());
             }
         }
     }
