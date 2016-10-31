@@ -31,11 +31,8 @@ namespace LAP.Dialogs
                 OutputCategory output = new OutputCategory();
                 this.Category[0] = output;
 
-                PSE pse = new PSE();
-                this.Category[1] = pse;
-
                 Plugin plg = new Plugin();
-                this.Category[2] = plg;
+                this.Category[1] = plg;
             }
 
             TabContent.Children.Clear();
@@ -130,29 +127,6 @@ namespace LAP.Dialogs
         public void Dispose()
         {
         }
-    }
-
-    internal class PSE : ISettingItem
-    {
-        public PSE()
-        {
-            UIControl = pse;
-        }
-
-        public Border Border { get; set; }
-
-        public string Header { get; set; } = "PSE";
-
-        public UIElement UIControl { get; set; }
-
-        private UserControls.PSEOption pse = new UserControls.PSEOption();
-
-        public void Apply()
-        {
-            cnf.Setting.Boolean.PSE = pse.PSEEnable;
-        }
-
-        public void Dispose() { }
     }
 
     internal class Plugin : ISettingItem

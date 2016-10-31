@@ -29,11 +29,11 @@ namespace LAP.Utils
 
         public class AudioFileReader : NWrapper.AudioFileReaderEx
         {
-            public AudioFileReader(string FileName) : base(FileName) { }
+            public AudioFileReader(string FilePath) : base(FilePath) { }
 
             protected override void CreateReaderStream(string fileName)
             {
-                for(int i = 0; PluginManager.InitializedPlugin.Count > i; i++)
+                for (int i = 0; PluginManager.InitializedPlugin.Count > i; i++)
                 {
                     try
                     {
@@ -41,31 +41,28 @@ namespace LAP.Utils
                         if (plg.Enabled)
                         {
                             plg.Instance.SetFilePath(fileName);
-                            if (plg.Instance?.WaveStreams.Count > 0)
+                            for (int s = 0; plg.Instance.WaveStreams.Count > s; s++)
                             {
-                                for (int s = 0; plg.Instance.WaveStreams.Count > s; s++)
+                                try
                                 {
-                                    try
+                                    if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(
+                                        System.IO.Path.GetExtension(fileName).ToLower()) ||
+                                        plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
                                     {
-                                        if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(System.IO.Path.GetExtension(fileName).ToLower()) ||
-                                            plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
-                                        {
-                                            readerStream = new PluginWaveStream(plg.Instance.WaveStreams[s]);
-                                            LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
-                                            return;
-                                        }
+                                        readerStream = new PluginWaveStream(plg.Instance.WaveStreams[s]);
+                                        LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
+                                        return;
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        LAP.Dialogs.LogWindow.Append(plg.Instance.Title + " Error : " + ex.Message);
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    LAP.Dialogs.LogWindow.Append(plg.Instance.Title + " Error : " + ex.Message);
                                 }
                             }
                         }
                     }
                     catch (Exception) { }
                 }
-
                 base.CreateReaderStream(fileName);
             }
 

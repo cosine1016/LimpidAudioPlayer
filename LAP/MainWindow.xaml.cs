@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Threading.Tasks;
 
 namespace LAP
 {
@@ -21,6 +22,7 @@ namespace LAP
         internal Timer seekt = new Timer();
         internal Utils.Taskbar TaskbarManager;
         internal Utils.GUI GUIMan = null;
+        internal Utils.ImageGenerator ImageGen = null;
 
         public MainWindow()
         {
@@ -108,6 +110,29 @@ namespace LAP
             FFTCalcDicision();
 
             if (AutoRun) RunFile();
+
+            ImageGen = new Utils.ImageGenerator(File.Path);
+            ImageGen.Height = (int)SeekBar.Height;
+            ImageGen.Pen = new System.Drawing.Pen(System.Drawing.Color.Red, 1);
+            ImageGen.ProgressChanged += ImageGen_ProgressChanged;
+            ImageGen.Generated += ImageGen_Generated;
+            ImageGen.Generate();
+        }
+
+        private void ImageGen_Generated(object sender, Utils.ImageGenerator.SpectrumProgressChangedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SeekBar.Image = Utils.Converter.ToImageSource((System.Drawing.Bitmap)e.Image);
+            }));
+        }
+
+        private void ImageGen_ProgressChanged(object sender, Utils.ImageGenerator.SpectrumProgressChangedEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                SeekBar.Image = Utils.Converter.ToImageSource((System.Drawing.Bitmap)e.Image);
+            }));
         }
 
         public void ReRenderFile(bool StayPosition, bool StayStatus)
@@ -210,6 +235,7 @@ namespace LAP
         private void InitializeRenderer(string FilePath)
         {
             if (Renderer != null) DisposeRenderer();
+
             Renderer = new Audio();
             Renderer.WaveStream = new Utils.Classes.AudioFileReader(FilePath);
 
@@ -232,7 +258,7 @@ namespace LAP
             Renderer.PSEMicMixer.Enabled = Utils.Config.Setting.Boolean.PSE;
             Renderer.PSEMicMixer.PSE.ExtractedDegreeOfRisk += PSE_ExtractedDegreeOfRisk;
             Renderer.PlaybackStopped += Renderer_PlaybackStopped;
-            
+
             Dialogs.LogWindow.Append("Renderer : " + Renderer.WaveStream.ToString());
         }
 

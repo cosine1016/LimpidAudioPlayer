@@ -25,7 +25,7 @@ namespace MVPUC.Buttons
         public event EventHandler MediaStateChanged;
         protected virtual void OnMediaStateChanged(EventArgs e)
         {
-            if (MediaStateChanged != null) MediaStateChanged(this, e);
+            MediaStateChanged?.Invoke(this, e);
         }
 
         State s = State.Pause;
@@ -36,9 +36,6 @@ namespace MVPUC.Buttons
 
             SwitchMediaStateShape();
             AppliedPropertyChanges += MediaStateButton_AppliedPropertyChanges;
-            path.Fill = ButtonBrush;
-            path.Stroke = ButtonStroke;
-            path.StrokeThickness = StrokeThickness;
         }
 
         public State MediaState

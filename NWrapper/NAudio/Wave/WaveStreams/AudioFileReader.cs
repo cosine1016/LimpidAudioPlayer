@@ -1,5 +1,6 @@
 ﻿using NAudio.Wave.SampleProviders;
 using System;
+using System.Threading.Tasks;
 
 namespace NAudio.Wave
 {
@@ -16,10 +17,10 @@ namespace NAudio.Wave
     {
         private string fileName;
         protected WaveStream readerStream; // the waveStream which we will use for all positioning
-        private readonly SampleChannel sampleChannel; // sample provider that gives us most stuff we need
-        private readonly int destBytesPerSample;
-        private readonly int sourceBytesPerSample;
-        private readonly long length;
+        private SampleChannel sampleChannel; // sample provider that gives us most stuff we need
+        private int destBytesPerSample;
+        private int sourceBytesPerSample;
+        private long length;
         private readonly object lockObject;
 
         /// <summary>

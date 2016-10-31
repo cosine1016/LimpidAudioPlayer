@@ -151,11 +151,9 @@
     <Compile Include="UserControls\PluginOption.xaml.cs">
       <DependentUpon>PluginOption.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\PSEOption.xaml.cs">
-      <DependentUpon>PSEOption.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\BackgroundScanner.cs" />
     <Compile Include="Utils\GUI.cs" />
+    <Compile Include="Utils\ImageGenerator.cs" />
     <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\PluginManager.cs" />
     <Compile Include="Utils\Update.cs" />
@@ -294,10 +292,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\PluginOption.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControls\PSEOption.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

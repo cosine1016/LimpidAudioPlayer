@@ -13,66 +13,26 @@ namespace ClearUC
     /// </summary>
     public partial class SeekBar : UserControl
     {
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(long), typeof(SeekBar));
-
         public event EventHandler<ValueChangedEventArgs> ValueChanged;
 
-        protected virtual void OnValueChanged(ValueChangedEventArgs e)
-        {
-            ValueChanged?.Invoke(this, e);
-        }
+        public static readonly DependencyProperty BarDirectionProperty = DependencyProperty.Register("BarDirection", typeof(Direction), typeof(SeekBar),
+            new PropertyMetadata(Direction.Horizonal));
 
-        public class Config
-        {
-            //FrontBar
-            public Brush FrontBar { get; set; } = new SolidColorBrush(Color.FromArgb(255, 255, 150, 0));
+        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(long), typeof(SeekBar));
+        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(long), typeof(SeekBar));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(long), typeof(SeekBar));
+        private Brush af;
 
-            public Brush FrontBarMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 255, 200, 50));
-            public Brush FrontBarMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 255, 250, 100));
-            public double FrontBarOpacity { get; set; } = 0.8;
-            public double FrontBarAnimationSpeed { get; set; } = 50;
-
-            //BackBar
-            public Brush BackBar { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
-
-            public Brush BackBarMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
-            public Brush BackBarMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
-            public double BackBarOpacity { get; set; } = 0.5;
-            public double BackBarAnimationSpeed { get; set; } = 50;
-
-            //Thumb
-            public Brush Thumb { get; set; } = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-
-            public Brush ThumbMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
-            public Brush ThumbMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
-            public double ThumbOpacity { get; set; } = 1;
-            public double ThumbAnimationSpeed { get; set; } = 50;
-
-            public Brush ThumbStroke { get; set; } = new SolidColorBrush(Color.FromArgb(255, 140, 140, 140));
-            public double ThumbSize { get; set; } = 10;
-            public double ThumbStrokeThickness { get; set; } = 0;
-        }
-
-        public class ValueChangedEventArgs : EventArgs
-        {
-            public enum ChangedType
-            {
-                Manual, Code, ManualEnd
-            }
-
-            public ValueChangedEventArgs(ChangedType ChangeType, double Value)
-            {
-                this.ChangeType = ChangeType;
-                this.Value = Value;
-            }
-
-            public ChangedType ChangeType { get; private set; }
-
-            public double Value { get; private set; }
-        }
+        private Utils.AnimationHelper.Brush ba = null;
 
         private Config cnf = new Config();
+
+        private bool downf = false;
+
+        private Rectangle item;
+
         private long max = 100;
+
         private long min = 0;
 
         public SeekBar()
@@ -81,19 +41,25 @@ namespace ClearUC
             ApplyConfig(cnf);
         }
 
-        public long Value
+        public enum Direction
         {
-            get { return (long)GetValue(ValueProperty); }
+            Vertical, Horizonal
+        }
+
+        public Direction BarDirection
+        {
+            get
+            {
+                Direction val = (Direction)GetValue(BarDirectionProperty);
+                return val;
+            }
             set
             {
-                SetValue(ValueProperty, value);
-                OnValueChanged(new ValueChangedEventArgs(ValueChangedEventArgs.ChangedType.Code, value));
-                if (downf == false) CalcMargin();
+                SetValue(BarDirectionProperty, value);
             }
         }
 
-
-        public static readonly DependencyProperty MaximumProperty = DependencyProperty.Register("Maximum", typeof(long), typeof(SeekBar));
+        public int EventInterval { get; set; } = 100;
 
         public long Maximum
         {
@@ -109,9 +75,6 @@ namespace ClearUC
             }
         }
 
-
-        public static readonly DependencyProperty MinimumProperty = DependencyProperty.Register("Minimum", typeof(long), typeof(SeekBar));
-
         public long Minimum
         {
             get
@@ -126,6 +89,12 @@ namespace ClearUC
             }
         }
 
+        public ImageSource Image
+        {
+            get { return ImageI.Source; }
+            set { ImageI.Source = value; }
+        }
+
         public Config SeekBarConfig
         {
             get { return cnf; }
@@ -136,28 +105,42 @@ namespace ClearUC
             }
         }
 
-        public int EventInterval { get; set; } = 100;
-
-        public enum Direction
+        public long Value
         {
-            Vertical, Horizonal
-        }
-
-
-        public static readonly DependencyProperty BarDirectionProperty = DependencyProperty.Register("BarDirection", typeof(Direction), typeof(SeekBar),
-            new PropertyMetadata(Direction.Horizonal));
-
-        public Direction BarDirection
-        {
-            get
-            {
-                Direction val = (Direction)GetValue(BarDirectionProperty);
-                return val;
-            }
+            get { return (long)GetValue(ValueProperty); }
             set
             {
-                SetValue(BarDirectionProperty, value);
+                SetValue(ValueProperty, value);
+                OnValueChanged(new ValueChangedEventArgs(ValueChangedEventArgs.ChangedType.Code, value));
+                if (downf == false) CalcMargin();
             }
+        }
+
+        protected virtual void OnValueChanged(ValueChangedEventArgs e)
+        {
+            ValueChanged?.Invoke(this, e);
+        }
+
+        private void AnimateRectangleColor(Brush Before, Brush After,
+            double Duration, Rectangle Item, DependencyProperty Property)
+        {
+            if (ba != null)
+            {
+                item.BeginAnimation(Shape.FillProperty, null);
+                item.Fill = af;
+                ba = null;
+            }
+
+            ba = new Utils.AnimationHelper.Brush();
+
+            item = Item;
+            af = After;
+            Item.Fill = Before;
+
+            ba.Storyboard.Completed += Storyboard_Completed;
+            ba.Animation.FillBehavior = FillBehavior.Stop;
+            PropertyPath pp = new PropertyPath("(0).(1)", Property, SolidColorBrush.ColorProperty);
+            ba.Animate(Before, After, Duration, Item, pp);
         }
 
         private void ApplyConfig(Config Config)
@@ -174,6 +157,43 @@ namespace ClearUC
             thumb.Stroke = Config.ThumbStroke;
             thumb.Width = cnf.ThumbSize;
             thumb.StrokeThickness = Config.ThumbStrokeThickness;
+        }
+
+        private void Bar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            downf = true;
+            thumb_MouseDown(sender, e);
+        }
+
+        private void Bar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            downf = false;
+            thumb_MouseUp(sender, e);
+        }
+
+        private void Bar_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (downf == true)
+            {
+                CalcValue(e.GetPosition(this));
+            }
+        }
+
+        private void bg_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (downf == true) return;
+            AnimateRectangleColor(bg.Fill, cnf.BackBarMouseEnter, cnf.BackBarAnimationSpeed, bg, Shape.FillProperty);
+        }
+
+        private void bg_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (downf == true) return;
+            AnimateRectangleColor(bg.Fill, cnf.BackBar, cnf.BackBarAnimationSpeed, bg, Shape.FillProperty);
+        }
+
+        private void bg_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            CalcMargin();
         }
 
         private void CalcMargin()
@@ -302,66 +322,6 @@ namespace ClearUC
             }
         }
 
-        private void bg_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            CalcMargin();
-        }
-
-        private Utils.AnimationHelper.Brush ba = null;
-        private Rectangle item;
-        private Brush af;
-
-        private void AnimateRectangleColor(Brush Before, Brush After,
-            double Duration, Rectangle Item, DependencyProperty Property)
-        {
-            if (ba != null)
-            {
-                item.BeginAnimation(Shape.FillProperty, null);
-                item.Fill = af;
-                ba = null;
-            }
-
-            ba = new Utils.AnimationHelper.Brush();
-
-            item = Item;
-            af = After;
-            Item.Fill = Before;
-
-            ba.Storyboard.Completed += Storyboard_Completed;
-            ba.Animation.FillBehavior = FillBehavior.Stop;
-            PropertyPath pp = new PropertyPath("(0).(1)", Property, SolidColorBrush.ColorProperty);
-            ba.Animate(Before, After, Duration, Item, pp);
-        }
-
-        private void Storyboard_Completed(object sender, EventArgs e)
-        {
-            item.Fill = af;
-        }
-
-        private void Bar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            downf = true;
-            thumb_MouseDown(sender, e);
-        }
-
-        private void Bar_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            downf = false;
-            thumb_MouseUp(sender, e);
-        }
-
-        private void bg_MouseEnter(object sender, MouseEventArgs e)
-        {
-            if (downf == true) return;
-            AnimateRectangleColor(bg.Fill, cnf.BackBarMouseEnter, cnf.BackBarAnimationSpeed, bg, Shape.FillProperty);
-        }
-
-        private void bg_MouseLeave(object sender, MouseEventArgs e)
-        {
-            if (downf == true) return;
-            AnimateRectangleColor(bg.Fill, cnf.BackBar, cnf.BackBarAnimationSpeed, bg, Shape.FillProperty);
-        }
-
         private void front_MouseEnter(object sender, MouseEventArgs e)
         {
             if (downf == true) return;
@@ -372,6 +332,41 @@ namespace ClearUC
         {
             if (downf == true) return;
             AnimateRectangleColor(front.Fill, cnf.FrontBar, cnf.BackBarAnimationSpeed, front, Shape.FillProperty);
+        }
+
+        private void grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            downf = true;
+        }
+
+        private void grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            downf = false;
+            AnimateRectangleColor(thumb.Fill, cnf.Thumb, cnf.ThumbAnimationSpeed, thumb, Shape.FillProperty);
+        }
+
+        private void grid_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            downf = false;
+        }
+
+        private void grid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            CalcMargin();
+        }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            item.Fill = af;
+        }
+
+        private void thumb_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            AnimateRectangleColor(bg.Fill, cnf.BackBar, cnf.BackBarAnimationSpeed, bg, Shape.FillProperty);
+            AnimateRectangleColor(front.Fill, cnf.FrontBar, cnf.BackBarAnimationSpeed, front, Shape.FillProperty);
+
+            CalcValue(e.GetPosition(this));
+            AnimateRectangleColor(thumb.Fill, cnf.ThumbMouseClick, cnf.ThumbAnimationSpeed, thumb, Shape.FillProperty);
         }
 
         private void thumb_MouseEnter(object sender, MouseEventArgs e)
@@ -386,17 +381,6 @@ namespace ClearUC
             AnimateRectangleColor(thumb.Fill, cnf.Thumb, cnf.ThumbAnimationSpeed, thumb, Shape.FillProperty);
         }
 
-        private bool downf = false;
-
-        private void thumb_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            AnimateRectangleColor(bg.Fill, cnf.BackBar, cnf.BackBarAnimationSpeed, bg, Shape.FillProperty);
-            AnimateRectangleColor(front.Fill, cnf.FrontBar, cnf.BackBarAnimationSpeed, front, Shape.FillProperty);
-
-            CalcValue(e.GetPosition(this));
-            AnimateRectangleColor(thumb.Fill, cnf.ThumbMouseClick, cnf.ThumbAnimationSpeed, thumb, Shape.FillProperty);
-        }
-
         private void thumb_MouseUp(object sender, MouseButtonEventArgs e)
         {
             CalcValue(e.GetPosition(this));
@@ -404,33 +388,55 @@ namespace ClearUC
             AnimateRectangleColor(thumb.Fill, cnf.ThumbMouseEnter, cnf.ThumbAnimationSpeed, thumb, Shape.FillProperty);
         }
 
-        private void Bar_MouseMove(object sender, MouseEventArgs e)
+        public class Config
         {
-            if (downf == true)
+            //BackBar
+            public Brush BackBar { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+
+            public double BackBarAnimationSpeed { get; set; } = 50;
+
+            public Brush BackBarMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
+
+            public Brush BackBarMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+
+            public double BackBarOpacity { get; set; } = 0.5;
+
+            //FrontBar
+            public Brush FrontBar { get; set; } = new SolidColorBrush(Color.FromArgb(255, 255, 150, 0));
+
+            public double FrontBarAnimationSpeed { get; set; } = 50;
+            public Brush FrontBarMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 255, 250, 100));
+            public Brush FrontBarMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 255, 200, 50));
+            public double FrontBarOpacity { get; set; } = 0.8;
+
+            //Thumb
+            public Brush Thumb { get; set; } = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+
+            public double ThumbAnimationSpeed { get; set; } = 50;
+            public Brush ThumbMouseClick { get; set; } = new SolidColorBrush(Color.FromArgb(255, 100, 100, 100));
+            public Brush ThumbMouseEnter { get; set; } = new SolidColorBrush(Color.FromArgb(255, 150, 150, 150));
+            public double ThumbOpacity { get; set; } = 1;
+            public double ThumbSize { get; set; } = 10;
+            public Brush ThumbStroke { get; set; } = new SolidColorBrush(Color.FromArgb(255, 140, 140, 140));
+            public double ThumbStrokeThickness { get; set; } = 0;
+        }
+
+        public class ValueChangedEventArgs : EventArgs
+        {
+            public ValueChangedEventArgs(ChangedType ChangeType, double Value)
             {
-                CalcValue(e.GetPosition(this));
+                this.ChangeType = ChangeType;
+                this.Value = Value;
             }
-        }
 
-        private void grid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            CalcMargin();
-        }
+            public enum ChangedType
+            {
+                Manual, Code, ManualEnd
+            }
 
-        private void grid_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            downf = false;
-        }
+            public ChangedType ChangeType { get; private set; }
 
-        private void grid_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            downf = true;
-        }
-
-        private void grid_MouseLeave(object sender, MouseEventArgs e)
-        {
-            downf = false;
-            AnimateRectangleColor(thumb.Fill, cnf.Thumb, cnf.ThumbAnimationSpeed, thumb, Shape.FillProperty);
+            public double Value { get; private set; }
         }
     }
 }

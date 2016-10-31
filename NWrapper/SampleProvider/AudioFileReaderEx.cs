@@ -9,9 +9,9 @@ namespace NWrapper
         public string FilePath;
         string ReaderName = "Unknown";
 
-        public AudioFileReaderEx(string FileName) : base(FileName)
+        public AudioFileReaderEx(string FilePath) : base(FilePath)
         {
-            FilePath = FileName;
+            this.FilePath = FilePath;
         }
 
         protected override void CreateReaderStream(string fileName)
