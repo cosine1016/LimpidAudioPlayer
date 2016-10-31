@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio.cs" />
+    <Compile Include="SampleProvider\Amplifier.cs" />
     <Compile Include="SampleProvider\AudioFileReaderEx.cs" />
     <Compile Include="SampleProvider\Equalizer.cs" />
     <Compile Include="SampleProvider\ISampleProviderEx.cs" />

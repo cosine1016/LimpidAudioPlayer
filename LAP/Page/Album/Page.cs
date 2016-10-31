@@ -16,7 +16,7 @@ namespace LAP.Page.Album
         private List<ListItem> TopPage = new List<ListItem>();
         private List<ListItem> PageItem = new List<ListItem>();
 
-        private List<LAPP.MTag.File> Files = new List<LAPP.MTag.File>();
+        private List<LAPP.MediaFile> Files = new List<LAPP.MediaFile>();
 
         internal Page()
         {
@@ -44,9 +44,9 @@ namespace LAP.Page.Album
                         Add(PageItem[i]);
                 }
 
-                if (e.Item.DataType == typeof(LAPP.MTag.File))
+                if (e.Item.DataType == typeof(LAPP.MediaFile))
                 {
-                    int ind = Files.IndexOf((LAPP.MTag.File)e.Item.Data);
+                    int ind = Files.IndexOf((LAPP.MediaFile)e.Item.Data);
                     OnPlayFile(Files.ToArray(), ind);
                 }
             }
@@ -77,16 +77,13 @@ namespace LAP.Page.Album
                 {
                     if (MI.ImageSources == null)
                     {
-                        LAPP.MTag.TagEx Tag = GetTag(Data.Tracks[i].Path);
-                        if (string.IsNullOrEmpty(Tag.ArtworkCachePath) == false)
-                        {
-                            System.Windows.Media.ImageSource Image = Utility.ArtworkManager.GetArtwork(Tag.ArtworkCachePath);
-                            ListItem.ImageSourceList ISL = new ListItem.ImageSourceList();
-                            ISL.Add(Image);
-                            MI.ImageSources = ISL;
-                            MI.ImageIndex = 0;
-                            break;
-                        }
+                        LAPP.MediaFile Tag = GetTag(Data.Tracks[i].Path);
+
+                        System.Windows.Media.ImageSource Image = Tag.Artwork;
+                        ListItem.ImageSourceList ISL = new ListItem.ImageSourceList();
+                        ISL.Add(Image);
+                        MI.ImageSources = ISL;
+                        MI.ImageIndex = 0;
                     }
                 }
             }
@@ -127,12 +124,11 @@ namespace LAP.Page.Album
 
                 Lai.SecondItem = lbi;
 
-                LAPP.MTag.TagEx tag = GetTag(Data.Tracks[i].Path);
-                LAPP.MTag.File File = new LAPP.MTag.File(Data.Tracks[i].Path, tag);
-                File.Artwork = Utility.ArtworkManager.GetArtwork(tag.ArtworkCachePath);
+                LAPP.MediaFile tag = GetTag(Data.Tracks[i].Path);
+                LAPP.MediaFile File = new LAPP.MediaFile(Data.Tracks[i].Path);
 
                 Lai.Data = File;
-                Lai.DataType = typeof(LAPP.MTag.File);
+                Lai.DataType = typeof(LAPP.MediaFile);
 
                 Files.Add(File);
 
@@ -202,9 +198,9 @@ namespace LAP.Page.Album
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
             if (lb != null)
             {
-                if (lb.ParentItem.DataType == typeof(LAPP.MTag.File))
+                if (lb.ParentItem.DataType == typeof(LAPP.MediaFile))
                 {
-                    LAPP.MTag.File File = (LAPP.MTag.File)lb.ParentItem.Data;
+                    LAPP.MediaFile File = (LAPP.MediaFile)lb.ParentItem.Data;
                     Utility.ShowExplorerWithFile(File.Path);
                 }
             }

@@ -122,6 +122,7 @@ namespace LAP.Dialogs
             cnf.Setting.WaveOut.ASIO = aos.ASIOConfig;
             cnf.Setting.WaveOut.WASAPI = aos.WASAPIConfig;
             cnf.Setting.WaveOut.DirectSound = aos.DSConfig;
+            cnf.Setting.WaveOut.Amplify = (float)aos.AmplifyN.Value / 100;
         }
 
         public void Dispose()

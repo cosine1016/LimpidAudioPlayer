@@ -18,7 +18,7 @@ namespace LAP.Page.Playlist
         private PlaylistData ShowingPlaylist;
         private PlaylistData PlayingPlaylist;
 
-        private List<LAPP.MTag.File> Files = new List<LAPP.MTag.File>();
+        private List<LAPP.MediaFile> Files = new List<LAPP.MediaFile>();
 
         internal Page()
         {
@@ -43,9 +43,9 @@ namespace LAP.Page.Playlist
                     ShowingPlaylist = (PlaylistData)e.Item.Data;
                 }
 
-                if (e.Item.DataType == typeof(LAPP.MTag.File))
+                if (e.Item.DataType == typeof(LAPP.MediaFile))
                 {
-                    int ind = Files.IndexOf((LAPP.MTag.File)e.Item.Data);
+                    int ind = Files.IndexOf((LAPP.MediaFile)e.Item.Data);
                     OnPlayFile(Files.ToArray(), ind);
                     PlayingPlaylist = ShowingPlaylist;
                 }
@@ -96,12 +96,10 @@ namespace LAP.Page.Playlist
             bool IsFile = FileMode;
             ListAnimativeItem Lai = new ListAnimativeItem(true);
 
-            LAPP.MTag.TagEx tag = GetTag(Path);
-            LAPP.MTag.File File = new LAPP.MTag.File(Path, tag);
-            File.Artwork = Utility.ArtworkManager.GetArtwork(tag.ArtworkCachePath);
+            LAPP.MediaFile File = new LAPP.MediaFile(Path);
 
             Lai.Data = File;
-            Lai.DataType = typeof(LAPP.MTag.File);
+            Lai.DataType = typeof(LAPP.MediaFile);
 
             ListSubItem lsi = new ListSubItem();
             Lai.ItemsHeight = lsi.Height;
@@ -109,30 +107,30 @@ namespace LAP.Page.Playlist
             lsi.SubLabelVisibility = Visibility.Hidden;
             lsi.StatusLabelVisibility = Visibility.Visible;
 
-            if (string.IsNullOrEmpty(File.Tag.Title) == false)
+            if (string.IsNullOrEmpty(File.Title) == false)
             {
-                lsi.MainLabelText = File.Tag.Title;
+                lsi.MainLabelText = File.Title;
             }
             else
             {
                 lsi.MainLabelText = System.IO.Path.GetFileNameWithoutExtension(Path);
             }
 
-            if (string.IsNullOrEmpty(File.Tag.Album) == false)
+            if (string.IsNullOrEmpty(File.Album) == false)
             {
                 lsi.SubLabelVisibility = Visibility.Visible;
-                lsi.SubLabelText = File.Tag.Album;
-                if (string.IsNullOrEmpty(File.Tag.Artist) == false)
+                lsi.SubLabelText = File.Album;
+                if (string.IsNullOrEmpty(File.Artist) == false)
                 {
-                    lsi.SubLabelText += " - " + File.Tag.Artist;
+                    lsi.SubLabelText += " - " + File.Artist;
                 }
             }
             else
             {
-                if (string.IsNullOrEmpty(File.Tag.Artist) == false)
+                if (string.IsNullOrEmpty(File.Artist) == false)
                 {
                     lsi.SubLabelVisibility = Visibility.Visible;
-                    lsi.SubLabelText = File.Tag.Artist;
+                    lsi.SubLabelText = File.Artist;
                 }
             }
 
@@ -186,9 +184,9 @@ namespace LAP.Page.Playlist
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
             if (lb != null)
             {
-                if (lb.ParentItem.DataType == typeof(LAPP.MTag.File))
+                if (lb.ParentItem.DataType == typeof(LAPP.MediaFile))
                 {
-                    LAPP.MTag.File File = (LAPP.MTag.File)lb.ParentItem.Data;
+                    LAPP.MediaFile File = (LAPP.MediaFile)lb.ParentItem.Data;
                     List<Playlist.PlaylistData.Path> Paths = new List<Playlist.PlaylistData.Path>();
                     Paths.AddRange(ShowingPlaylist.Data.Paths);
 
@@ -201,7 +199,7 @@ namespace LAP.Page.Playlist
 
                     if (PlayingPlaylist != null && ShowingPlaylist == PlayingPlaylist)
                     {
-                        Files.Remove((LAPP.MTag.File)lb.ParentItem.Data);
+                        Files.Remove((LAPP.MediaFile)lb.ParentItem.Data);
                         MakeOrder(Files.ToArray(), PlayingIndex);
                     }
                 }
@@ -213,9 +211,9 @@ namespace LAP.Page.Playlist
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
             if (lb != null)
             {
-                if (lb.ParentItem.DataType == typeof(LAPP.MTag.File))
+                if (lb.ParentItem.DataType == typeof(LAPP.MediaFile))
                 {
-                    LAPP.MTag.File File = (LAPP.MTag.File)lb.ParentItem.Data;
+                    LAPP.MediaFile File = (LAPP.MediaFile)lb.ParentItem.Data;
                     Utility.ShowExplorerWithFile(File.Path);
                 }
             }

@@ -154,6 +154,8 @@ namespace LAP.Utils
         public void AutoUpdate(bool Silent = false)
         {
             VersionInfo vi = CheckUpdate();
+            if (vi == null)
+                return;
             if (!vi.AccessFailed && vi.CompareVersions() == VersionInfo.ComparingResult.Older)
             {
                 LAP.Dialogs.LogWindow.Append("Newer version available : " + vi.LatestVersion + " > " + vi.CurrentVersion);

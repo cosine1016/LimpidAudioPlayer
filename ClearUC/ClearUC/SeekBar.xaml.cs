@@ -95,6 +95,14 @@ namespace ClearUC
             set { ImageI.Source = value; }
         }
 
+        private void ThrowValueError()
+        {
+            if (Maximum < Value)
+                throw new Exception();
+            else if (Minimum > Value)
+                throw new Exception();
+        }
+
         public Config SeekBarConfig
         {
             get { return cnf; }

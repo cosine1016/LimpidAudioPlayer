@@ -38,10 +38,6 @@ namespace ClearUC
 
         public enum GradientMode { Lightness, Saturation, Hue }
 
-        private byte sat = 0;
-        private int hue = 0;
-
-
         public static readonly DependencyProperty LightnessProperty = DependencyProperty.Register("Lightness", typeof(byte), typeof(ColorSlider));
 
         public byte Lightness

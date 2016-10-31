@@ -31,7 +31,7 @@ namespace LAP.Page.Plugin
             Plg.ItemClicked(e.Index, e.Item);
         }
 
-        private void Plg_GetTagEvent(object sender, LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx> e)
+        private void Plg_GetTagEvent(object sender, LAPP.Utils.ReturnableEventArgs<string, LAPP.MediaFile> e)
         {
             e.Return = GetTag(e.Value);
         }
