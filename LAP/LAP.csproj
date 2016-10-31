@@ -130,7 +130,6 @@
     <Compile Include="Page\Playlist\Data.cs" />
     <Compile Include="Page\Playlist\Page.cs" />
     <Compile Include="Page\Plugin\Page.cs" />
-    <Compile Include="Page\TestPage\ScanTest.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -154,7 +153,6 @@
     <Compile Include="UserControls\PSEOption.xaml.cs">
       <DependentUpon>PSEOption.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\BackgroundScanner.cs" />
     <Compile Include="Utils\GUI.cs" />
     <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\PluginManager.cs" />
@@ -351,6 +349,7 @@
   <ItemGroup>
     <Folder Include="DebugWindow\" />
     <Folder Include="Page\Other\" />
+    <Folder Include="Page\TestPage\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Properties\Limpid Audio Player.ico" />

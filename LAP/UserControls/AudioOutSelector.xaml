@@ -5,13 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:LAP.UserControls"
              xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.UserControls.AudioOutSelector"
-             mc:Ignorable="d" Height="auto" Width="auto">
+             mc:Ignorable="d" d:DesignHeight="120" d:DesignWidth="700"  Height="auto" Width="auto">
     <Grid x:Name="Parent" Background="#B2000000" ClipToBounds="True">
         <Grid x:Name="OutputConfig" Margin="10,37,10,10" Background="#B2000000">
             <ComboBox x:Name="comboBox" Margin="10,10,10,0" VerticalAlignment="Top" SelectionChanged="comboBox_SelectionChanged" />
             <ClearUC:NumericUpDown x:Name="Latency" HorizontalAlignment="Right" Margin="0,37,10,0" VerticalAlignment="Top" Height="33" Width="182" Maximum="500" Minimum="50" Value="100" ValueChanged="Latency_ValueChanged" />
             <Label x:Name="LatencyL" Content="Latency" Margin="0,37,192,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" FontWeight="Thin" Height="33" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="66" />
             <CheckBox x:Name="checkBox" Content="Exclusive" HorizontalAlignment="Right" Margin="0,47,274,0" VerticalAlignment="Top" Background="White" Foreground="White" FontWeight="Thin" Checked="checkBox_Checked" Unchecked="checkBox_Unchecked" Visibility="Hidden"/>
+            <ClearUC:NumericUpDown x:Name="AmplifyN" HorizontalAlignment="Right" Margin="0,37,263,0" VerticalAlignment="Top" Height="33" Width="182" Maximum="500" Minimum="0" Value="100" ValueChanged="Latency_ValueChanged" />
+            <Label x:Name="AmplifyL" Content="Amplify" Margin="0,37,445,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" FontWeight="Thin" Height="33" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="66" />
         </Grid>
         <WrapPanel Height="32" VerticalAlignment="Top" HorizontalAlignment="Center" Width="368">
             <ClearUC:Button x:Name="DirectSound" HorizontalAlignment="Left" VerticalAlignment="Top" Height="32" Width="92" Content="DirectSound" Click="DirectSound_Click" Background="#B2000000" FontWeight="Thin" />

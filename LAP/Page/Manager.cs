@@ -28,24 +28,24 @@ namespace LAP.Page
 
         public event EventHandler RendererDisposeRequest;
 
-        public event EventHandler<LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx>> GetTagEvent;
+        public event EventHandler<LAPP.Utils.ReturnableEventArgs<string, LAPP.MediaFile>> GetTagEvent;
 
         public bool Loop { get; set; } = false;
         public bool Opened { get; set; } = false;
-        public List<LAPP.MTag.File> Order { get; protected set; } = new List<LAPP.MTag.File>();
+        public List<LAPP.MediaFile> Order { get; protected set; } = new List<LAPP.MediaFile>();
 
         public bool Search { get; protected set; } = true;
         public bool Playing { get; private set; } = false;
         public int PlayingIndex { get; private set; } = -1;
         public bool Shuffle { get; set; } = false;
-        public List<LAPP.MTag.File> ShuffledOrder { get; private set; } = new List<LAPP.MTag.File>();
+        public List<LAPP.MediaFile> ShuffledOrder { get; private set; } = new List<LAPP.MediaFile>();
 
         /// <summary>
         /// オーダーをすべて初期化した後
         /// ファイルを再生します。
         /// </summary>
         /// <param name="File">ファイル</param>
-        public void OnPlayFile(LAPP.MTag.File[] Files, int Index)
+        public void OnPlayFile(LAPP.MediaFile[] Files, int Index)
         {
             MakeOrder(Files, Index);
 
@@ -87,10 +87,10 @@ namespace LAP.Page
             else PlayFile?.Invoke(this, new PlayFileEventArgs(Order[PlayingIndex]));
         }
 
-        protected LAPP.MTag.TagEx GetTag(string FilePath)
+        protected LAPP.MediaFile GetTag(string FilePath)
         {
-            LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx> args
-                = new LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx>(FilePath);
+            LAPP.Utils.ReturnableEventArgs<string, LAPP.MediaFile> args
+                = new LAPP.Utils.ReturnableEventArgs<string, LAPP.MediaFile>(FilePath);
             GetTagEvent?.Invoke(this, args);
             return args.Return;
         }
@@ -138,7 +138,7 @@ namespace LAP.Page
 
         public abstract void PlayAnyFile();
 
-        protected void MakeOrder(LAPP.MTag.File[] Files, int Index)
+        protected void MakeOrder(LAPP.MediaFile[] Files, int Index)
         {
             Order.Clear();
             Order.AddRange(Files);
@@ -147,12 +147,12 @@ namespace LAP.Page
 
             ShuffledOrder.Clear();
 
-            LAPP.MTag.File[] sorder = Order.OrderBy(i => Guid.NewGuid()).ToArray();
+            LAPP.MediaFile[] sorder = Order.OrderBy(i => Guid.NewGuid()).ToArray();
             {
                 for (int i = 0; sorder.Length > i; i++)
                     if (sorder[i] == Order[PlayingIndex])
                     {
-                        LAPP.MTag.File bk = sorder[0];
+                        LAPP.MediaFile bk = sorder[0];
                         sorder[0] = Order[PlayingIndex];
                         sorder[i] = bk;
 
@@ -172,8 +172,6 @@ namespace LAP.Page
         private ClearUC.ListView QV;
 
         private ClearUC.Tab Tab;
-
-        private Utils.BackgroundScanner bs = new Utils.BackgroundScanner();
 
         public Manager(ClearUC.ListView ListView, ClearUC.ListView QueueView, ClearUC.Tab Tab)
         {
@@ -199,7 +197,7 @@ namespace LAP.Page
 
         public event EventHandler OrderEnded;
 
-        public void OnPlayStateChanged(NWrapper.Audio.Status Status, LAPP.MTag.File File)
+        public void OnPlayStateChanged(NWrapper.Audio.Status Status, LAPP.MediaFile File)
         {
             int Index = -1;
             ListViewPage lvp = GetPlayingPage(out Index);
@@ -218,12 +216,12 @@ namespace LAP.Page
             }
         }
 
-        private void UpdateQueue(bool UpdateOrder, LAPP.MTag.File File, NWrapper.Audio.Status Status)
+        private void UpdateQueue(bool UpdateOrder, LAPP.MediaFile File, NWrapper.Audio.Status Status)
         {
             if (UpdateOrder)
             {
                 QV.Items.Clear();
-                LAPP.MTag.File[] Files = GetOrder();
+                LAPP.MediaFile[] Files = GetOrder();
                 if(Files != null)
                 {
                     for(int i = 0;Files.Length > i; i++)
@@ -241,7 +239,7 @@ namespace LAP.Page
                 if(lsi != null)
                 {
                     lsi.StatusLabelText = "";
-                    LAPP.MTag.File itemf = lsi.Data as LAPP.MTag.File;
+                    LAPP.MediaFile itemf = lsi.Data as LAPP.MediaFile;
                     if(itemf != null)
                     {
                         if(itemf.Path == File.Path)
@@ -261,7 +259,7 @@ namespace LAP.Page
             }
         }
 
-        private ListSubItem GetItemFromFile(LAPP.MTag.File File)
+        private ListSubItem GetItemFromFile(LAPP.MediaFile File)
         {
             ListSubItem lsi = new ListSubItem();
 
@@ -270,10 +268,10 @@ namespace LAP.Page
             lsi.Data = File;
             lsi.DataType = File.GetType();
 
-            if (string.IsNullOrEmpty(File.Tag.Title))
+            if (string.IsNullOrEmpty(File.Title))
                 lsi.MainLabelText = System.IO.Path.GetFileNameWithoutExtension(File.Path);
             else
-                lsi.MainLabelText = File.Tag.Title;
+                lsi.MainLabelText = File.Title;
 
             lsi.SubLabelVisibility = System.Windows.Visibility.Collapsed;
 
@@ -292,7 +290,7 @@ namespace LAP.Page
             for (int i = 0; Pages.Count > i; i++) Pages[i].Dispose();
         }
 
-        public LAPP.MTag.File[] GetOrder()
+        public LAPP.MediaFile[] GetOrder()
         {
             ListViewPage lvp = GetPlayingPage();
             if (lvp != null) return lvp.Order.ToArray();
@@ -435,9 +433,9 @@ namespace LAP.Page
             }
         }
 
-        private void NewItem_GetTagEvent(object sender, LAPP.Utils.ReturnableEventArgs<string, LAPP.MTag.TagEx> e)
+        private void NewItem_GetTagEvent(object sender, LAPP.Utils.ReturnableEventArgs<string, LAPP.MediaFile> e)
         {
-            e.Return = bs.GetTag(e.Value);
+            e.Return = new LAPP.MediaFile(e.Value);
         }
 
         private void NewItem_OrderEnded(object sender, EventArgs e)
@@ -450,9 +448,9 @@ namespace LAP.Page
             RendererDisposeRequest?.Invoke(sender, e);
         }
 
-        public LAPP.MTag.TagEx GetTag(string FilePath)
+        public LAPP.MediaFile GetTag(string FilePath)
         {
-            return bs.GetTag(FilePath);
+            return new LAPP.MediaFile(FilePath);
         }
     }
 
@@ -556,9 +554,9 @@ namespace LAP.Page
 
     public class PlayFileEventArgs : EventArgs
     {
-        public LAPP.MTag.File File;
+        public LAPP.MediaFile File;
 
-        public PlayFileEventArgs(LAPP.MTag.File File)
+        public PlayFileEventArgs(LAPP.MediaFile File)
         {
             this.File = File;
         }

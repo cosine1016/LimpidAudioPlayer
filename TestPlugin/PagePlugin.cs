@@ -9,9 +9,9 @@ namespace TestPlugin
 {
     public class PagePlugin : LAPP.Page.Plugin
     {
-        private List<ListItem> Items = new List<ListItem>();
+        protected List<ListItem> Items = new List<ListItem>();
 
-        private List<LAPP.MTag.File> Files = new List<LAPP.MTag.File>();
+        protected List<LAPP.MediaFile> Files = new List<LAPP.MediaFile>();
 
         public override System.Windows.Controls.Border Border { get; set; }
 
@@ -51,23 +51,32 @@ namespace TestPlugin
             GetItems();
         }
 
-        private void GetItems()
+        protected virtual void GetItems()
+        {
+        }
+    }
+
+    public class FastPage : PagePlugin
+    {
+        protected override void GetItems()
         {
             Items.Clear();
-            try
+            string[] files
+                = System.IO.Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)
+                + @"\Echosmith\Talking Dreams");
+
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            foreach (string f in files)
             {
-                string[] files
-                    = System.IO.Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)
-                    + @"\Echosmith\Talking Dreams");
-                foreach (string f in files)
-                {
-                    LAPP.MTag.File file = new LAPP.MTag.File(f, GetTag(f));
-                    file.Artwork = file.Tag.GetArtwork();
-                    Items.Add(new ListSubItem() { MainLabelText = file.Tag.Title, SubLabelVisibility = System.Windows.Visibility.Hidden });
-                    Files.Add(file);
-                }
+                LAPP.MediaFile tag = new LAPP.MediaFile(f);
+                Items.Add(new ListSubItem() { MainLabelText = tag.Title,
+                    SubLabelVisibility = System.Windows.Visibility.Hidden });
+                Files.Add(tag);
+                
             }
-            catch (Exception) { LAPP.Utils.Player.Notice("Directory Not Found", System.Windows.Media.Brushes.Red); }
+            sw.Stop();
+            Items.Add(new ListSubItem() { MainLabelText = sw.ElapsedMilliseconds.ToString() });
         }
     }
 }

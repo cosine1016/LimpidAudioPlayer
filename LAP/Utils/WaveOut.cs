@@ -21,6 +21,8 @@ namespace LAP.Utils
 
         public WASAPIConfig WASAPI { get; set; } = new WASAPIConfig(NAudio.CoreAudioApi.AudioClientShareMode.Shared);
 
+        public float Amplify { get; set; } = 0;
+
         [Serializable()]
         public class DirectSoundConfig : ICloneable
         {

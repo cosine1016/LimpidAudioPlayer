@@ -11,7 +11,7 @@ namespace TestPlugin
     {
         public PluginBase()
         {
-            Pages.Add(new PagePlugin());
+            Pages.Add(new FastPage());
             WaveStreams.Add(new WaveStreamPlugin());
         }
 

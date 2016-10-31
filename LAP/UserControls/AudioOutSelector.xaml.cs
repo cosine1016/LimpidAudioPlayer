@@ -22,6 +22,7 @@ namespace LAP.UserControls
                 ASIOConfig = (Utils.WaveOut.ASIOConfig)Utils.Config.Setting.WaveOut.ASIO.Clone();
                 WASAPIConfig = (Utils.WaveOut.WASAPIConfig)Utils.Config.Setting.WaveOut.WASAPI.Clone();
                 DSConfig = (Utils.WaveOut.DirectSoundConfig)Utils.Config.Setting.WaveOut.DirectSound.Clone();
+                AmplifyN.Value = (int)(Utils.Config.Setting.WaveOut.Amplify * 100);
                 SwitchButton();
             }
         }

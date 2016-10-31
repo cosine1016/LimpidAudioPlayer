@@ -34,6 +34,9 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RWTag">
+      <HintPath>..\..\ERTag\ERTag\bin\Debug\RWTag.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -48,14 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events.cs" />
-    <Compile Include="MTag\Async\DirectoryReader.cs" />
-    <Compile Include="MTag\Async\FileReader.cs" />
-    <Compile Include="MTag\Ext\Flac\Reader.cs" />
-    <Compile Include="MTag\Ext\ID3\Reader.cs" />
-    <Compile Include="MTag\Ext\LRC\Reader.cs" />
-    <Compile Include="MTag\Ext\MP4\Reader.cs" />
-    <Compile Include="MTag\Tag.cs" />
-    <Compile Include="MTag\TagReader.cs" />
     <Compile Include="NAudio\Codecs\ALawDecoder.cs" />
     <Compile Include="NAudio\Codecs\ALawEncoder.cs" />
     <Compile Include="NAudio\Codecs\G722Codec.cs" />
@@ -484,6 +479,7 @@
     <Compile Include="NAudio\Wave\WaveStreams\WaveOutBuffer.cs" />
     <Compile Include="NAudio\Wave\WaveStreams\WaveStream.cs" />
     <Compile Include="Setting\ISettingItem.cs" />
+    <Compile Include="Tag.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\EventArgs.cs" />
     <Compile Include="LimpidAudioPlayerPlugin.cs" />

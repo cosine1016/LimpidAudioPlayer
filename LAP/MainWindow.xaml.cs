@@ -14,9 +14,9 @@ namespace LAP
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal LAPP.MTag.File LastFile = null;
+        internal LAPP.MediaFile PlayingFile = null;
+        internal LAPP.MediaFile LastFile = null;
         internal Page.Manager Manager;
-        internal LAPP.MTag.File PlayingFile = null;
         internal Audio Renderer = null;
         internal Timer seekt = new Timer();
         internal Utils.Taskbar TaskbarManager;
@@ -35,23 +35,20 @@ namespace LAP
             StopFile(false);
             Manager.OnPlayStateChanged(Audio.Status.Stopped, null);
 
-            if (PlayingFile != null) LastFile = (LAPP.MTag.File)PlayingFile.Clone();
-
-            LAPP.MTag.File file = new LAPP.MTag.File(FilePath, Manager.GetTag(FilePath));
-            file.Artwork = Utils.Utility.ArtworkManager.GetArtwork(file.Tag.ArtworkCachePath);
+            LAPP.MediaFile file = new LAPP.MediaFile(FilePath);
             RenderFile(file);
         }
 
-        public void RenderFile(LAPP.MTag.File File, bool KeepState = false, bool AutoRun = true)
+        public void RenderFile(LAPP.MediaFile File, bool KeepState = false, bool AutoRun = true)
         {
             try
             {
                 InitializeRenderer(File.Path);
 
-                TitleT.Content = File.Tag.Title;
-                ArtistT.Content = File.Tag.Artist;
-                AlbumT.Content = File.Tag.Album;
-                LyricsT.Text = File.Tag.Lyrics;
+                TitleT.Content = File.Title;
+                ArtistT.Content = File.Artist;
+                AlbumT.Content = File.Album;
+                LyricsT.Text = File.Lyrics;
                 ArtworkI.Source = File.Artwork;
             }
             catch (Audio.ASIOException)
@@ -82,15 +79,9 @@ namespace LAP
             MC.MediaStateButton.SwitchMediaState();
 
             if (!KeepState)
-            {
-                LastFile = PlayingFile;
-                PlayingFile = File;
-            }
+                SetFile(File);
 
-            if (LastFile == null || File.Tag.ArtworkCachePath != LastFile.Tag.ArtworkCachePath)
-            {
-                bgImage.Image = File.Artwork;
-            }
+            bgImage.Image = File.Artwork;
 
             if (bgImage.Visibility == Visibility.Hidden)
             {
@@ -98,8 +89,8 @@ namespace LAP
                 va.Animate(Utils.Config.Setting.Values.BackgroundImageAnimationDuration, bgImage, Visibility.Visible);
             }
 
-            MC.PlayingStatus.Title = File.Tag.Title;
-            MC.PlayingStatus.Album = File.Tag.Album;
+            MC.PlayingStatus.Title = File.Title;
+            MC.PlayingStatus.Album = File.Album;
             MC.PlayingStatus.Image = File.Artwork;
             MC.VisibleStatus();
 
@@ -229,6 +220,8 @@ namespace LAP
             Spectrum.SampleAggreator = Renderer.SampleAggregator;
             Spectrum.AssociateEvent();
 
+            Renderer.Amplifier.Amplify = Utils.Config.Setting.WaveOut.Amplify;
+
             Renderer.PSEMicMixer.Enabled = Utils.Config.Setting.Boolean.PSE;
             Renderer.PSEMicMixer.PSE.ExtractedDegreeOfRisk += PSE_ExtractedDegreeOfRisk;
             Renderer.PlaybackStopped += Renderer_PlaybackStopped;
@@ -249,10 +242,20 @@ namespace LAP
             else Manager.PlayNextFile();
         }
 
-        internal void PlayFile(LAPP.MTag.File File)
+        internal void PlayFile(LAPP.MediaFile File)
         {
-            if (PlayingFile != null) LastFile = (LAPP.MTag.File)PlayingFile.Clone();
+            SetFile(File);
             RenderFile(File);
+        }
+
+        private void SetFile(LAPP.MediaFile File)
+        {
+            if(LastFile != null)
+            {
+                LastFile.Dispose();
+            }
+            LastFile = PlayingFile;
+            PlayingFile = File;
         }
 
         internal void RunFile()
@@ -314,6 +317,8 @@ namespace LAP
                     va.Animate(Utils.Config.Setting.Values.BackgroundImageAnimationDuration, bgImage, Visibility.Hidden);
                 }
 
+                LastFile?.Dispose();
+                PlayingFile?.Dispose();
                 LastFile = null;
                 PlayingFile = null;
                 MC.HideStatus();

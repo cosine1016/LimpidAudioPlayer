@@ -90,58 +90,40 @@ namespace LAP.Dialogs
                 LastNum++;
                 ClearUC.Dialogs.TextBoxWithMessage.ResultData Result = ClearUC.Dialogs.Dialog.ShowMessageBoxWithNumeric(
                     Utils.Config.Language.Strings.ExceptionMessage.SelectDiscNumber[0], Utils.Config.Language.Strings.ExceptionMessage.SelectDiscNumber[1], LastNum);
-                int DNum = 0;
-                if (Result.ClickedButton == ClearUC.Dialogs.Dialog.ClickedButton.OK) DNum = Result.Number;
-
+                
                 foreach (string p in OFD.FileNames)
                 {
-                    int Num = -1;
-
                     Page.Album.AlbumData.Track Track = new Page.Album.AlbumData.Track();
 
-                    if (LAPP.MTag.TagReader.SupportedExtension.Contains(System.IO.Path.GetExtension(p).ToLower()))
+                    LAPP.MediaFile Tag = new LAPP.MediaFile(p);
+                    if (MenuItem.ImageSources == null)
                     {
-                        LAPP.MTag.Tag Tag = LAPP.MTag.TagReader.GetTag(p);
-                        if (Tag != null)
+                        if (Tag.Artwork != null)
                         {
-                            if (MenuItem.ImageSources == null)
-                            {
-                                if (Tag.Artwork != null)
-                                {
-                                    ImageSource Image =
-                                        Utils.Converter.ToImageSource((System.Drawing.Bitmap)Tag.Artwork);
-                                    ClearUC.ListViewItems.ListItem.ImageSourceList ISL
-                                        = new ClearUC.ListViewItems.ListItem.ImageSourceList();
-                                    ISL.Add(Image);
-                                    MenuItem.ImageSources = ISL;
-                                    MenuItem.ImageIndex = 0;
-                                }
-                            }
-
-                            if (string.IsNullOrEmpty(AlbumT.Text) && string.IsNullOrEmpty(Tag.Album) == false)
-                                AlbumT.Text = Tag.Album;
-
-                            if (string.IsNullOrEmpty(Tag.Title) == false)
-                            {
-                                Track.Title = Tag.Title;
-                                if (string.IsNullOrEmpty(ArtistT.Text))
-                                    ArtistT.Text = Tag.Artist;
-                            }
-                            else
-                            {
-                                Track.Title = System.IO.Path.GetFileNameWithoutExtension(p);
-                            }
-
-                            if (string.IsNullOrEmpty(Tag.Track) == false)
-                            {
-                                bool Success = int.TryParse(Tag.Track, out Num);
-                                if (Success == false) Num = -1;
-                            }
+                            ImageSource Image = Tag.Artwork;
+                            ListItem.ImageSourceList ISL = new ListItem.ImageSourceList();
+                            ISL.Add(Image);
+                            MenuItem.ImageSources = ISL;
+                            MenuItem.ImageIndex = 0;
                         }
                     }
 
-                    Track.DiscNumber = DNum;
-                    Track.TrackNumber = Num;
+                    if (string.IsNullOrEmpty(AlbumT.Text) && string.IsNullOrEmpty(Tag.Album) == false)
+                        AlbumT.Text = Tag.Album;
+
+                    if (string.IsNullOrEmpty(Tag.Title) == false)
+                    {
+                        Track.Title = Tag.Title;
+                        if (string.IsNullOrEmpty(ArtistT.Text))
+                            ArtistT.Text = Tag.Artist;
+                    }
+                    else
+                    {
+                        Track.Title = System.IO.Path.GetFileNameWithoutExtension(p);
+                    }
+
+                    Track.DiscNumber = Tag.DiscNumber;
+                    Track.TrackNumber = Tag.Track;
                     Track.Path = p;
 
                     ListView.Items.Add(CreateSubItem(Track));
