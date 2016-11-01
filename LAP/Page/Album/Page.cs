@@ -124,8 +124,11 @@ namespace LAP.Page.Album
 
                 Lai.SecondItem = lbi;
 
-                LAPP.MediaFile tag = GetTag(Data.Tracks[i].Path);
-                LAPP.MediaFile File = new LAPP.MediaFile(Data.Tracks[i].Path);
+                Async.TagReader<ListAnimativeItem>.
+                    GetInstance(new Async.TagReader<ListAnimativeItem>.TagReadingCompletedDelegate(TagReadingDelegate),
+                    Data.Tracks[i].Path, Lai);
+
+                LAPP.MediaFile File = GetTag(Data.Tracks[i].Path);
 
                 Lai.Data = File;
                 Lai.DataType = typeof(LAPP.MediaFile);
@@ -134,6 +137,14 @@ namespace LAP.Page.Album
 
                 PageItem.Add(Lai);
             }
+        }
+
+        internal ListAnimativeItem TagReadingDelegate(LAPP.MediaFile MediaFile, ListAnimativeItem Item)
+        {
+            Item.Data = MediaFile;
+            Item.DataType = typeof(LAPP.MediaFile);
+
+            return Item;
         }
 
         private void Album_AlbumCreated(object sender, Dialogs.Album.AlbumCreatedEventArgs e)
