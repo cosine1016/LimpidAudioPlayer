@@ -89,12 +89,6 @@ namespace ClearUC
             }
         }
 
-        public ImageSource Image
-        {
-            get { return ImageI.Source; }
-            set { ImageI.Source = value; }
-        }
-
         private void ThrowValueError()
         {
             if (Maximum < Value)

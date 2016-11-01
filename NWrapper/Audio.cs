@@ -47,8 +47,6 @@ namespace NWrapper
 
         public FadeInOutSampleProvider Fade { get; set; } = null;
 
-        public Amplifier Amplifier { get; set; } = null;
-
         public Equalizer.EqualizerBand[] EqualizerBand { get; set; } = new Equalizer.EqualizerBand[]
         {
             new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 100, Gain = 0},
@@ -105,9 +103,7 @@ namespace NWrapper
 
                     SampleAggregator = new SampleAggregator(PSEMicMixer, fftLenght);
 
-                    Amplifier = new Amplifier(SampleAggregator);
-
-                    WavePlayer.Init(Amplifier);
+                    WavePlayer.Init(SampleAggregator);
                 }
                 catch (Exception e)
                 {

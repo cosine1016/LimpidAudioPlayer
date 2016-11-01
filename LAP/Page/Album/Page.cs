@@ -118,22 +118,11 @@ namespace LAP.Page.Album
                 Explorer.Content = Config.Language.Strings.ContextMenu.ShowInExplorer;
                 lbi.Add(Explorer);
 
-                //ListButtonsItem.ListButton Remove = new ListButtonsItem.ListButton(Lai);
-                //Remove.Content = Utils.Config.Language.Strings.ContextMenu.Remove;
-                //lbi.Add(Remove);
-
                 Lai.SecondItem = lbi;
 
                 Async.TagReader<ListAnimativeItem>.
                     GetInstance(new Async.TagReader<ListAnimativeItem>.TagReadingCompletedDelegate(TagReadingDelegate),
                     Data.Tracks[i].Path, Lai);
-
-                LAPP.MediaFile File = GetTag(Data.Tracks[i].Path);
-
-                Lai.Data = File;
-                Lai.DataType = typeof(LAPP.MediaFile);
-
-                Files.Add(File);
 
                 PageItem.Add(Lai);
             }
@@ -143,6 +132,7 @@ namespace LAP.Page.Album
         {
             Item.Data = MediaFile;
             Item.DataType = typeof(LAPP.MediaFile);
+            Files.Add(MediaFile);
 
             return Item;
         }

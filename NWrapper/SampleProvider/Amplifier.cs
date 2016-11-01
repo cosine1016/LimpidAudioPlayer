@@ -17,7 +17,7 @@ namespace NWrapper
 
         public Amplifier(ISampleProvider Source) : this(Source, 1) { }
 
-        public bool Enabled { get; set; } = true;
+        public bool Enabled { get; set; } = false;
 
         public float Amplify { get; set; } = 0;
 
@@ -28,16 +28,21 @@ namespace NWrapper
 
         public int Read(float[] buffer, int offset, int count)
         {
-            int read = 0;
-            int rcou = count - offset;
-            read += source.Read(buffer, offset, count);
-
-            for(int i = 0;rcou > i; i++)
+            if (Enabled)
             {
-                buffer[i] *= (Amplify + 1.0f);
-            }
+                int read = 0;
+                int rcou = count - offset;
+                read += source.Read(buffer, offset, count);
 
-            return read;
+                for (int i = 0; rcou > i; i++)
+                {
+                    buffer[i] *= (Amplify + 1.0f);
+                }
+
+                return read;
+            }
+            else
+                return source.Read(buffer, offset, count);
         }
     }
 }

@@ -9,7 +9,6 @@
         <Rectangle x:Name="drain" Fill="#02FFFFFF" />
         <Rectangle x:Name="bg" Fill="#FF323232" Opacity="0.7" Margin="5,0,0,0" MouseEnter="bg_MouseEnter" MouseLeave="bg_MouseLeave" MouseLeftButtonDown="Bar_MouseLeftButtonDown" MouseLeftButtonUp="Bar_MouseLeftButtonUp" MouseMove="Bar_MouseMove" />
         <Rectangle x:Name="front" Fill="#FFFFAE00" Opacity="0.7" MouseEnter="front_MouseEnter" MouseLeave="front_MouseLeave" MouseLeftButtonDown="Bar_MouseLeftButtonDown" MouseLeftButtonUp="Bar_MouseLeftButtonUp" MouseMove="Bar_MouseMove" HorizontalAlignment="Left" Width="0" />
-        <Image x:Name="ImageI"/>
         <Rectangle x:Name="thumb" Fill="#FFC8C8C8" Width="5" Stroke="#FF8C8C8C" HorizontalAlignment="Left" Margin="0" MouseEnter="thumb_MouseEnter" MouseLeave="thumb_MouseLeave" MouseDown="thumb_MouseDown" MouseUp="thumb_MouseUp" MouseMove="Bar_MouseMove" />
     </Grid>
 </UserControl>
