@@ -150,10 +150,6 @@
     <Compile Include="UserControls\PluginOption.xaml.cs">
       <DependentUpon>PluginOption.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\PSEOption.xaml.cs">
-      <DependentUpon>PSEOption.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\BackgroundScanner.cs" />
     <Compile Include="Utils\GUI.cs" />
     <Compile Include="Utils\ImageGenerator.cs" />
     <Compile Include="Utils\Library.cs" />
