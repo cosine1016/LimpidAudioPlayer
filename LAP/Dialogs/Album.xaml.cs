@@ -95,7 +95,7 @@ namespace LAP.Dialogs
                 {
                     Page.Album.AlbumData.Track Track = new Page.Album.AlbumData.Track();
 
-                    LAPP.MediaFile Tag = new LAPP.MediaFile(p);
+                    LAPP.IO.MediaFile Tag = new LAPP.IO.MediaFile(p);
                     if (MenuItem.ImageSources == null)
                     {
                         if (Tag.Artwork != null)

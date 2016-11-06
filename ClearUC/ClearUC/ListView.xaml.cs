@@ -9,6 +9,22 @@ using System.Windows.Media.Animation;
 
 namespace ClearUC
 {
+    public class ItemClickedEventArgs : EventArgs
+    {
+        public ItemClickedEventArgs(ListItem Item, int Index, MouseButtonEventArgs MouseButtonEventArgs)
+        {
+            this.Item = Item;
+            this.Index = Index;
+            this.MouseButtonEventArgs = MouseButtonEventArgs;
+        }
+
+        public int Index { get; private set; }
+
+        public ListItem Item { get; private set; }
+
+        public MouseButtonEventArgs MouseButtonEventArgs { get; set; }
+    }
+
     public class ListItemCollection : System.Collections.ObjectModel.ObservableCollection<ListItem>
     {
         public event EventHandler<NotifyCollectionChangedEventArgs> CollectionChangeNotice;
@@ -42,7 +58,7 @@ namespace ClearUC
     /// </summary>
     public partial class ListView : UserControl
     {
-        public event EventHandler<ListItem.ItemClickedEventArgs> ItemClicked;
+        public event EventHandler<ItemClickedEventArgs> ItemClicked;
 
         public static readonly DependencyProperty SearchBoxVisibleProperty = DependencyProperty.Register("SearchBoxVisible", typeof(bool), typeof(ListView));
 
@@ -86,8 +102,6 @@ namespace ClearUC
             set { bg.Stroke.Opacity = value; }
         }
 
-        public bool ClearSearchBoxWhenItemsClicked { get; set; } = true;
-
         public IEasingFunction EasingFunction { get; set; } = new CircleEase();
 
         public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -123,7 +137,7 @@ namespace ClearUC
             {
                 bool ssb = SearchBoxVisible;
                 SetValue(SearchBoxVisibleProperty, value);
-                if (ssb == true)
+                if (value == true)
                 {
                     if (sbadded == false)
                     {
@@ -153,7 +167,7 @@ namespace ClearUC
             set { sc.VerticalScrollBarVisibility = value; }
         }
 
-        protected virtual void OnItemClicked(ListItem.ItemClickedEventArgs e)
+        protected virtual void OnItemClicked(ItemClickedEventArgs e)
         {
             ItemClicked?.Invoke(this, e);
         }
@@ -305,12 +319,12 @@ namespace ClearUC
             Item.ItemClicked += Item_ItemClicked;
         }
 
-        private void Item_ItemClicked(object sender, ListItem.ItemClickedEventArgs e)
+        private void Item_ItemClicked(object sender, ItemClickedEventArgs e)
         {
             if (e.MouseButtonEventArgs.ChangedButton == MouseButton.Left)
             {
                 OnItemClicked(e);
-                if (ClearSearchBoxWhenItemsClicked == true || string.IsNullOrEmpty(SB.Text) == true) SB.ClearText();
+                if (string.IsNullOrEmpty(SB.Text)) SB.ClearText();
             }
         }
 
@@ -394,6 +408,11 @@ namespace ClearUC
                         Items[i].ItemStatus = ListItem.State.Removed;
                     }
                 }
+            }
+
+            if (SearchBoxVisible)
+            {
+                SB.ClearText();
             }
         }
 

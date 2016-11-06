@@ -325,11 +325,7 @@ namespace LAP.Utils
         {
             public string Open { get; set; } = "Open";
 
-            public string DiscOpen { get; set; } = "Disc Open";
-
             public string Config { get; set; } = "Config";
-
-            public string Equalizer { get; set; } = "Equalizer";
 
             public string Exit { get; set; } = "Exit";
 

@@ -5,7 +5,14 @@ using System.Diagnostics;
 
 namespace NWrapper
 {
-    public class SampleAggregator : ISampleProviderEx
+    public class FFTInfo
+    {
+        public bool Enable { get; set; } = false;
+
+        public int Length { get; set; } = 0;
+    }
+
+    public class SampleAggregator : IManagableProvider
     {
         // volume
         public event EventHandler<MaxSampleEventArgs> MaximumCalculated;
@@ -18,30 +25,12 @@ namespace NWrapper
         // FFT
         public event EventHandler<FftEventArgs> FftCalculated;
 
-        public bool PerformFFT { get; set; }
-        private readonly Complex[] fftBuffer;
-        private readonly FftEventArgs fftArgs;
+        private FFTInfo Info = new FFTInfo();
+        private Complex[] fftBuffer;
+        private FftEventArgs fftArgs;
         private int fftPos;
-        private readonly int fftLength;
         private int m;
-        private readonly ISampleProvider source;
-
-        private readonly int channels;
-
-        public SampleAggregator(ISampleProvider source, int fftLength = 4096)
-        {
-            channels = source.WaveFormat.Channels;
-            if (!IsPowerOfTwo(fftLength))
-            {
-                throw new ArgumentException("FFT Length must be a power of two");
-            }
-            this.m = (int)Math.Log(fftLength, 2.0);
-            this.fftLength = fftLength;
-            this.fftBuffer = new Complex[fftLength];
-            this.fftArgs = new FftEventArgs(fftBuffer);
-            this.source = source;
-            redt = redc;
-        }
+        private ISampleProvider source;
 
         private bool IsPowerOfTwo(int x)
         {
@@ -60,7 +49,7 @@ namespace NWrapper
             {
                 if (FftCalculated != null)
                 {
-                    fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HammingWindow(fftPos, fftLength));
+                    fftBuffer[fftPos].X = (float)(value * FastFourierTransform.HammingWindow(fftPos, Info.Length));
                     fftBuffer[fftPos].Y = 0;
                     fftPos++;
                     if (fftPos >= fftBuffer.Length)
@@ -88,8 +77,6 @@ namespace NWrapper
 
         public WaveFormat WaveFormat { get { return source.WaveFormat; } }
 
-        public bool Enabled { get; set; } = false;
-
         public int ReduceCount
         {
             get { return redc; }
@@ -106,22 +93,48 @@ namespace NWrapper
         {
             int samplesRead = source.Read(buffer, offset, count);
 
-            if (PerformFFT == false || Enabled == false) return samplesRead;
-
-            if (redt >= ReduceCount)
-            {
-                System.Threading.Tasks.Task.Run(() =>
-                {
-                    for (int n = 0; n < samplesRead; n += channels)
-                        if (Add(buffer[n + offset])) break;
-                });
-                redt = 0;
-            }
+            if (Info == null || Info.Enable == false || Info.Length < 2)
+                return samplesRead;
             else
-                redt++;
+            {
+                if (redt >= ReduceCount)
+                {
+                    System.Threading.Tasks.Task.Run(() =>
+                    {
+                        for (int n = 0; n < samplesRead; n += source.WaveFormat.Channels)
+                            if (Add(buffer[n + offset])) break;
+                    });
+                    redt = 0;
+                }
+                else
+                    redt++;
 
-            return samplesRead;
+                return samplesRead;
+            }
         }
+
+        public bool Enabled
+        {
+            get { return Info.Enable; }
+            set { Info.Enable = value; }
+        }
+
+        public void Initialize(ISampleProvider BaseProvider)
+        {
+            source = BaseProvider;
+        }
+
+        public void SetFFT(FFTInfo Info)
+        {
+            this.Info = Info;
+
+            m = (int)Math.Log(Info.Length, 2.0);
+            fftBuffer = new Complex[Info.Length];
+            fftArgs = new FftEventArgs(fftBuffer);
+            redt = redc;
+        }
+
+        public void Dispose() { }
     }
 
     public class MaxSampleEventArgs : EventArgs

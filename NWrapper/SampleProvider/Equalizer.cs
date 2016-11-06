@@ -1,26 +1,17 @@
-﻿using NAudio.Dsp;
+﻿using System;
+using NAudio.Dsp;
 using NAudio.Wave;
 
 namespace NWrapper
 {
-    public class Equalizer : ISampleProviderEx
+    public class Equalizer : IManagableProvider
     {
-        private readonly ISampleProvider sourceProvider;
+        private ISampleProvider sourceProvider;
         private EqualizerBand[] bands;
-        private readonly BiQuadFilter[,] filters;
-        private readonly int channels;
-        private readonly int bandCount;
+        private BiQuadFilter[,] filters;
+        private int channels;
+        private int bandCount;
         private bool updated;
-
-        public Equalizer(ISampleProvider sourceProvider, EqualizerBand[] Bands)
-        {
-            this.sourceProvider = sourceProvider;
-            bands = Bands;
-            bandCount = Bands.Length;
-            channels = sourceProvider.WaveFormat.Channels;
-            filters = new BiQuadFilter[channels, bands.Length];
-            CreateFilters();
-        }
 
         private void CreateFilters()
         {
@@ -72,7 +63,26 @@ namespace NWrapper
             return samplesRead;
         }
 
-        public class EqualizerBand : System.ICloneable
+        public void Initialize(ISampleProvider BaseProvider)
+        {
+            sourceProvider = BaseProvider; ;
+            CreateFilters();
+        }
+
+        public void SetBands(EqualizerBand[] Bands)
+        {
+            bands = Bands;
+            bandCount = Bands.Length;
+            channels = sourceProvider.WaveFormat.Channels;
+            filters = new BiQuadFilter[channels, bands.Length];
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
+
+        public class EqualizerBand : ICloneable
         {
             public float Frequency { get; set; }
             public float Gain { get; set; }

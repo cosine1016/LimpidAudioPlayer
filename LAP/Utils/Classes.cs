@@ -14,19 +14,6 @@ namespace LAP.Utils
 {
     public class Classes
     {
-        public class PlaylistEventArgs : EventArgs
-        {
-            public PlaylistEventArgs(string Path, Page.Playlist.Playlist.PlaylistData Data)
-            {
-                this.Path = Path;
-                this.Data = Data;
-            }
-
-            public string Path { get; set; }
-
-            public Page.Playlist.Playlist.PlaylistData Data { get; set; }
-        }
-
         public class AudioFileReader : NWrapper.AudioFileReaderEx
         {
             public AudioFileReader(string FilePath) : base(FilePath) { }
@@ -49,7 +36,7 @@ namespace LAP.Utils
                                         System.IO.Path.GetExtension(fileName).ToLower()) ||
                                         plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
                                     {
-                                        readerStream = new PluginWaveStream(plg.Instance.WaveStreams[s]);
+                                        readerStream = plg.Instance.WaveStreams[s];
                                         LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
                                         return;
                                     }
@@ -64,47 +51,6 @@ namespace LAP.Utils
                     catch (Exception) { }
                 }
                 base.CreateReaderStream(fileName);
-            }
-
-            public class PluginWaveStream : WaveStream
-            {
-                LAPP.Wave.WaveStreamPlugin bs;
-
-                public PluginWaveStream(LAPP.Wave.WaveStreamPlugin BaseStream)
-                {
-                    bs = BaseStream;
-                }
-
-                public override long Length
-                {
-                    get { return bs.Length; }
-                }
-
-                public override long Position
-                {
-                    get { return bs.Position; }
-                    set { bs.Position = value; }
-                }
-
-                public override WaveFormat WaveFormat
-                {
-                    get { return ToNAudioFormat(bs.WaveFormat); }
-                }
-
-                public override int Read(byte[] buffer, int offset, int count)
-                {
-                    return bs.Read(buffer, offset, count);
-                }
-
-                private WaveFormat ToNAudioFormat(LAPP.NAudio.Wave.WaveFormat Format)
-                {
-                    return new WaveFormat(Format.SampleRate, Format.BitsPerSample, Format.Channels);
-                }
-
-                public override string ToString()
-                {
-                    return bs.ToString();
-                }
             }
         }
     }

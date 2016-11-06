@@ -108,6 +108,10 @@ namespace LAP
                             Utils.InstanceData.LogExp = true;
                             Utils.InstanceData.LogExpPath = Arg;
                         }
+                        else if (Arg.StartsWith("-Output"))
+                        {
+                            OutputParser(Arg);
+                        }
                         else
                         {
                             Priority = false;
@@ -140,6 +144,35 @@ namespace LAP
             }
         }
 
+        private static void OutputParser(string Arg)
+        {
+            Arg = Arg.ToLower();
+            Arg = Arg.Replace("-output:", "");
+
+            Utils.InstanceData.OverrideOutput = true;
+
+            switch (Arg)
+            {
+                case "wave":
+                case "wav":
+                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.Wave;
+                    break;
+                case "directsound":
+                case "ds":
+                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.DirectSound;
+                    break;
+                case "wasapi":
+                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.WASAPI;
+                    break;
+                case "asio":
+                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.ASIO;
+                    break;
+                default:
+                    Utils.InstanceData.OverrideOutput = false;
+                    break;
+            }
+        }
+
         private static void Events_AppendLog(object sender, LAPP.Events.LogEventArgs e)
         {
             Dialogs.LogWindow.Append(e.Msg);
@@ -147,6 +180,7 @@ namespace LAP
 
         private static void App_Exit(object sender, System.Windows.ExitEventArgs e)
         {
+            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(LAPP.Player.Action.Exited, e.ApplicationExitCode));
             Dialogs.LogWindow.Append("Application is Shutting Down(Code " + e.ApplicationExitCode + ")");
 
             if (Utils.InstanceData.DoNotInitialize == false)
@@ -170,8 +204,26 @@ namespace LAP
                     return;
                 }
 
+                if (Utils.Config.Setting != null && Utils.PluginManager.InitializedPlugin.Count > 0)
+                {
+                    for(int i = 0;Utils.PluginManager.InitializedPlugin.Count > i; i++)
+                    {
+                        System.Reflection.Assembly asm = Utils.PluginManager.InitializedPlugin[i].Asm;
+                        if(asm.GetName().Name == e.Exception.Source)
+                        {
+                            e.Handled = true;
+
+                            Utils.PluginManager.UnloadPlugin(Utils.PluginManager.InitializedPlugin[i]);
+                            ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.OKOnly, "Plugin Error",
+                                asm.GetName().Name + " is not compatible plugin\nThe plugin was unloaded");
+                            return;
+                        }
+                    }
+                }
+                
                 try
                 {
+                    if (e.Handled) return;
                     System.Management.ManagementClass mc =
                         new System.Management.ManagementClass("Win32_OperatingSystem");
                     System.Management.ManagementObjectCollection moc = mc.GetInstances();

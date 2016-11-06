@@ -10,28 +10,20 @@ namespace LAP.Utils
     {
         public Paths()
         {
-            UsingLanguage = UsingLanguage.Replace("{Base}", BaseSettingPath);
-            Equalizer = Equalizer.Replace("{Base}", BaseSettingPath);
-            Playlist = Playlist.Replace("{Base}", BaseSettingPath);
-            Album = Album.Replace("{Base}", BaseSettingPath);
-            Cache = Cache.Replace("{Base}", BaseSettingPath);
-            LibraryPath = LibraryPath.Replace("{Base}", BaseSettingPath);
-            PluginInfoPath = PluginInfoPath.Replace("{Base}", BaseSettingPath);
+            UsingLanguage = LAPP.Utils.Path.GetPath(UsingLanguage);
+            Equalizer = LAPP.Utils.Path.GetPath(Equalizer);
+            Cache = LAPP.Utils.Path.GetPath(Cache);
+            LibraryPath = LAPP.Utils.Path.GetPath(LibraryPath);
+            PluginInfoPath = LAPP.Utils.Path.GetPath(PluginInfoPath);
         }
 
-        public static string SettingFilePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"/LAP/Config/Setting.limpidcnf";
+        public static string SettingFilePath = LAPP.Utils.Path.GetPath(@"{LAP}\Setting.limpidcnf");
 
-        public static string BaseSettingPath { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        public string UsingLanguage { get; set; } = @"{LAP}\Languages\English.xml";
 
-        public string UsingLanguage { get; set; } = @"{Base}\LAP\Languages\English.xml";
+        public string Equalizer { get; set; } = @"{LAP}\Equalizer\";
 
-        public string Equalizer { get; set; } = @"{Base}\LAP\Equalizer\";
-
-        public string Playlist { get; set; } = @"{Base}\LAP\Playlists\";
-
-        public string Album { get; set; } = @"{Base}\LAP\Album\";
-
-        public string Cache { get; set; } = @"{Base}\LAP\Cache\";
+        public string Cache { get; set; } = @"{LAP}\Cache\";
 
         public string EqualizerExtension { get; set; } = @".limpideq";
 
@@ -39,9 +31,9 @@ namespace LAP.Utils
 
         public string AlbumExtension { get; set; } = @".limpidal";
 
-        public string LibraryPath { get; set; } = @"{Base}\LAP\Library.limpidlb";
+        public string LibraryPath { get; set; } = @"{LAP}\Library.limpidlb";
 
-        public string PluginInfoPath { get; set; } = @"{Base}\LAP\PluginInfo.xml";
+        public string PluginInfoPath { get; set; } = @"{LAP}\PluginInfo.xml";
 
         public string PlaylistCache { get; set; } = "PlaylistCache";
 

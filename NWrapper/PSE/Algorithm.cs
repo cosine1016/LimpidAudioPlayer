@@ -11,7 +11,7 @@ namespace NWrapper
         public DegreeOfRisk DangerLevel { get; internal set; } = DegreeOfRisk.Safe;
     }
 
-    public class PerilousSoundExtractor : IDisposable
+    internal class PerilousSoundExtractor : IDisposable
     {
         private Thread bgWorker;
         private Thread bgLooper;

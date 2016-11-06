@@ -7,19 +7,27 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using LAPP.IO;
 
 namespace LAP.Utils
 {
     internal class GUI
     {
         private ListSubItem OpenItem;
-        private ListSubItem OpenDiscItem;
         private ListSubItem ConfigItem;
         private ListSubItem CreatorItem;
-        private ListSubItem EqualizerItem;
         private ListSubItem ExitItem;
         private ListSubItem LogItem;
         private LAP.Dialogs.LogWindow LogWindow;
+
+        private void RaiseEvent(LAPP.Player.Action Action, params object[] Args)
+        {
+            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(Action, Args));
+        }
+        private void RaiseEvent(LAPP.Player.Action Action)
+        {
+            RaiseEvent(Action, null);
+        }
 
         private MainWindow MW;
 
@@ -67,12 +75,6 @@ namespace LAP.Utils
             OpenItem.Height = PerHeight;
             MW.OptionalView.Items.Add(OpenItem);
 
-            //OpenDiscItem = new ListSubItem();
-            //OpenDiscItem.MainLabelText = Utils.Config.Language.Strings.OptionalView.DiscOpen;
-            //OpenDiscItem.SubLabelVisibility = Visibility.Hidden;
-            //OpenDiscItem.Height = PerHeight;
-            //MW.OptionalView.Items.Add(OpenDiscItem);
-
             MW.OptionalView.Items.Add(new Separator());
 
             ConfigItem = new ListSubItem();
@@ -80,12 +82,6 @@ namespace LAP.Utils
             ConfigItem.SubLabelVisibility = Visibility.Hidden;
             ConfigItem.Height = PerHeight;
             MW.OptionalView.Items.Add(ConfigItem);
-
-            EqualizerItem = new ListSubItem();
-            EqualizerItem.MainLabelText = Config.Language.Strings.OptionalView.Equalizer;
-            EqualizerItem.SubLabelVisibility = Visibility.Hidden;
-            EqualizerItem.Height = PerHeight;
-            MW.OptionalView.Items.Add(EqualizerItem);
 
             if (InstanceData.LogMode)
             {
@@ -124,27 +120,27 @@ namespace LAP.Utils
         private void AssociateEvents()
         {
             Program.NotImplementedException += Program_NotImplementedException;
-            PluginManager.PluginEnableChanged += PluginManager_PluginEnableChanged;
+            PluginManager.PluginChanged += PluginManager_PluginChanged;
 
             LAPP.Events.Noticed += Events_Noticed;
 
             MW.MC.StopButton.MouseClicked += (sender, e) => { MW.StopFile(true); };
             MW.MC.LibraryButton.MouseClicked += LibraryButton_MouseClicked;
-            MW.MC.FFButton.MouseClicked += (sender, e) => { MW.Manager.PlayNextFile(); };
+            MW.MC.FFButton.MouseClicked += (sender, e) => { MW.Manager.PlayNext(); };
             MW.MC.RewButton.MouseClicked += (sender, e) =>
             {
                 if(MW.Renderer == null)
                 {
-                    MW.Manager.PlayLastFile();
+                    MW.Manager.PlayLast();
                     return;
                 }
-                long min = MW.Renderer.WaveStream.Length / 30;
-                if (MW.Renderer != null && MW.Renderer.StreamStatus != NWrapper.Audio.Status.Stopped && MW.Renderer.WaveStream.Position >= min)
+                long min = MW.Renderer.AudioFileReader.Length / 30;
+                if (MW.Renderer != null && MW.Renderer.StreamStatus != NWrapper.Audio.Status.Stopped && MW.Renderer.AudioFileReader.Position >= min)
                 {
-                    MW.Renderer.WaveStream.Position = 0;
+                    MW.Renderer.AudioFileReader.Position = 0;
                 }
                 else
-                    MW.Manager.PlayLastFile();
+                    MW.Manager.PlayLast();
             };
 
             MW.MediaInformationRoot.PreviewMouseUp += MediaInformationRoot_PreviewMouseUp;
@@ -156,16 +152,14 @@ namespace LAP.Utils
             MW.MC.MediaStateButton.MouseClicked += MediaStateButton_MouseClicked;
             MW.MC.Volume.ValueChanged += Volume_ValueChanged;
             MW.MC.Volume.MuteChanged += Volume_MuteChanged;
-
-            MW.QueueButton.Click += QueueButton_Click;
-            MW.Shuffle.StateChanged += (sender, e) => { MW.Manager.Shuffle = MW.Shuffle.ToggleState; };
-            MW.Repeat.StateChanged += Repeat_StateChanged;
-
-            Equalizer.EqualizerChanged += (sender, e) =>
+            
+            MW.Shuffle.StateChanged += (sender, e) =>
             {
-                if (MW.Renderer != null && MW.Renderer.Equalizer != null)
-                    MW.Renderer.SetEqualizerBand(Equalizer.Bands);
+                MW.Manager.Shuffle = MW.Shuffle.ToggleState;
+                RaiseEvent(LAPP.Player.Action.Shuffle, MW.Manager.Shuffle);
             };
+
+            MW.Repeat.StateChanged += Repeat_StateChanged;
 
             MW.Caption.OptionalButtonClick += Caption_OptionalButtonClick;
 
@@ -187,10 +181,14 @@ namespace LAP.Utils
                 if (MW.LyricsT.Visibility == Visibility.Hidden)
                 {
                     sv.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.LyricsT, MW.ArtworkI);
+                    RaiseEvent(LAPP.Player.Action.MediaLyrics, true);
+                    RaiseEvent(LAPP.Player.Action.MediaArtwork, false);
                 }
                 else
                 {
                     sv.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.ArtworkI, MW.LyricsT);
+                    RaiseEvent(LAPP.Player.Action.MediaLyrics, false);
+                    RaiseEvent(LAPP.Player.Action.MediaArtwork, true);
                 }
             }
             mirmrf = false;
@@ -207,6 +205,7 @@ namespace LAP.Utils
                         va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, itemhidden, Visibility.Visible);
                         itemhidden = null;
                         mirmcf = false;
+                        RaiseEvent(LAPP.Player.Action.MediaHidden, false);
                         return;
                     }
                 }
@@ -216,6 +215,7 @@ namespace LAP.Utils
                     case Visibility.Visible:
                         va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.LyricsT, Visibility.Hidden);
                         itemhidden = MW.LyricsT;
+                        RaiseEvent(LAPP.Player.Action.MediaHidden, true);
                         break;
                 }
 
@@ -224,6 +224,7 @@ namespace LAP.Utils
                     case Visibility.Visible:
                         va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.ArtworkI, Visibility.Hidden);
                         itemhidden = MW.ArtworkI;
+                        RaiseEvent(LAPP.Player.Action.MediaHidden, true);
                         break;
                 }
             }
@@ -245,25 +246,32 @@ namespace LAP.Utils
             }
         }
 
-        private void PluginManager_PluginEnableChanged(object sender, EventArgs e)
+        private void PluginManager_PluginChanged(object sender, PluginChangedEventArgs e)
         {
-            MW.Manager.Pages.Clear();
-            MW.Manager.Pages.AddRange(Pages.GetPages());
-            if (MW.Tab.Items.Count > 0) MW.Tab.ActiveIndex = 0;
+            if(e.Plugin.Instance.Pages != null)
+            {
+                for(int i = 0;e.Plugin.Instance.Pages.Count > i; i++)
+                {
+                    MW.Manager.Pages.Remove(e.Plugin.Instance.Pages[i]);
+                }
+            }
+
+            MW.Tab.ActiveIndex = -1;
         }
 
         private void RewButton_Rewind(object sender, EventArgs e)
         {
             if (MW.Renderer != null && MW.Renderer.StreamStatus != NWrapper.Audio.Status.Stopped)
             {
-                long interval = MW.Renderer.WaveStream.Length / 20;
-                if (MW.Renderer.WaveStream.Position - interval >= 0)
+                RaiseEvent(LAPP.Player.Action.Rewind);
+                long interval = MW.Renderer.AudioFileReader.Length / 20;
+                if (MW.Renderer.AudioFileReader.Position - interval >= 0)
                 {
-                    MW.Renderer.WaveStream.Position -= interval;
+                    MW.Renderer.AudioFileReader.Position -= interval;
                 }
                 else
                 {
-                    MW.Renderer.WaveStream.Position = 0;
+                    MW.Renderer.AudioFileReader.Position = 0;
                 }
             }
         }
@@ -272,32 +280,17 @@ namespace LAP.Utils
         {
             if(MW.Renderer != null && MW.Renderer.StreamStatus != NWrapper.Audio.Status.Stopped)
             {
-                long interval = MW.Renderer.WaveStream.Length / 20;
-                if (MW.Renderer.WaveStream.Position + interval <= MW.Renderer.WaveStream.Length)
+                RaiseEvent(LAPP.Player.Action.FastForward);
+                long interval = MW.Renderer.AudioFileReader.Length / 20;
+                if (MW.Renderer.AudioFileReader.Position + interval <= MW.Renderer.AudioFileReader.Length)
                 {
-                    MW.Renderer.WaveStream.Position += interval;
+                    MW.Renderer.AudioFileReader.Position += interval;
                 }
                 else
                 {
-                    MW.Renderer.WaveStream.Position = MW.Renderer.WaveStream.Length;
+                    MW.Renderer.AudioFileReader.Position = MW.Renderer.AudioFileReader.Length;
                 }
             }
-        }
-
-        private void QueueButton_Click(object sender, RoutedEventArgs e)
-        {
-            MW.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                Animation.Visible va = new Animation.Visible();
-                if (MW.QueueWindow.Visibility == Visibility.Visible)
-                {
-                    va.Animate(Config.Setting.Values.QueueWindowAnimationDuration, MW.QueueWindow, Visibility.Hidden);
-                }
-                else
-                {
-                    va.Animate(Config.Setting.Values.QueueWindowAnimationDuration, MW.QueueWindow, Visibility.Visible);
-                }
-            }));
         }
 
         private void Program_NotImplementedException(object sender, EventArgs e)
@@ -311,7 +304,7 @@ namespace LAP.Utils
         {
             if (MW.Renderer != null)
             {
-                if (MW.Renderer.WaveStream != null)
+                if (MW.Renderer.AudioFileReader != null)
                 {
                     MW.ApplyVolume();
                 }
@@ -322,7 +315,7 @@ namespace LAP.Utils
         {
             if (MW.Renderer != null)
             {
-                if (MW.Renderer.WaveStream != null)
+                if (MW.Renderer.AudioFileReader != null)
                 {
                     MW.ApplyVolume();
                 }
@@ -336,7 +329,7 @@ namespace LAP.Utils
                 switch (MW.Renderer.StreamStatus)
                 {
                     case NWrapper.Audio.Status.Stopped:
-                        MW.Manager.PlayNextFile();
+                        MW.Manager.PlayNext();
                         break;
 
                     case NWrapper.Audio.Status.Playing:
@@ -359,13 +352,13 @@ namespace LAP.Utils
                     Animation.SwitchVisibility sv = new Animation.SwitchVisibility();
                     if (MW.MediaInformationRoot.Visibility == Visibility.Hidden)
                     {
-                        MW.Renderer.SampleAggregator.Enabled = true;
                         sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.MediaInformationRoot, MW.LibraryRoot);
+                        RaiseEvent(LAPP.Player.Action.MediaInformation, true);
                     }
                     else
                     {
-                        MW.Renderer.SampleAggregator.Enabled = false;
                         sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.LibraryRoot, MW.MediaInformationRoot);
+                        RaiseEvent(LAPP.Player.Action.MediaInformation, false);
                     }
                 }
             }
@@ -377,23 +370,8 @@ namespace LAP.Utils
                 MW.Manager.Loop = true;
             else
                 MW.Manager.Loop = false;
-        }
 
-        private void Tab_ActiveItemChanged(object sender, EventArgs e)
-        {
-            ListItem[] items = null;
-            MW.library.Items.Clear();
-            if (MW.Manager.Pages[MW.Tab.ActiveIndex].Opened == false)
-            {
-                MW.Manager.Pages[MW.Tab.ActiveIndex].Update();
-                items = MW.Manager.Pages[MW.Tab.ActiveIndex].GetTopPageItems();
-                if (items != null) MW.library.Items.AddRange(items);
-            }
-            else
-            {
-                items = MW.Manager.Pages[MW.Tab.ActiveIndex].GetPageItems();
-                if (items != null) MW.library.Items.AddRange(items);
-            }
+            RaiseEvent(LAPP.Player.Action.Repeat, (int)MW.Repeat.ToggleState);
         }
 
         private void TaskbarManager_PauseButtonClick(object sender, EventArgs e)
@@ -415,11 +393,7 @@ namespace LAP.Utils
             }
             else
             {
-                MW.library.Items.Clear();
-                MW.Manager.Pages[MW.Tab.ActiveIndex].Update();
-
-                ListItem[] items = MW.Manager.Pages[MW.Tab.ActiveIndex].GetTopPageItems();
-                if(items != null) MW.library.Items.AddRange(items);
+                MW.Manager.SetTopPage();
             }
         }
 
@@ -430,18 +404,15 @@ namespace LAP.Utils
 
             Config.WriteSetting(Paths.SettingFilePath);
             Config.WriteLanguage(Config.Setting.Paths.UsingLanguage);
+
+            RaiseEvent(LAPP.Player.Action.WindowClosing);
         }
 
         private void InitializeTabAndManager()
         {
-            MW.Tab.ActiveItemChanged += Tab_ActiveItemChanged;
-            MW.Manager = new Page.Manager(MW.library, MW.PlayQueue, MW.Tab);
+            MW.Manager = new Page.Manager(MW.library, MW.Tab);
             MW.Manager.Pages.AddRange(Pages.GetPages());
             if (MW.Tab.Items.Count > 0) MW.Tab.ActiveIndex = 0;
-
-            MW.Manager.PlayFile += Manager_PlayFile;
-            MW.Manager.RendererDisposeRequest += Manager_RendererDisposeRequest;
-            MW.Manager.OrderEnded += Manager_OrderEnded;
         }
 
         private void Manager_OrderEnded(object sender, EventArgs e)
@@ -457,9 +428,9 @@ namespace LAP.Utils
             MW.StopFile(false);
         }
 
-        private void Manager_PlayFile(object sender, Page.PlayFileEventArgs e)
+        private void Manager_PlayFile(object sender, LAPP.RunFileEventArgs e)
         {
-            MW.PlayFile(e.File);
+            MW.PlayFile(e.Item.File);
         }
 
         private void InitializeTaskBarManager()
@@ -476,36 +447,28 @@ namespace LAP.Utils
             {
                 case Visibility.Visible:
                     MW.OptionalGrid.Visibility = Visibility.Hidden;
+                    RaiseEvent(LAPP.Player.Action.ToolStrip, false);
                     break;
 
                 case Visibility.Hidden:
                     MW.OptionalGrid.Visibility = Visibility.Visible;
+                    RaiseEvent(LAPP.Player.Action.ToolStrip, true);
                     break;
             }
         }
 
-        private void OptionalView_ItemClicked(object sender, ListItem.ItemClickedEventArgs e)
+        private void OptionalView_ItemClicked(object sender, ClearUC.ItemClickedEventArgs e)
         {
             if (e.Item == OpenItem)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
-                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (ofd.ShowDialog() == DialogResult.OK)
                     MW.DirectPlay(ofd.FileName);
-            }
-
-            if(e.Item == OpenDiscItem)
-            {
-
             }
 
             if (e.Item == ConfigItem)
             {
                 new LAP.Dialogs.Config(MW).Show();
-            }
-
-            if (e.Item == EqualizerItem)
-            {
-                new LAP.Dialogs.Equalizer().Show();
             }
 
             if (e.Item == CreatorItem)

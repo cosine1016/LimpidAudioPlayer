@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LAPP;
 
 namespace LAP.Utils
 {
@@ -10,14 +11,14 @@ namespace LAP.Utils
     {
         public string[] PageCollection { get; set; } = new string[] { "Album", "Playlist", "Plugin" };
 
-        public static Page.ListViewPage[] GetPages()
+        public static PageCollection GetPages()
         {
             if (Config.Setting.Pages.PageCollection != null)
                 if (Config.Setting.Pages.PageCollection.Length != 0)
                 {
                     try
                     {
-                        List<Page.ListViewPage> pages = new List<Page.ListViewPage>();
+                        PageCollection pages = new PageCollection(false);
                         for (int i = 0; Config.Setting.Pages.PageCollection.Length > i; i++)
                         {
                             if(Config.Setting.Pages.PageCollection[i] == "Plugin")
@@ -26,29 +27,25 @@ namespace LAP.Utils
                                 {
                                     if (PluginManager.InitializedPlugin[pc].Enabled)
                                     {
-                                        foreach (LAPP.Page.Plugin p in PluginManager.InitializedPlugin[pc].Instance.Pages)
+                                        foreach (LAPP.Page p in PluginManager.InitializedPlugin[pc].Instance.Pages)
                                         {
-                                            Page.ListViewPage lvp = new Page.Plugin.Page(p);
-                                            if (lvp != null) pages.Add(lvp);
+                                            if (p != null) pages.Add(p);
                                         }
                                     }
                                 }
                             }
                             else
                             {
-                                Page.ListViewPage lvp = Utility.GetPageFromString(Config.Setting.Pages.PageCollection[i]);
-                                if (lvp != null) pages.Add(lvp);
+                                LAPP.Page p = Utility.GetPageFromString(Config.Setting.Pages.PageCollection[i]);
+                                if (p != null) pages.Add(p);
                             }
                         }
-                        return pages.ToArray();
+                        return pages;
                     }
                     catch (Exception) { }
                 }
 
-            return new Page.ListViewPage[]
-            {
-                new Page.Album.Page()
-            };
+            return new PageCollection(false);
         }
     }
 }

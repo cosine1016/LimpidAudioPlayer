@@ -10,6 +10,23 @@ using System.Xml.Serialization;
 
 namespace LAP.Utils
 {
+    public class PluginChangedEventArgs : EventArgs
+    {
+        public PluginChangedEventArgs(PluginManager.Plugin Plugin)
+        {
+            this.Plugin = Plugin;
+        }
+
+        public PluginChangedEventArgs(PluginManager.Plugin Plugin, bool Unload) : this(Plugin)
+        {
+            this.Unload = Unload;
+        }
+
+        public PluginManager.Plugin Plugin { get; set; }
+
+        public bool Unload { get; set; }
+    }
+
     public class PluginManager
     {
         public const string PluginDirectory = @"Plugin\";
@@ -18,7 +35,7 @@ namespace LAP.Utils
 
         private static PluginInfoCollection InfoCollection { get; set; }
 
-        public static event EventHandler PluginEnableChanged;
+        public static event EventHandler<PluginChangedEventArgs> PluginChanged;
 
         static PluginManager()
         {
@@ -92,6 +109,14 @@ namespace LAP.Utils
             catch (Exception) { InfoCollection = new PluginInfoCollection(); }
         }
 
+        public static void UnloadPlugin(Plugin Plugin)
+        {
+            if (InitializedPlugin.Remove(Plugin))
+            {
+                PluginChanged?.Invoke(null, new PluginChangedEventArgs(Plugin, true));
+            }
+        }
+
         public static void ReLoadPlugin()
         {
             for(int i = 0;InitializedPlugin.Count > i; i++)
@@ -110,7 +135,8 @@ namespace LAP.Utils
         private static void Plg_EnableChanged(object sender, EventArgs e)
         {
             SaveInfo();
-            PluginEnableChanged?.Invoke(sender, e);
+            Plugin plg = (Plugin)sender;
+            PluginChanged?.Invoke(sender, new PluginChangedEventArgs(plg));
         }
 
         public class Plugin

@@ -6,39 +6,12 @@ using NAudio.Dsp;
 
 namespace NWrapper
 {
-    public class PSEMicMixProvider : ISampleProviderEx, IDisposable
+    public class PSEMicMixProvider : IManagableProvider
     {
         public event EventHandler MicMixEnd;
 
         private ISampleProvider baseProv;
         private AudioMeterInformation Meter = null;
-
-        public PSEMicMixProvider(ISampleProvider Source, MMDevice Device)
-        {
-            baseProv = Source;
-            CaptureDevice = Device;
-            Meter = Device.AudioMeterInformation;
-
-            WasapiCapture = new WasapiCapture(Device);
-
-            PSE.VolumeRequest += PSE_VolumeRequest;
-            PSE.ExtractedDegreeOfRisk += PSE_ExtractedDegreeOfRisk;
-            PSE.Enable = true;
-
-            PSEFadeTimer.Interval = 3000;
-            PSEFadeTimer.Tick += PSEFadeTimer_Tick;
-
-            BufferedWaveProvider = new BufferedWaveProvider(WaveFormat);
-
-            WasapiCapture.DataAvailable += WasapiCapture_DataAvailable;
-            WasapiCapture.StartRecording();
-
-            List<ISampleProvider> sources = new List<ISampleProvider>();
-            sources.Add(baseProv);
-            sources.Add(WaveExtensionMethods.ToSampleProvider(BufferedWaveProvider));
-
-            Mixer = new NAudio.Wave.SampleProviders.MixingSampleProvider(sources);
-        }
 
         private bool rec = false;
         
@@ -96,7 +69,7 @@ namespace NWrapper
 
         public DegreeOfRisk MicDisableRisk { get; set; } = DegreeOfRisk.Middle;
 
-        public PerilousSoundExtractor PSE { get; set; } = new PerilousSoundExtractor();
+        private PerilousSoundExtractor PSE { get; set; } = new PerilousSoundExtractor();
 
         public MMDevice CaptureDevice { get; private set; }
 
@@ -130,6 +103,36 @@ namespace NWrapper
             Mixer = null;
             WasapiCapture = null;
             BufferedWaveProvider = null;
+        }
+
+        public void Initialize(ISampleProvider BaseProvider)
+        {
+            baseProv = BaseProvider;
+
+            PSE.VolumeRequest += PSE_VolumeRequest;
+            PSE.ExtractedDegreeOfRisk += PSE_ExtractedDegreeOfRisk;
+            PSE.Enable = true;
+
+            PSEFadeTimer.Interval = 3000;
+            PSEFadeTimer.Tick += PSEFadeTimer_Tick;
+
+            BufferedWaveProvider = new BufferedWaveProvider(WaveFormat);
+
+            List<ISampleProvider> sources = new List<ISampleProvider>();
+            sources.Add(baseProv);
+            sources.Add(WaveExtensionMethods.ToSampleProvider(BufferedWaveProvider));
+
+            Mixer = new NAudio.Wave.SampleProviders.MixingSampleProvider(sources);
+        }
+
+        public void SetDevice(MMDevice Device)
+        {
+            CaptureDevice = Device;
+            Meter = Device.AudioMeterInformation;
+
+            WasapiCapture = new WasapiCapture(Device);
+            WasapiCapture.DataAvailable += WasapiCapture_DataAvailable;
+            WasapiCapture.StartRecording();
         }
 
         ~PSEMicMixProvider()

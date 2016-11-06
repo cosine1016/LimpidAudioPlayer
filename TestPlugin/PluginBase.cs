@@ -11,8 +11,14 @@ namespace TestPlugin
     {
         public PluginBase()
         {
-            Pages.Add(new FastPage());
+            Pages.Add(new DirectoryPage());
             WaveStreams.Add(new WaveStreamPlugin());
+            LAPP.Player.EventReceived += Player_EventReceived;
+        }
+
+        private void Player_EventReceived(object sender, LAPP.Player.EventReceiveArgs e)
+        {
+            //Console.WriteLine(e.Action.ToString());
         }
 
         public override string Author
@@ -56,10 +62,6 @@ namespace TestPlugin
         }
 
         public override void SetFilePath(string FilePath)
-        {
-        }
-
-        public override void SetStream(Stream Stream)
         {
         }
     }

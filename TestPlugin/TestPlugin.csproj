@@ -34,6 +34,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,6 +57,10 @@
     <ProjectReference Include="..\LAPP\LAPP.csproj">
       <Project>{ea8497da-00de-4fd3-a4bb-18690fec9271}</Project>
       <Name>LAPP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NWrapper\NWrapper.csproj">
+      <Project>{89d4b40a-027b-4a45-a1d5-2956080e0195}</Project>
+      <Name>NWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

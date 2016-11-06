@@ -4,79 +4,73 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClearUC.ListViewItems;
+using LAPP.IO;
+using LAPP;
+using NAudio.Wave;
+using System.IO;
+using System.Windows.Controls;
 
 namespace TestPlugin
 {
-    public class PagePlugin : LAPP.Page.Plugin
+    public class DirectoryPage : ManageablePage
     {
-        protected List<ListItem> Items = new List<ListItem>();
-
-        protected List<LAPP.MediaFile> Files = new List<LAPP.MediaFile>();
-
-        public override System.Windows.Controls.Border Border { get; set; }
-
-        public override string Title { get; set; } = "TestPluginPage";
-
-        public PagePlugin()
+        protected override void InitializeTopItems()
         {
-            
+            TopItems.Clear();
+
+            OpenB = new ListButtonsItem.ListButton(OpenDirItem);
+            OpenB.Content = "Open";
+            OpenB.Click += OpenB_Click;
+
+            OpenDirItem.Add(OpenB);
+            OpenDirPageItem = new PageItem(OpenDirItem);
+
+            TopItems.Add(OpenDirPageItem);
         }
 
-        public override void Dispose()
-        {
-        }
+        private PageItemCollection TopItems = new PageItemCollection();
+        System.Windows.Forms.FolderBrowserDialog FolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
 
-        public override ListItem[] GetPageItems()
-        {
-            return Items.ToArray();
-        }
+        PageItem OpenDirPageItem;
+        ListButtonsItem OpenDirItem = new ListButtonsItem();
+        ListButtonsItem.ListButton OpenB;
 
-        public override ListItem[] GetTopPageItems()
-        {
-            return Items.ToArray();
-        }
+        public override Border Border { get; protected set; }
 
-        public override void PlayAnyFile()
-        {
-            OnPlayFile(Files.ToArray(), 0);
-        }
+        public override string Title { get; protected set; } = "Directory";
 
-        public override void ItemClicked(int Index, ListItem Item)
+        public override void Dispose() { }
+
+        public override void PlaybackStateChanged(PlaybackState PlaybackState)
         {
-            OnPlayFile(Files.ToArray(), Index);
         }
 
         public override void Update()
         {
-            GetItems();
+
         }
 
-        protected virtual void GetItems()
+        private void OpenB_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-        }
-    }
-
-    public class FastPage : PagePlugin
-    {
-        protected override void GetItems()
-        {
-            Items.Clear();
-            string[] files
-                = System.IO.Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)
-                + @"\Echosmith\Talking Dreams");
-
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-            foreach (string f in files)
+            if(FolderBrowser.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                LAPP.MediaFile tag = new LAPP.MediaFile(f);
-                Items.Add(new ListSubItem() { MainLabelText = tag.Title,
-                    SubLabelVisibility = System.Windows.Visibility.Hidden });
-                Files.Add(tag);
-                
+                TopItems.Clear();
+                TopItems.Add(OpenDirPageItem);
+
+                string[] paths = Directory.GetFiles(FolderBrowser.SelectedPath);
+                for(int i = 0;paths.Length > i; i++)
+                {
+                    MediaFile mf = new MediaFile(paths[i]);
+                    TopItems.Add(new FileItem(mf, new ListSubItem() { MainLabelText = mf.Title, SubLabelText = mf.Artist }, true));
+                }
+
+                UpdatePage(Level.Top);
             }
-            sw.Stop();
-            Items.Add(new ListSubItem() { MainLabelText = sw.ElapsedMilliseconds.ToString() });
+        }
+
+        protected override PageItemCollection GetTopItems()
+        {
+            return TopItems;
         }
     }
 }

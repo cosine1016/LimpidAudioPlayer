@@ -56,18 +56,7 @@ namespace LAP.Utils
                 }
             }
 
-            UpdateLAPP();
-
             Library = new Library(true);
-        }
-
-        public static void UpdateLAPP()
-        {
-            LAPP.Utils.Config.Setting = new LAPP.Utils.Setting();
-            LAPP.Utils.Config.Setting.Paths.Cache = Setting.Paths.Cache;
-            LAPP.Utils.Config.Setting.Paths.LibraryPath = Setting.Paths.LibraryPath;
-            LAPP.Utils.Config.Setting.Paths.ScanPaths = Setting.Paths.ScanPaths;
-            LAPP.Utils.Config.Setting.Paths.ScanFilters = Setting.Paths.ScanFilters;
         }
 
         public static void WriteSetting(string Path)

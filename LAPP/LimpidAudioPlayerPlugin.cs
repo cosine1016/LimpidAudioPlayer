@@ -19,14 +19,17 @@ namespace LAPP
             if (string.IsNullOrEmpty(Title)) throw new Exception("タイトルがありません");
         }
 
-        public virtual DisposableItemCollection<Page.Plugin> Pages { get; set; }
-            = new DisposableItemCollection<Page.Plugin>();
+        public virtual PageCollection Pages { get; set; }
+            = new PageCollection(false);
 
         public virtual DisposableItemCollection<Wave.WaveStreamPlugin> WaveStreams { get; set; }
             = new DisposableItemCollection<Wave.WaveStreamPlugin>();
 
         public virtual Collection<Setting.ISettingItem> SettingItems { get; set; }
             = new Collection<Setting.ISettingItem>();
+
+        public virtual Collection<NWrapper.IManagableProvider> Providers { get; set; }
+            = new Collection<NWrapper.IManagableProvider>();
 
         /// <summary>
         /// プラグインに割り当てられたフォルダパスを取得します。このフォルダを利用するかどうかは自由です
@@ -41,18 +44,16 @@ namespace LAPP
 
         /// <summary>
         /// ファイルがレンダリングされる前に実行されます。
-        /// プラグイン製作者はこのメソッド内で必要なWaveStreamPluginをWaveStreamsに追加する必要があります。
+        /// プラグイン製作者はこのメソッド内で必要なWaveStreamPluginを追加する必要があります。
         /// </summary>
         /// <param name="FilePath">レンダリング予定のファイルパス</param>
         public abstract void SetFilePath(string FilePath);
-
-        public abstract void SetStream(Stream Stream);
         
         public virtual void Dispose()
         {
             if(Pages != null)
             {
-                Pages.Clear(true);
+                Pages.Clear();
                 Pages = null;
             }
 

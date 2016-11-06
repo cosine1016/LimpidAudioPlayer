@@ -115,7 +115,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Async\TagReader.cs" />
     <Compile Include="Dialogs\Config.xaml.cs">
       <DependentUpon>Config.xaml</DependentUpon>
     </Compile>
@@ -125,23 +124,13 @@
     <Compile Include="Dialogs\UnhandledExceptionDialog.xaml.cs">
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Page\Album\Data.cs" />
-    <Compile Include="Page\Album\Page.cs" />
     <Compile Include="Page\Manager.cs" />
-    <Compile Include="Page\Playlist\Data.cs" />
-    <Compile Include="Page\Playlist\Page.cs" />
-    <Compile Include="Page\Plugin\Page.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourceServices.cs" />
-    <Compile Include="Resources\Shapes.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Shapes.resx</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\AudioOutSelector.xaml.cs">
       <DependentUpon>AudioOutSelector.xaml</DependentUpon>
     </Compile>
@@ -163,17 +152,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Dialogs\Album.xaml.cs">
-      <DependentUpon>Album.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\Creator.xaml.cs">
       <DependentUpon>Creator.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\Equalizer.xaml.cs">
       <DependentUpon>Equalizer.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Playlist.xaml.cs">
-      <DependentUpon>Playlist.xaml</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Resources\Taskbar.Designer.cs">
@@ -213,10 +196,6 @@
     <Compile Include="Utils\Taskbar.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\Values.cs" />
-    <Page Include="Dialogs\Album.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\Config.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -230,10 +209,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\LogWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\Playlist.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -253,18 +228,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Resources\Icon\Disc.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Icon\Eye.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\Icon\Playlist.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="UserControls\AudioOutSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -317,11 +280,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Shapes.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Shapes.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Taskbar.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Taskbar.Designer.cs</LastGenOutput>
@@ -341,9 +299,8 @@
     <None Include="Properties\App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Components\" />
     <Folder Include="DebugWindow\" />
-    <Folder Include="Page\Other\" />
-    <Folder Include="Page\TestPage\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Properties\Limpid Audio Player.ico" />

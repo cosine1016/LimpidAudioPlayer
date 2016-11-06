@@ -161,7 +161,7 @@ namespace ClearUC.ListViewItems
             set
             {
                 staL.Content = value;
-                if (StatusLabelTextChanged != null) StatusLabelTextChanged(this, new EventArgs());
+                StatusLabelTextChanged?.Invoke(this, new EventArgs());
             }
         }
 

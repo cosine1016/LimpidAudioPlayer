@@ -15,13 +15,22 @@ namespace LAP
     /// </summary>
     public partial class MainWindow : Window
     {
-        internal LAPP.MediaFile PlayingFile = null;
-        internal LAPP.MediaFile LastFile = null;
+        internal LAPP.IO.MediaFile PlayingFile = null;
+        internal LAPP.IO.MediaFile LastFile = null;
         internal Page.Manager Manager;
         internal Audio Renderer = null;
         internal Timer seekt = new Timer();
         internal Utils.Taskbar TaskbarManager;
         internal Utils.GUI GUIMan = null;
+
+        private void RaiseEvent(LAPP.Player.Action Action, params object[] Args)
+        {
+            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(Action, Args));
+        }
+        private void RaiseEvent(LAPP.Player.Action Action)
+        {
+            RaiseEvent(Action, null);
+        }
 
         public MainWindow()
         {
@@ -29,18 +38,38 @@ namespace LAP
 
             if (Utils.InstanceData.ErrorRaise)
                 throw new Exception("-ErrorRaiseが引数として与えられました");
+
+            RaiseEvent(LAPP.Player.Action.Boot);
+        }
+
+        private void PluginManager_PluginChanged(object sender, EventArgs e)
+        {
+            if(Renderer != null)
+            {
+                ReRenderFile(true, true);
+            }
+        }
+
+        private void Manager_RunFile(object sender, LAPP.RunFileEventArgs e)
+        {
+            if (e.Item.Playable)
+                PlayFile(e.Item.File);
+        }
+
+        private void Manager_Stop(object sender, EventArgs e)
+        {
+            StopFile(true);
         }
 
         public void DirectPlay(string FilePath)
         {
             StopFile(false);
-            Manager.OnPlayStateChanged(Audio.Status.Stopped, null);
 
-            LAPP.MediaFile file = new LAPP.MediaFile(FilePath);
+            LAPP.IO.MediaFile file = new LAPP.IO.MediaFile(FilePath);
             RenderFile(file);
         }
 
-        public void RenderFile(LAPP.MediaFile File, bool KeepState = false, bool AutoRun = true)
+        public void RenderFile(LAPP.IO.MediaFile File, bool KeepState = false, bool AutoRun = true)
         {
             try
             {
@@ -70,7 +99,7 @@ namespace LAP
                 return;
             }
 
-            SeekBar.Maximum = Renderer.WaveStream.Length;
+            SeekBar.Maximum = Renderer.AudioFileReader.Length;
             ApplyVolume();
 
             seekt.Interval = 20;
@@ -97,8 +126,6 @@ namespace LAP
 
             TaskbarManager.VisibleButtons();
 
-            FFTCalcDicision();
-
             if (AutoRun) RunFile();
         }
 
@@ -109,9 +136,9 @@ namespace LAP
             long pos = 0;
             Audio.Status status = Audio.Status.Playing;
 
-            if (Renderer != null && Renderer.WaveStream != null)
+            if (Renderer != null && Renderer.AudioFileReader != null)
             {
-                if (StayPosition) pos = Renderer.WaveStream.Position;
+                if (StayPosition) pos = Renderer.AudioFileReader.Position;
                 if (StayStatus)
                 {
                     status = Renderer.StreamStatus;
@@ -142,7 +169,7 @@ namespace LAP
                 return;
             }
 
-            Renderer.WaveStream.Position = pos;
+            Renderer.AudioFileReader.Position = pos;
 
             seekt.Interval = 20;
             seekt.Start();
@@ -165,12 +192,14 @@ namespace LAP
         {
             if (MC.Volume.Mute == false)
             {
-                Renderer.WaveStream.Volume = (float)MC.Volume.Value / 100;
+                Renderer.AudioFileReader.Volume = (float)MC.Volume.Value / 100;
             }
             else
             {
-                Renderer.WaveStream.Volume = 0;
+                Renderer.AudioFileReader.Volume = 0;
             }
+
+            RaiseEvent(LAPP.Player.Action.VolumeChanged, Renderer.AudioFileReader.Volume);
         }
 
         private void DisposeRenderer()
@@ -180,53 +209,33 @@ namespace LAP
 
             if (Renderer != null)
             {
-                if (Renderer.SampleAggregator != null)
-                {
-                    Renderer.SampleAggregator.Enabled = false;
-                    Renderer.SampleAggregator.PerformFFT = false;
-
-                    Spectrum.SampleAggreator = null;
-                }
-
-                if (Renderer.PSEMicMixer != null)
-                    Renderer.PSEMicMixer.PSE.ExtractedDegreeOfRisk -= PSE_ExtractedDegreeOfRisk;
-
                 Renderer.PlaybackStopped -= Renderer_PlaybackStopped;
 
                 Renderer.StreamStatus = Audio.Status.Stopped;
                 Renderer.Dispose();
                 Renderer = null;
             }
+
+            RaiseEvent(LAPP.Player.Action.RendererDisposed);
         }
 
         private void InitializeRenderer(string FilePath)
         {
             if (Renderer != null) DisposeRenderer();
 
+            RaiseEvent(LAPP.Player.Action.Render);
             Renderer = new Audio();
-            Renderer.WaveStream = new Utils.Classes.AudioFileReader(FilePath);
 
-            Renderer.fftLenght = Utils.Config.Setting.Values.SpectrumBarCount * 2;
+            Renderer.OpenFile(FilePath,
+                new Utils.Classes.AudioFileReader(FilePath), Utils.Utility.CreateSoundDevice());
 
-            Renderer.WavePlayer = Utils.Utility.CreateSoundDevice();
-            Dialogs.LogWindow.Append("Output : " + Utils.Config.Setting.WaveOut.OutputDevice.ToString());
-
-            Renderer.OpenFile(FilePath, Utils.Utility.GetCaptureDevice());
             Dialogs.LogWindow.Append("File Open : " + FilePath);
 
-            Renderer.SetEqualizerBand(Utils.Equalizer.Bands);
+            RaiseEvent(LAPP.Player.Action.Rendered);
 
-            Spectrum.OverrideMaxY = true;
-            Spectrum.MaxY = 100;
-            Spectrum.MainThreadDispatcher = Dispatcher;
-            Spectrum.SampleAggreator = Renderer.SampleAggregator;
-            Spectrum.AssociateEvent();
-
-            Renderer.PSEMicMixer.Enabled = Utils.Config.Setting.Boolean.PSE;
-            Renderer.PSEMicMixer.PSE.ExtractedDegreeOfRisk += PSE_ExtractedDegreeOfRisk;
             Renderer.PlaybackStopped += Renderer_PlaybackStopped;
 
-            Dialogs.LogWindow.Append("Renderer : " + Renderer.WaveStream.ToString());
+            Dialogs.LogWindow.Append("Renderer : " + Renderer.AudioFileReader.ToString());
         }
 
         private void Renderer_PlaybackStopped(object sender, NAudio.Wave.StoppedEventArgs e)
@@ -239,16 +248,16 @@ namespace LAP
             }
 
             if (Repeat.ToggleState == MVPUC.Toggles.Repeat.State.SingleRepeat) ReRenderFile(false, true);
-            else Manager.PlayNextFile();
+            else Manager.PlayNext();
         }
 
-        internal void PlayFile(LAPP.MediaFile File)
+        internal void PlayFile(LAPP.IO.MediaFile File)
         {
             SetFile(File);
             RenderFile(File);
         }
 
-        private void SetFile(LAPP.MediaFile File)
+        private void SetFile(LAPP.IO.MediaFile File)
         {
             if(LastFile != null)
             {
@@ -260,22 +269,12 @@ namespace LAP
 
         internal void RunFile()
         {
-            if (MediaInformationRoot.Visibility == Visibility.Hidden)
-            {
-                Renderer.SampleAggregator.Enabled = true;
-            }
-            else
-            {
-                Renderer.SampleAggregator.Enabled = false;
-            }
-
             Dialogs.LogWindow.Append("Run");
             MC.MediaStateButton.MediaState = MVPUC.Buttons.MediaStateButton.State.Pause;
             Renderer.StreamStatus = Audio.Status.Playing;
             TaskbarManager.State = Utils.Taskbar.ButtonState.Pause;
-            Manager.OnPlayStateChanged(Audio.Status.Playing, PlayingFile);
-
-            Spectrum.Start();
+            Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Playing);
+            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Playing);
         }
 
         internal void PauseFile()
@@ -284,9 +283,8 @@ namespace LAP
             MC.MediaStateButton.MediaState = MVPUC.Buttons.MediaStateButton.State.Play;
             Renderer.StreamStatus = Audio.Status.Paused;
             TaskbarManager.State = Utils.Taskbar.ButtonState.Play;
-            Manager.OnPlayStateChanged(Audio.Status.Paused, PlayingFile);
-
-            Spectrum.Pause();
+            Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Paused);
+            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Paused);
         }
 
         internal void StopFile(bool ClearImage)
@@ -295,6 +293,9 @@ namespace LAP
             MC.MediaStateButton.MediaState = MVPUC.Buttons.MediaStateButton.State.Play;
 
             DisposeRenderer();
+
+            LastFile?.Dispose();
+            LastFile = null;
 
             if (ClearImage)
             {
@@ -316,28 +317,14 @@ namespace LAP
 
                     va.Animate(Utils.Config.Setting.Values.BackgroundImageAnimationDuration, bgImage, Visibility.Hidden);
                 }
-
-                LastFile?.Dispose();
-                PlayingFile?.Dispose();
-                LastFile = null;
-                PlayingFile = null;
                 MC.HideStatus();
             }
 
-            Manager.OnPlayStateChanged(Audio.Status.Stopped, null);
+            Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Stopped);
+            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Stopped);
 
             SeekBar.Value = SeekBar.Minimum;
             if (TaskbarManager != null) TaskbarManager.HideButtons();
-        }
-
-        private void PSE_ExtractedDegreeOfRisk(object sender, PerilousSoundEventArgs e)
-        {
-            if (Renderer.StreamStatus != Audio.Status.Stopped && e.DangerLevel == DegreeOfRisk.High && Utils.Config.Setting.Boolean.PSE)
-            {
-                Dialogs.LogWindow.Append("Perilous Sound Detected");
-                Renderer.Fade.BeginFadeOut(1);
-                Renderer.PSEMicMixer.Enabled = true;
-            }
         }
 
         private void SeekBar_ValueChanged(object sender, ClearUC.SeekBar.ValueChangedEventArgs e)
@@ -345,27 +332,22 @@ namespace LAP
             if (e.ChangeType == ClearUC.SeekBar.ValueChangedEventArgs.ChangedType.ManualEnd && Renderer != null)
             {
                 seekt.Stop();
-                Renderer.WaveStream.Position = SeekBar.Value;
+                Renderer.AudioFileReader.Position = SeekBar.Value;
+                RaiseEvent(LAPP.Player.Action.Seek, Renderer.AudioFileReader.Position);
                 seekt.Start();
             }
         }
 
         private void Seekt_Tick(object sender, EventArgs e)
         {
-            if (Renderer != null && Renderer.WaveStream != null)
+            if (Renderer != null && Renderer.AudioFileReader != null)
             {
-                SeekBar.Value = Renderer.WaveStream.Position;
-                MC.PlayingStatus.SetTime(Renderer.WaveStream.CurrentTime, Renderer.WaveStream.TotalTime);
-                if (Renderer.WaveStream.Position >= Renderer.WaveStream.Length - 3000)
+                SeekBar.Value = Renderer.AudioFileReader.Position;
+                MC.PlayingStatus.SetTime(Renderer.AudioFileReader.CurrentTime, Renderer.AudioFileReader.TotalTime);
+                if (Renderer.AudioFileReader.Position >= Renderer.AudioFileReader.Length - 3000)
                     if (Repeat.ToggleState == MVPUC.Toggles.Repeat.State.SingleRepeat) ReRenderFile(false, true);
-                    else Manager.PlayNextFile();
+                    else Manager.PlayNext();
             }
-        }
-
-        private void WaitVolTimer_Tick(object sender, EventArgs e)
-        {
-            Renderer.Fade.BeginFadeIn(1000);
-            Renderer.PSEMicMixer.Enabled = false;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -374,6 +356,10 @@ namespace LAP
             {
                 GUIMan = new Utils.GUI(this);
                 GUIMan.Initialize();
+                
+                Manager.RunFile += Manager_RunFile;
+                Manager.Stop += Manager_Stop;
+                Utils.PluginManager.PluginChanged += PluginManager_PluginChanged;
             }));
         }
 
@@ -390,48 +376,7 @@ namespace LAP
                     break;
             }
 
-            FFTCalcDicision();
-        }
-
-        private void FFTCalcDicision()
-        {
-            if (Renderer != null)
-            {
-                if (Renderer.SampleAggregator != null)
-                {
-                    bool perform = false;
-                    bool active = Utils.Config.Setting.Values.CalculateFFTWindowState.HasFlag(Utils.Values.WindowState.Activated);
-                    bool deactive = Utils.Config.Setting.Values.CalculateFFTWindowState.HasFlag(Utils.Values.WindowState.Deactivated);
-
-                    if (IsActive && active)
-                    {
-                        perform = true;
-                    }
-                    else if (!IsActive && deactive)
-                    {
-                        perform = true;
-                    }
-
-                    bool max = Utils.Config.Setting.Values.CalculateFFTWindowState.HasFlag(Utils.Values.WindowState.Maximized);
-                    bool min = Utils.Config.Setting.Values.CalculateFFTWindowState.HasFlag(Utils.Values.WindowState.Minimized);
-                    bool nor = Utils.Config.Setting.Values.CalculateFFTWindowState.HasFlag(Utils.Values.WindowState.Normal);
-
-                    if (max || min || nor)
-                        perform = true;
-
-                    Renderer.SampleAggregator.PerformFFT = perform;
-                }
-            }
-        }
-
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            FFTCalcDicision();
-        }
-
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            FFTCalcDicision();
+            RaiseEvent(LAPP.Player.Action.WindowState, WindowState);
         }
     }
 }

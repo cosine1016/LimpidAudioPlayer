@@ -83,16 +83,15 @@ namespace LAP.Visualize
             }));
         }
 
-        public void Start()
-        {
-            SampleAggreator.Enabled = true;
-            SampleAggreator.PerformFFT = true;
-        }
+        //public void Start()
+        //{
+        //    SampleAggreator.Enabled = true;
+        //}
 
-        public void Pause()
-        {
-            SampleAggreator.PerformFFT = false;
-        }
+        //public void Pause()
+        //{
+        //    SampleAggreator.Enabled = false;
+        //}
 
         public static float GetYPosLog(Complex c, float Height)
         {

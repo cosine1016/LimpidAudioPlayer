@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LAP" xmlns:ListViewItems="clr-namespace:ClearUC.ListViewItems;assembly=ClearUC"  xmlns:Buttons="clr-namespace:MVPUC.Buttons;assembly=MVPUC"
         xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" xmlns:UserControls="clr-namespace:LAP.UserControls" xmlns:ListViewItems1="clr-namespace:LAP.UserControls.ListViewItems" xmlns:SeekBar="clr-namespace:MVPUC.SeekBar;assembly=MVPUC" xmlns:Toggles="clr-namespace:MVPUC.Toggles;assembly=MVPUC" xmlns:Visualize="clr-namespace:LAP.Visualize" x:Class="LAP.MainWindow"
         mc:Ignorable="d"
-        Title="Limpid Audio Player" Height="586.241" Width="1019.03" Background="#FF282828" MinWidth="500" MinHeight="300" Foreground="#FFAAAAAA" Loaded="Window_Loaded" StateChanged="Window_StateChanged" Activated="Window_Activated" Deactivated="Window_Deactivated" Icon="Properties/Limpid Audio Player.ico">
+        Title="Limpid Audio Player" Height="586.241" Width="1019.03" Background="#FF282828" MinWidth="500" MinHeight="300" Foreground="#FFAAAAAA" Loaded="Window_Loaded" StateChanged="Window_StateChanged" Icon="Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
     </WindowChrome.WindowChrome>
@@ -34,10 +34,6 @@
                 <ClearUC:ListView x:Name="library" Margin="0,0,0,57" />
                 <ClearUC:Tab x:Name="Tab" Height="57" VerticalAlignment="Bottom" Width="Auto" Background="#B2000000" />
             </Grid>
-            <Grid x:Name="QueueWindow" HorizontalAlignment="Right" Width="300" Opacity="0" Visibility="Hidden">
-                <ClearUC:ListView x:Name="PlayQueue" DockPanel.Dock="Bottom" Margin="0,41,0,0" Background="#B2000000" />
-                <Label x:Name="PlayQueueL" Content="Queue" Height="41" DockPanel.Dock="Top" VerticalAlignment="Top" Background="#B2000000" Foreground="White" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontWeight="Thin"/>
-            </Grid>
             <Grid x:Name="PluginPanel">
                 <Grid x:Name="SidePanel" HorizontalAlignment="Left" Width="264"/>
             </Grid>
@@ -49,7 +45,6 @@
             </Grid>
             <Toggles:Shuffle x:Name="Shuffle" HorizontalAlignment="Left" Height="19" Margin="169,9,0,0" VerticalAlignment="Top" Width="29" WindowChrome.IsHitTestVisibleInChrome="True" />
             <Toggles:Repeat x:Name="Repeat" HorizontalAlignment="Left" Height="19" Margin="203,9,0,0" VerticalAlignment="Top" Width="22" WindowChrome.IsHitTestVisibleInChrome="True" />
-            <ClearUC:Button x:Name="QueueButton" Margin="0,0,105,0" VerticalAlignment="Top" Height="35" Width="35" BorderThickness="0" HorizontalAlignment="Right" Content="Q" WindowChrome.IsHitTestVisibleInChrome="True" Opacity="0.8" />
         </Grid>
     </Grid>
 </Window>

@@ -3,12 +3,147 @@ using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using System;
 using System.Collections.Generic;
+using System.Collections;
+using System.Reflection;
 
 namespace NWrapper
 {
+    /// <summary>
+    /// このプロバイダのDisposeメソッドでは初期化に用いたプロバイダを破棄する必要はありません
+    /// </summary>
+    public interface IManagableProvider : ISampleProvider, IDisposable
+    {
+        void Initialize(ISampleProvider BaseProvider);
+    }
+
+    /// <summary>
+    /// サンプルプロバイダを管理するコレクションです。アイテムは自動で破棄されます
+    /// メモリリークを防ぐため、可能な限り参照情報は残さないでください
+    /// </summary>
+    public class ManagableProviderCollection : IList<IManagableProvider>, IDisposable
+    {
+        List<IManagableProvider> providers = new List<IManagableProvider>();
+
+        public IManagableProvider this[int index]
+        {
+            get { return providers[index]; }
+            set
+            {
+                DisposeItem(providers[index]);
+                providers[index] = value;
+            }
+        }
+
+        public AudioFileReader BaseReader { get; set; } = null;
+
+        public int Count
+        {
+            get { return providers.Count; }
+        }
+
+        public bool IsReadOnly { get; } = false;
+
+        public void Add(IManagableProvider item)
+        {
+            providers.Add(item);
+        }
+
+        public void AddRange(IManagableProvider[] items)
+        {
+            for(int i = 0;Count > i; i++)
+            {
+                Add(items[i]);
+            }
+        }
+
+        public void Clear()
+        {
+            for(int i = 0; Count > i; i++)
+            {
+                DisposeItem(providers[i]);
+            }
+
+            providers.Clear();
+        }
+
+        public bool Contains(IManagableProvider item)
+        {
+            return providers.Contains(item);
+        }
+
+        public void CopyTo(IManagableProvider[] array, int arrayIndex)
+        {
+            providers.CopyTo(array, arrayIndex);
+        }
+
+        public IEnumerator<IManagableProvider> GetEnumerator()
+        {
+            return providers.GetEnumerator();
+        }
+
+        public int IndexOf(IManagableProvider item)
+        {
+            return providers.IndexOf(item);
+        }
+
+        public void Insert(int index, IManagableProvider item)
+        {
+            providers.Insert(index, item);
+        }
+
+        public bool Remove(IManagableProvider item)
+        {
+            bool s = providers.Remove(item);
+            if (s) DisposeItem(item);
+            return s;
+        }
+
+        public void RemoveAt(int index)
+        {
+            DisposeItem(providers[index]);
+            providers.RemoveAt(index);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return providers.GetEnumerator();
+        }
+
+        public ISampleProvider Initialize()
+        {
+            if (Count == 0) return BaseReader as ISampleProvider;
+
+            providers[0].Initialize(BaseReader as ISampleProvider);
+
+            for(int i = 1;Count > i; i++)
+                providers[i].Initialize(providers[i - 1]);
+
+            return providers[Count - 1];
+        }
+
+        public void Dispose()
+        {
+            Clear();
+            if(BaseReader != null)
+            {
+                BaseReader.Dispose();
+                BaseReader = null;
+            }
+        }
+
+        private void DisposeItem(IManagableProvider Provider)
+        {
+            if(Provider != null) Provider.Dispose();
+        }
+    }
+
     public class Audio : IDisposable
     {
+        public Audio() { }
+        public Audio(IManagableProvider[] Providers) { this.Providers.AddRange(Providers); }
+
         public class ASIOException : Exception { }
+
         public event EventHandler<StoppedEventArgs> PlaybackStopped;
 
         public enum Status { Unknown, Playing, Paused, Stopped }
@@ -18,7 +153,7 @@ namespace NWrapper
         public IWavePlayer WavePlayer
         {
             get { return iwp; }
-            set
+            private set
             {
                 if (iwp != value)
                 {
@@ -37,108 +172,37 @@ namespace NWrapper
             PlaybackStopped?.Invoke(sender, e);
         }
 
-        public AudioFileReaderEx WaveStream { get; set; } = null;
+        public ManagableProviderCollection Providers { get; set; } = new ManagableProviderCollection();
 
-        public SampleAggregator SampleAggregator { get; set; } = null;
+        public AudioFileReaderEx AudioFileReader { get; private set; } = null;
 
-        public Equalizer Equalizer { get; set; } = null;
-
-        public PSEMicMixProvider PSEMicMixer { get; set; } = null;
-
-        public FadeInOutSampleProvider Fade { get; set; } = null;
-
-        public Equalizer.EqualizerBand[] EqualizerBand { get; set; } = new Equalizer.EqualizerBand[]
+        public void OpenFile(string FileName, AudioFileReaderEx AudioFileReader, IWavePlayer WavePlayer)
         {
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 100, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 150, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 200, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 300, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 400, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 600, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 800, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 1000, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 1200, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 1800, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 2400, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 3600, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 4800, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 7200, Gain = 0},
-            new Equalizer.EqualizerBand {Bandwidth = 1.5f, Frequency = 9600, Gain = 0},
-        };
-
-        public System.ComponentModel.ISynchronizeInvoke SynchronizingObject { get; set; } = null;
-
-        public void SetEqualizerBand(Equalizer.EqualizerBand[] EqualizerBand)
-        {
-            this.EqualizerBand = EqualizerBand;
-            Equalizer.Update(EqualizerBand);
-        }
-
-        public Audio()
-        {
-        }
-
-        public void OpenFile(string FileName, MMDevice CaptureDevice)
-        {
-            if (WavePlayer != null)
+            try
             {
-                try
-                {
-                    if(WaveStream == null) WaveStream = new AudioFileReaderEx(FileName);
+                this.AudioFileReader = AudioFileReader;
+                this.WavePlayer = WavePlayer;
 
-                    if (WavePlayer as AsioOut != null)
-                    {
-                        if (WaveStream.GetReaderStream as MediaFoundationReader != null)
-                            throw new ASIOException();
-                    }
-                    
-
-                    Equalizer = new Equalizer(WaveStream, EqualizerBand);
-                    SetEqualizerBand(EqualizerBand);
-
-                    Fade = new FadeInOutSampleProvider(Equalizer, false);
-
-                    PSEMicMixer = new PSEMicMixProvider(Fade, CaptureDevice);
-                    PSEMicMixer.MicMixEnd += PSEMicMixer_MicMixEnd;
-
-                    SampleAggregator = new SampleAggregator(PSEMicMixer, fftLenght);
-
-                    WavePlayer.Init(SampleAggregator);
-                }
-                catch (Exception e)
-                {
-                    CloseFile();
-                    throw e;
-                }
+                Providers.BaseReader = AudioFileReader;
+                WavePlayer.Init(Providers.Initialize());
             }
-            else
-                throw new Exception("WavePlayerを先に初期化してください");
-        }
-
-        private void PSEMicMixer_MicMixEnd(object sender, EventArgs e)
-        {
-            Fade.BeginFadeIn(300);
-        }
-
-        public int fftLenght = 4096;
-
-        public void CloseFile()
-        {
-            if (WaveStream != null)
+            catch (Exception e)
             {
-                WaveStream.Dispose();
-                WaveStream = null;
+                Dispose();
+                throw e;
             }
         }
 
-        public static WaveOutCapabilities[] GetDevices()
+        private void CloseFile()
         {
-            List<WaveOutCapabilities> dev = new List<WaveOutCapabilities>();
-            for (int id = 0; id < WaveOut.DeviceCount; id++)
-            {
-                dev.Add(WaveOut.GetCapabilities(id));
-            }
-            return dev.ToArray();
+            AudioFileReader?.Dispose();
+            AudioFileReader = null;
+
+            WavePlayer?.Dispose();
+            WavePlayer = null;
+
+            Providers?.Dispose();
+            Providers = null;
         }
 
         public Status StreamStatus
@@ -186,7 +250,7 @@ namespace NWrapper
 
         private void Play()
         {
-            if (WavePlayer != null && WaveStream != null)
+            if (WavePlayer != null && AudioFileReader != null)
                 WavePlayer.Pause();
         }
 
@@ -200,35 +264,13 @@ namespace NWrapper
         {
             if (WavePlayer != null)
                 WavePlayer.Stop();
-            if (WaveStream != null)
-                WaveStream.Position = 0;
+            if (AudioFileReader != null)
+                AudioFileReader.Position = 0;
         }
 
         public void Dispose()
         {
-            if (PSEMicMixer != null)
-            {
-                PSEMicMixer.WasapiCapture.StopRecording();
-                PSEMicMixer.MicMixEnd -= PSEMicMixer_MicMixEnd;
-            }
-
-            Stop();
             CloseFile();
-
-            if (WavePlayer != null)
-            {
-                WavePlayer.Dispose();
-                WavePlayer = null;
-            }
-
-            if (WaveStream != null) WaveStream.Dispose();
-            if (PSEMicMixer != null) PSEMicMixer.Dispose();
-
-            WaveStream = null;
-            SampleAggregator = null;
-            Equalizer = null;
-            PSEMicMixer = null;
-            Fade = null;
         }
     }
 }

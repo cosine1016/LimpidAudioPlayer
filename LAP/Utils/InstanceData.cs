@@ -27,6 +27,10 @@ namespace LAP.Utils
 
         public static bool UpdateMode { get; set; } = false;
 
+        public static WaveOut.Devices OverrideDevice { get; set; }
+
+        public static bool OverrideOutput { get; set; } = false;
+
         public static System.Diagnostics.ProcessStartInfo UpdateProcessInfo { get; set; } = null;
     }
 }

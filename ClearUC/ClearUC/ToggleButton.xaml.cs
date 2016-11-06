@@ -130,7 +130,6 @@ namespace ClearUC
         {
             if (bar.Value == bar.Maximum)
             {
-                State = true;
                 ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
@@ -139,12 +138,10 @@ namespace ClearUC
             {
                 Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
                 da.Animate(bar.Value, bar.Maximum, AnimationDuration, null, SeekBar.ValueProperty, bar);
-                State = true;
             }
             else
             {
                 bar.Value = bar.Maximum;
-                State = true;
             }
             ToggleStateChanged?.Invoke(this, new EventArgs());
         }

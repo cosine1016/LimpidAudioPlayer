@@ -26,7 +26,7 @@ namespace LAP.Dialogs
                 this.Category = Category;
             else
             {
-                this.Category = new ISettingItem[3];
+                this.Category = new ISettingItem[2];
                 
                 OutputCategory output = new OutputCategory();
                 this.Category[0] = output;
@@ -39,10 +39,13 @@ namespace LAP.Dialogs
             Tab.Items.Clear();
             for (int i = 0; this.Category.Length > i; i++)
             {
-                this.Category[i].UIControl.Visibility = Visibility.Hidden;
+                if(this.Category[i] != null)
+                {
+                    this.Category[i].UIControl.Visibility = Visibility.Hidden;
 
-                TabContent.Children.Add(this.Category[i].UIControl);
-                Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
+                    TabContent.Children.Add(this.Category[i].UIControl);
+                    Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
+                }
             }
 
             for(int i = 0; Utils.PluginManager.InitializedPlugin.Count > i; i++)
@@ -79,8 +82,6 @@ namespace LAP.Dialogs
             }
 
             cnf.WriteSetting(Utils.Paths.SettingFilePath);
-
-            cnf.UpdateLAPP();
 
             MW.ReRenderFile(true, true);
             Close();

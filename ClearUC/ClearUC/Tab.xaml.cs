@@ -199,6 +199,16 @@ namespace ClearUC
                     Add(items[i]);
                 }
             }
+
+            public new void Clear()
+            {
+                for(int i = 0;Count > i; i++)
+                {
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, this[i]));
+                }
+
+                base.Clear();
+            }
         }
 
         public event EventHandler ActiveItemChanged;
@@ -238,18 +248,6 @@ namespace ClearUC
                     ((TabItem)e.OldItems[0]).VisibleChanged -= Tab_VisibleChanged;
                     if (((TabItem)e.OldItems[0]).IsActive) ActiveIndex = -1;
                     Base.Children.Remove(((TabItem)e.OldItems[0]).BG);
-                    break;
-
-                case NotifyCollectionChangedAction.Reset:
-                    if (e.OldItems != null)
-                    {
-                        for (int i = 0; e.OldItems.Count > i; i++)
-                        {
-                            ((TabItem)e.OldItems[i]).MouseClick -= Tab_MouseClick;
-                            ((TabItem)e.OldItems[i]).VisibleChanged -= Tab_VisibleChanged;
-                        }
-                        Base.Children.Clear();
-                    }
                     break;
             }
 

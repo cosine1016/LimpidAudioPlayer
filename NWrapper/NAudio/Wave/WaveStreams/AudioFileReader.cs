@@ -157,7 +157,7 @@ namespace NAudio.Wave
         {
             if (disposing)
             {
-                readerStream.Dispose();
+                readerStream?.Dispose();
                 readerStream = null;
             }
             base.Dispose(disposing);

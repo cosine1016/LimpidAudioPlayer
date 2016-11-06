@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using LAPP.NAudio.Wave;
+using NAudio.Wave;
 
 namespace TestPlugin
 {

@@ -139,35 +139,28 @@ namespace LAP.Utils
             }
         }
 
-        internal static Page.ListViewPage GetPageFromString(string str)
+        internal static LAPP.Page GetPageFromString(string str)
         {
             switch (str)
             {
-                case "Album":
-                    return new Page.Album.Page();
-
-                case "Playlist":
-                    return new Page.Playlist.Page();
-
                 default:
                     return null;
             }
         }
 
-        internal static void ShowExplorerWithFile(string File)
-        {
-            System.Diagnostics.Process.Start("EXPLORER.EXE",
-                @"/select,""" + File + "\"");
-        }
-
-        internal static void ShowExplorerWithDirectory(string Directory)
-        {
-            System.Diagnostics.Process.Start(Directory);
-        }
-
         internal static IWavePlayer CreateSoundDevice()
         {
-            switch (Config.Setting.WaveOut.OutputDevice)
+            WaveOut.Devices device = Config.Setting.WaveOut.OutputDevice;
+            if (InstanceData.OverrideOutput)
+            {
+                device = InstanceData.OverrideDevice;
+                LAP.Dialogs.LogWindow.Append("Output Device Overridden : " + device.ToString());
+            }
+
+
+            LAP.Dialogs.LogWindow.Append("Output : " + device.ToString());
+
+            switch (device)
             {
                 case WaveOut.Devices.ASIO:
                     if (string.IsNullOrEmpty(Config.Setting.WaveOut.ASIO.DriverName))

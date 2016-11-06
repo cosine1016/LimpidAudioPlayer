@@ -1,6 +1,7 @@
-﻿using LAPP.NAudio.Wave;
+﻿using NAudio.Wave;
 using System.IO;
 using System.Linq;
+using NAudio.Wave;
 
 namespace LAPP.Wave
 {
@@ -14,5 +15,13 @@ namespace LAPP.Wave
         }
 
         public override abstract string ToString();
+    }
+
+    public abstract class SampleProviderPlugin : NWrapper.IManagableProvider
+    {
+        public abstract WaveFormat WaveFormat { get; }
+        public abstract void Dispose();
+        public abstract void Initialize(ISampleProvider BaseProvider);
+        public abstract int Read(float[] buffer, int offset, int count);
     }
 }
