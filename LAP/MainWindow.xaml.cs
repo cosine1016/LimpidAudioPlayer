@@ -23,11 +23,11 @@ namespace LAP
         internal Utils.Taskbar TaskbarManager;
         internal Utils.GUI GUIMan = null;
 
-        private void RaiseEvent(LAPP.Player.Action Action, params object[] Args)
+        private void RaiseEvent(LAPP.Player.Receiver.Action Action, params object[] Args)
         {
-            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(Action, Args));
+            LAPP.Player.Receiver.RaiseReceivedEvent(new LAPP.Player.Receiver.EventReceiveArgs(Action, Args));
         }
-        private void RaiseEvent(LAPP.Player.Action Action)
+        private void RaiseEvent(LAPP.Player.Receiver.Action Action)
         {
             RaiseEvent(Action, null);
         }
@@ -39,7 +39,7 @@ namespace LAP
             if (Utils.InstanceData.ErrorRaise)
                 throw new Exception("-ErrorRaiseが引数として与えられました");
 
-            RaiseEvent(LAPP.Player.Action.Boot);
+            RaiseEvent(LAPP.Player.Receiver.Action.Boot);
         }
 
         private void PluginManager_PluginChanged(object sender, EventArgs e)
@@ -199,7 +199,7 @@ namespace LAP
                 Renderer.AudioFileReader.Volume = 0;
             }
 
-            RaiseEvent(LAPP.Player.Action.VolumeChanged, Renderer.AudioFileReader.Volume);
+            RaiseEvent(LAPP.Player.Receiver.Action.VolumeChanged, Renderer.AudioFileReader.Volume);
         }
 
         private void DisposeRenderer()
@@ -216,14 +216,14 @@ namespace LAP
                 Renderer = null;
             }
 
-            RaiseEvent(LAPP.Player.Action.RendererDisposed);
+            RaiseEvent(LAPP.Player.Receiver.Action.RendererDisposed);
         }
 
         private void InitializeRenderer(string FilePath)
         {
             if (Renderer != null) DisposeRenderer();
 
-            RaiseEvent(LAPP.Player.Action.Render);
+            RaiseEvent(LAPP.Player.Receiver.Action.Render);
             Renderer = new Audio();
 
             Renderer.OpenFile(FilePath,
@@ -231,7 +231,7 @@ namespace LAP
 
             Dialogs.LogWindow.Append("File Open : " + FilePath);
 
-            RaiseEvent(LAPP.Player.Action.Rendered);
+            RaiseEvent(LAPP.Player.Receiver.Action.Rendered);
 
             Renderer.PlaybackStopped += Renderer_PlaybackStopped;
 
@@ -274,7 +274,7 @@ namespace LAP
             Renderer.StreamStatus = Audio.Status.Playing;
             TaskbarManager.State = Utils.Taskbar.ButtonState.Pause;
             Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Playing);
-            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Playing);
+            RaiseEvent(LAPP.Player.Receiver.Action.PlaybackState, NAudio.Wave.PlaybackState.Playing);
         }
 
         internal void PauseFile()
@@ -284,7 +284,7 @@ namespace LAP
             Renderer.StreamStatus = Audio.Status.Paused;
             TaskbarManager.State = Utils.Taskbar.ButtonState.Play;
             Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Paused);
-            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Paused);
+            RaiseEvent(LAPP.Player.Receiver.Action.PlaybackState, NAudio.Wave.PlaybackState.Paused);
         }
 
         internal void StopFile(bool ClearImage)
@@ -321,7 +321,7 @@ namespace LAP
             }
 
             Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Stopped);
-            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Stopped);
+            RaiseEvent(LAPP.Player.Receiver.Action.PlaybackState, NAudio.Wave.PlaybackState.Stopped);
 
             SeekBar.Value = SeekBar.Minimum;
             if (TaskbarManager != null) TaskbarManager.HideButtons();
@@ -333,7 +333,7 @@ namespace LAP
             {
                 seekt.Stop();
                 Renderer.AudioFileReader.Position = SeekBar.Value;
-                RaiseEvent(LAPP.Player.Action.Seek, Renderer.AudioFileReader.Position);
+                RaiseEvent(LAPP.Player.Receiver.Action.Seek, Renderer.AudioFileReader.Position);
                 seekt.Start();
             }
         }
@@ -376,7 +376,7 @@ namespace LAP
                     break;
             }
 
-            RaiseEvent(LAPP.Player.Action.WindowState, WindowState);
+            RaiseEvent(LAPP.Player.Receiver.Action.WindowState, WindowState);
         }
     }
 }

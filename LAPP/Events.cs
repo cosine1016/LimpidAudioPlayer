@@ -20,11 +20,11 @@ namespace LAPP
 
         internal static void DoNotice(NotificationEventArgs e)
         {
-            Noticed?.Invoke(null, e);
+            Notice?.Invoke(null, e);
         }
 
         public static event EventHandler<LogEventArgs> AppendLog;
-        public static event EventHandler<NotificationEventArgs> Noticed;
+        public static event EventHandler<NotificationEventArgs> Notice;
 
         public class LogEventArgs : EventArgs
         {
@@ -41,6 +41,7 @@ namespace LAPP
         {
             public System.Windows.Media.Brush FillBrush { get; set; }
             public string Text { get; set; }
+            public System.Reflection.Assembly Assembly { get; set; }
         }
     }
 }

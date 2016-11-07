@@ -18,26 +18,18 @@ namespace LAP.Utils
                 {
                     try
                     {
-                        PageCollection pages = new PageCollection(false);
+                        PageCollection pages = null;
                         for (int i = 0; Config.Setting.Pages.PageCollection.Length > i; i++)
                         {
-                            if(Config.Setting.Pages.PageCollection[i] == "Plugin")
-                            {
-                                for (int pc = 0; PluginManager.InitializedPlugin.Count > pc; pc++)
-                                {
-                                    if (PluginManager.InitializedPlugin[pc].Enabled)
-                                    {
-                                        foreach (LAPP.Page p in PluginManager.InitializedPlugin[pc].Instance.Pages)
-                                        {
-                                            if (p != null) pages.Add(p);
-                                        }
-                                    }
-                                }
-                            }
-                            else
+                            if (Config.Setting.Pages.PageCollection[i] == "Plugin")
+                                pages = PluginManager.GetPages();
                             {
                                 LAPP.Page p = Utility.GetPageFromString(Config.Setting.Pages.PageCollection[i]);
-                                if (p != null) pages.Add(p);
+                                if (p != null)
+                                {
+                                    pages = new PageCollection(false);
+                                    pages.Add(p);
+                                }
                             }
                         }
                         return pages;

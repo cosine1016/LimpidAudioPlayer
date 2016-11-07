@@ -109,7 +109,7 @@ namespace LAP.Page
                     };
                 }
 
-                Player.RaiseReceivedEvent(new Player.EventReceiveArgs(Player.Action.TabIndexChanged, Tab.ActiveIndex));
+                LAPP.Player.Receiver.RaiseReceivedEvent(new LAPP.Player.Receiver.EventReceiveArgs(LAPP.Player.Receiver.Action.TabIndexChanged, Tab.ActiveIndex));
             }
             else
                 LV.Items.Clear();

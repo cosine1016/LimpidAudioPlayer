@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LAPP
+namespace LAPP.Player
 {
-    public static class Player
+    public static class Receiver
     {
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public static void RaiseReceivedEvent(EventReceiveArgs Args)

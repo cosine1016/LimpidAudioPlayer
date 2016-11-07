@@ -425,6 +425,7 @@ namespace LAPP
 
         protected FileItem GetPlayingItem()
         {
+            if (man == null) return null;
             if (man.Index > -1)
                 return man.GetFile();
             else

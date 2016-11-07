@@ -180,7 +180,7 @@ namespace LAP
 
         private static void App_Exit(object sender, System.Windows.ExitEventArgs e)
         {
-            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(LAPP.Player.Action.Exited, e.ApplicationExitCode));
+            LAPP.Player.Receiver.RaiseReceivedEvent(new LAPP.Player.Receiver.EventReceiveArgs(LAPP.Player.Receiver.Action.Exited, e.ApplicationExitCode));
             Dialogs.LogWindow.Append("Application is Shutting Down(Code " + e.ApplicationExitCode + ")");
 
             if (Utils.InstanceData.DoNotInitialize == false)

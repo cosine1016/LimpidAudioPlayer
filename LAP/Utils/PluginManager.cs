@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,71 @@ namespace LAP.Utils
         private static PluginInfoCollection InfoCollection { get; set; }
 
         public static event EventHandler<PluginChangedEventArgs> PluginChanged;
+
+        internal static LAPP.PageCollection GetPages()
+        {
+            LAPP.PageCollection pages = new LAPP.PageCollection(false);
+
+            for (int i = 0; InitializedPlugin.Count > i; i++)
+            {
+                if(InitializedPlugin[i].Enabled)
+                    pages.AddRange(InitializedPlugin[i].Instance.Pages);
+            }
+
+            return pages;
+        }
+
+        internal static LAPP.DisposableItemCollection<LAPP.Wave.WaveStreamPlugin> GetWaveStreams()
+        {
+            LAPP.DisposableItemCollection<LAPP.Wave.WaveStreamPlugin> streams
+                = new LAPP.DisposableItemCollection<LAPP.Wave.WaveStreamPlugin>();
+
+            for(int i = 0;InitializedPlugin.Count > i; i++)
+            {
+                if (InitializedPlugin[i].Enabled)
+                    streams.AddRange(InitializedPlugin[i].Instance.WaveStreams.ToArray());
+            }
+
+            return streams;
+        }
+
+        internal static Collection<LAPP.Setting.ISettingItem> GetSettings()
+        {
+            Collection<LAPP.Setting.ISettingItem> sets
+                = new Collection<LAPP.Setting.ISettingItem>();
+
+            for (int i = 0; InitializedPlugin.Count > i; i++)
+            {
+                if (InitializedPlugin[i].Enabled)
+                {
+                    for(int j = 0;InitializedPlugin[i].Instance.SettingItems.Count > j; j++)
+                    {
+                        sets.Add(InitializedPlugin[i].Instance.SettingItems[j]);
+                    }
+                }
+            }
+
+            return sets;
+        }
+
+        internal static Collection<NWrapper.IManagableProvider> GetProviders()
+        {
+            Collection<NWrapper.IManagableProvider> pros
+                = new Collection<NWrapper.IManagableProvider>();
+
+            for (int i = 0; InitializedPlugin.Count > i; i++)
+            {
+                if (InitializedPlugin[i].Enabled)
+                {
+                    for (int j = 0; InitializedPlugin[i].Instance.Providers.Count > j; j++)
+                    {
+                        pros.Add(InitializedPlugin[i].Instance.Providers[j]);
+                    }
+                }
+            }
+
+            return pros;
+        }
 
         static PluginManager()
         {
