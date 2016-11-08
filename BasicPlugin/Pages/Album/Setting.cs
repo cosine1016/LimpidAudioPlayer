@@ -11,5 +11,6 @@ namespace BasicPlugin.Pages.Album
         internal const string AlbumSettingFileName = "Album.cnf";
         internal const string AlbumExtension = ".limpidal";
         public string AlbumDirectory { get; set; } = LAPP.Utils.Path.GetPath(LAPP.Utils.Path.LAPSetting + @"Album");
+        public string CreateAlbumStr { get; set; } = "Create Album";
     }
 }

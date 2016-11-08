@@ -102,16 +102,26 @@ namespace BasicPlugin.Pages.Album
 
             ListButtonsItem lbi = new ListButtonsItem();
 
+            ListButtonsItem.ListButton Edit = new ListButtonsItem.ListButton(Lai);
+            Edit.Content = Common.Setting.Edit;
+            Edit.Click += Edit_Click;
+            lbi.Add(Edit);
+
             ListButtonsItem.ListButton Remove = new ListButtonsItem.ListButton(Lai);
             Remove.Content = Common.Setting.Remove;
             Remove.Click += Remove_Click;
             lbi.Add(Remove);
+
 
             Lai.SecondItem = lbi;
 
             Lai.ItemClicked += Lai_ItemClicked;
 
             return Lai;
+        }
+
+        private void Edit_Click(object sender, RoutedEventArgs e)
+        {
         }
 
         private void Lai_ItemClicked(object sender, ClearUC.ItemClickedEventArgs e)
@@ -124,10 +134,14 @@ namespace BasicPlugin.Pages.Album
 
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
-            ListButtonsItem.ListButton lb = (ListButtonsItem.ListButton)sender;
-            ListAnimativeItem lai = (ListAnimativeItem)lb.ParentItem;
-            //AlbumData alb = (AlbumData)lai.Data;
-            //File.Delete(alb.Path);
+            try
+            {
+                ListButtonsItem.ListButton lb = (ListButtonsItem.ListButton)sender;
+                ListAnimativeItem lai = (ListAnimativeItem)lb.ParentItem;
+                File.Delete(Data.Path);
+            }
+            catch(Exception ex)
+            { LAPP.Player.Utils.Notice(ex.Message, System.Windows.Media.Brushes.Red); }
         }
     }
 
@@ -142,8 +156,6 @@ namespace BasicPlugin.Pages.Album
 
         public Page()
         {
-            CreateAlbumItem.MainLabelText = "Create Album";
-            CreateAlbumItem.SubLabelVisibility = Visibility.Hidden;
         }
 
         protected override void InitializeTopItems()
@@ -159,7 +171,16 @@ namespace BasicPlugin.Pages.Album
                 AddAlbum(Path);
 
             TopItems.Add(new ClearUC.ListViewItems.Separator());
+
+            CreateAlbumItem.ItemClicked += CreateAlbumItem_ItemClicked;
+            CreateAlbumItem.MainLabelText = set.CreateAlbumStr;
+            CreateAlbumItem.SubLabelVisibility = Visibility.Hidden;
             TopItems.Add(CreateAlbumItem);
+        }
+
+        private void CreateAlbumItem_ItemClicked(object sender, ClearUC.ItemClickedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         public override Border Border

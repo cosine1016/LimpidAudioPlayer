@@ -10,6 +10,7 @@ namespace BasicPlugin
     {
         internal static Common Setting = new Common();
         public string Remove { get; set; } = "Remove";
+        public string Edit { get; set; } = "Edit";
         public string ShowInExplorer { get; set; } = "Show in explorer";
         public string Play { get; set; } = "Play";
         public string Pause { get; set; } = "Pause";

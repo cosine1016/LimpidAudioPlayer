@@ -20,11 +20,11 @@ namespace LAP.Utils
         private ListSubItem LogItem;
         private LAP.Dialogs.LogWindow LogWindow;
 
-        private void RaiseEvent(LAPP.Player.Action Action, params object[] Args)
+        private void RaiseEvent(LAPP.Player.Receiver.Action Action, params object[] Args)
         {
-            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(Action, Args));
+            LAPP.Player.Receiver.RaiseReceivedEvent(new LAPP.Player.Receiver.EventReceiveArgs(Action, Args));
         }
-        private void RaiseEvent(LAPP.Player.Action Action)
+        private void RaiseEvent(LAPP.Player.Receiver.Action Action)
         {
             RaiseEvent(Action, null);
         }
@@ -122,7 +122,7 @@ namespace LAP.Utils
             Program.NotImplementedException += Program_NotImplementedException;
             PluginManager.PluginChanged += PluginManager_PluginChanged;
 
-            LAPP.Events.Noticed += Events_Noticed;
+            LAPP.Events.Notice += Events_Noticed;
 
             MW.MC.StopButton.MouseClicked += (sender, e) => { MW.StopFile(true); };
             MW.MC.LibraryButton.MouseClicked += LibraryButton_MouseClicked;
@@ -156,7 +156,7 @@ namespace LAP.Utils
             MW.Shuffle.StateChanged += (sender, e) =>
             {
                 MW.Manager.Shuffle = MW.Shuffle.ToggleState;
-                RaiseEvent(LAPP.Player.Action.Shuffle, MW.Manager.Shuffle);
+                RaiseEvent(LAPP.Player.Receiver.Action.Shuffle, MW.Manager.Shuffle);
             };
 
             MW.Repeat.StateChanged += Repeat_StateChanged;
@@ -169,6 +169,7 @@ namespace LAP.Utils
         private void Events_Noticed(object sender, LAPP.Events.NotificationEventArgs e)
         {
             Notification notif = new Notification(MW.ParentGrid, e.Text, e.FillBrush);
+            LAP.Dialogs.LogWindow.Append("[" + e.Assembly.GetName() + "] : " + e.Text);
             notif.ShowMessage();
         }
 
@@ -181,14 +182,14 @@ namespace LAP.Utils
                 if (MW.LyricsT.Visibility == Visibility.Hidden)
                 {
                     sv.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.LyricsT, MW.ArtworkI);
-                    RaiseEvent(LAPP.Player.Action.MediaLyrics, true);
-                    RaiseEvent(LAPP.Player.Action.MediaArtwork, false);
+                    RaiseEvent(LAPP.Player.Receiver.Action.MediaLyrics, true);
+                    RaiseEvent(LAPP.Player.Receiver.Action.MediaArtwork, false);
                 }
                 else
                 {
                     sv.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.ArtworkI, MW.LyricsT);
-                    RaiseEvent(LAPP.Player.Action.MediaLyrics, false);
-                    RaiseEvent(LAPP.Player.Action.MediaArtwork, true);
+                    RaiseEvent(LAPP.Player.Receiver.Action.MediaLyrics, false);
+                    RaiseEvent(LAPP.Player.Receiver.Action.MediaArtwork, true);
                 }
             }
             mirmrf = false;
@@ -205,7 +206,7 @@ namespace LAP.Utils
                         va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, itemhidden, Visibility.Visible);
                         itemhidden = null;
                         mirmcf = false;
-                        RaiseEvent(LAPP.Player.Action.MediaHidden, false);
+                        RaiseEvent(LAPP.Player.Receiver.Action.MediaHidden, false);
                         return;
                     }
                 }
@@ -215,7 +216,7 @@ namespace LAP.Utils
                     case Visibility.Visible:
                         va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.LyricsT, Visibility.Hidden);
                         itemhidden = MW.LyricsT;
-                        RaiseEvent(LAPP.Player.Action.MediaHidden, true);
+                        RaiseEvent(LAPP.Player.Receiver.Action.MediaHidden, true);
                         break;
                 }
 
@@ -224,7 +225,7 @@ namespace LAP.Utils
                     case Visibility.Visible:
                         va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.ArtworkI, Visibility.Hidden);
                         itemhidden = MW.ArtworkI;
-                        RaiseEvent(LAPP.Player.Action.MediaHidden, true);
+                        RaiseEvent(LAPP.Player.Receiver.Action.MediaHidden, true);
                         break;
                 }
             }
@@ -263,7 +264,7 @@ namespace LAP.Utils
         {
             if (MW.Renderer != null && MW.Renderer.StreamStatus != NWrapper.Audio.Status.Stopped)
             {
-                RaiseEvent(LAPP.Player.Action.Rewind);
+                RaiseEvent(LAPP.Player.Receiver.Action.Rewind);
                 long interval = MW.Renderer.AudioFileReader.Length / 20;
                 if (MW.Renderer.AudioFileReader.Position - interval >= 0)
                 {
@@ -280,7 +281,7 @@ namespace LAP.Utils
         {
             if(MW.Renderer != null && MW.Renderer.StreamStatus != NWrapper.Audio.Status.Stopped)
             {
-                RaiseEvent(LAPP.Player.Action.FastForward);
+                RaiseEvent(LAPP.Player.Receiver.Action.FastForward);
                 long interval = MW.Renderer.AudioFileReader.Length / 20;
                 if (MW.Renderer.AudioFileReader.Position + interval <= MW.Renderer.AudioFileReader.Length)
                 {
@@ -353,12 +354,12 @@ namespace LAP.Utils
                     if (MW.MediaInformationRoot.Visibility == Visibility.Hidden)
                     {
                         sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.MediaInformationRoot, MW.LibraryRoot);
-                        RaiseEvent(LAPP.Player.Action.MediaInformation, true);
+                        RaiseEvent(LAPP.Player.Receiver.Action.MediaInformation, true);
                     }
                     else
                     {
                         sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.LibraryRoot, MW.MediaInformationRoot);
-                        RaiseEvent(LAPP.Player.Action.MediaInformation, false);
+                        RaiseEvent(LAPP.Player.Receiver.Action.MediaInformation, false);
                     }
                 }
             }
@@ -371,7 +372,7 @@ namespace LAP.Utils
             else
                 MW.Manager.Loop = false;
 
-            RaiseEvent(LAPP.Player.Action.Repeat, (int)MW.Repeat.ToggleState);
+            RaiseEvent(LAPP.Player.Receiver.Action.Repeat, (int)MW.Repeat.ToggleState);
         }
 
         private void TaskbarManager_PauseButtonClick(object sender, EventArgs e)
@@ -405,7 +406,7 @@ namespace LAP.Utils
             Config.WriteSetting(Paths.SettingFilePath);
             Config.WriteLanguage(Config.Setting.Paths.UsingLanguage);
 
-            RaiseEvent(LAPP.Player.Action.WindowClosing);
+            RaiseEvent(LAPP.Player.Receiver.Action.WindowClosing);
         }
 
         private void InitializeTabAndManager()
@@ -447,12 +448,12 @@ namespace LAP.Utils
             {
                 case Visibility.Visible:
                     MW.OptionalGrid.Visibility = Visibility.Hidden;
-                    RaiseEvent(LAPP.Player.Action.ToolStrip, false);
+                    RaiseEvent(LAPP.Player.Receiver.Action.ToolStrip, false);
                     break;
 
                 case Visibility.Hidden:
                     MW.OptionalGrid.Visibility = Visibility.Visible;
-                    RaiseEvent(LAPP.Player.Action.ToolStrip, true);
+                    RaiseEvent(LAPP.Player.Receiver.Action.ToolStrip, true);
                     break;
             }
         }

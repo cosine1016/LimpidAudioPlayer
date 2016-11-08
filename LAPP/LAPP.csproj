@@ -65,7 +65,7 @@
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Utils\NotifyPropertyChangedEx.cs" />
     <Compile Include="Utils\Path.cs" />
-    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="Player\Utils.cs" />
     <Compile Include="Wave\Plugin.cs" />
   </ItemGroup>
   <ItemGroup>

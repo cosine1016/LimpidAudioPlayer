@@ -13,10 +13,10 @@ namespace TestPlugin
         {
             Pages.Add(new DirectoryPage());
             WaveStreams.Add(new WaveStreamPlugin());
-            LAPP.Player.EventReceived += Player_EventReceived;
+            LAPP.Player.Receiver.EventReceived += Player_EventReceived;
         }
 
-        private void Player_EventReceived(object sender, LAPP.Player.EventReceiveArgs e)
+        private void Player_EventReceived(object sender, LAPP.Player.Receiver.EventReceiveArgs e)
         {
             //Console.WriteLine(e.Action.ToString());
         }

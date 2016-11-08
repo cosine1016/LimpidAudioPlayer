@@ -20,35 +20,17 @@ namespace LAP.Utils
 
             protected override void CreateReaderStream(string fileName)
             {
-                for (int i = 0; PluginManager.InitializedPlugin.Count > i; i++)
+                LAPP.DisposableItemCollection<LAPP.Wave.WaveStreamPlugin> streams
+                    = PluginManager.GetWaveStreams();
+                for (int i = 0; streams.Count > i; i++)
                 {
-                    try
+                    if (streams[i].SupportedExtensions.Contains(
+                        System.IO.Path.GetExtension(fileName).ToLower()) ||
+                        streams[i].SupportedExtensions.Contains(".*"))
                     {
-                        PluginManager.Plugin plg = PluginManager.InitializedPlugin[i];
-                        if (plg.Enabled)
-                        {
-                            plg.Instance.SetFilePath(fileName);
-                            for (int s = 0; plg.Instance.WaveStreams.Count > s; s++)
-                            {
-                                try
-                                {
-                                    if (plg.Instance.WaveStreams[s].SupportedExtensions.Contains(
-                                        System.IO.Path.GetExtension(fileName).ToLower()) ||
-                                        plg.Instance.WaveStreams[s].SupportedExtensions.Contains(".*"))
-                                    {
-                                        readerStream = plg.Instance.WaveStreams[s];
-                                        LAP.Dialogs.LogWindow.Append("Created Reader From " + plg.Instance.Title);
-                                        return;
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    LAP.Dialogs.LogWindow.Append(plg.Instance.Title + " Error : " + ex.Message);
-                                }
-                            }
-                        }
+                        readerStream = streams[i];
+                        return;
                     }
-                    catch (Exception) { }
                 }
                 base.CreateReaderStream(fileName);
             }
