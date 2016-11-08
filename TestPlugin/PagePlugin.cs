@@ -72,5 +72,9 @@ namespace TestPlugin
         {
             return TopItems;
         }
+
+        protected override void Initialize(FileItem FileItem)
+        {
+        }
     }
 }

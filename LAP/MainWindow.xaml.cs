@@ -16,12 +16,12 @@ namespace LAP
     public partial class MainWindow : Window
     {
         internal LAPP.IO.MediaFile PlayingFile = null;
-        internal LAPP.IO.MediaFile LastFile = null;
         internal Page.Manager Manager;
         internal Audio Renderer = null;
         internal Timer seekt = new Timer();
         internal Utils.Taskbar TaskbarManager;
         internal Utils.GUI GUIMan = null;
+        private NAudio.Wave.PlaybackState LastPlaybackState = NAudio.Wave.PlaybackState.Stopped;
 
         private void RaiseEvent(LAPP.Player.Action Action, params object[] Args)
         {
@@ -30,6 +30,16 @@ namespace LAP
         private void RaiseEvent(LAPP.Player.Action Action)
         {
             RaiseEvent(Action, null);
+        }
+
+        private void SetPlaybackState(NAudio.Wave.PlaybackState State)
+        {
+            if (LastPlaybackState != State)
+            {
+                LastPlaybackState = State;
+                Manager.PlaybackStateChanged(State);
+                RaiseEvent(LAPP.Player.Action.PlaybackState, State);
+            }
         }
 
         public MainWindow()
@@ -53,7 +63,7 @@ namespace LAP
         private void Manager_RunFile(object sender, LAPP.RunFileEventArgs e)
         {
             if (e.Item.Playable)
-                PlayFile(e.Item.File);
+                e.Success = PlayFile(e.Item.File);
         }
 
         private void Manager_Stop(object sender, EventArgs e)
@@ -69,7 +79,7 @@ namespace LAP
             RenderFile(file);
         }
 
-        public void RenderFile(LAPP.IO.MediaFile File, bool KeepState = false, bool AutoRun = true)
+        public bool RenderFile(LAPP.IO.MediaFile File, bool AutoRun = true)
         {
             try
             {
@@ -87,7 +97,7 @@ namespace LAP
                 Utils.Notification na = new Utils.Notification(ParentGrid,
                     Utils.Config.Language.Strings.ExceptionMessage.ASIOException, Utils.Config.Setting.Brushes.Notification.Error.Brush);
                 na.ShowMessage();
-                return;
+                return false;
             }
             catch (Exception ex)
             {
@@ -96,7 +106,7 @@ namespace LAP
                 Utils.Notification na = new Utils.Notification(ParentGrid,
                     Utils.Config.Language.Strings.ExceptionMessage.RenderingError, Utils.Config.Setting.Brushes.Notification.Error.Brush);
                 na.ShowMessage();
-                return;
+                return false;
             }
 
             SeekBar.Maximum = Renderer.AudioFileReader.Length;
@@ -107,9 +117,6 @@ namespace LAP
             seekt.Tick += Seekt_Tick;
 
             MC.MediaStateButton.SwitchMediaState();
-
-            if (!KeepState)
-                SetFile(File);
 
             bgImage.Image = File.Artwork;
 
@@ -127,6 +134,8 @@ namespace LAP
             TaskbarManager.VisibleButtons();
 
             if (AutoRun) RunFile();
+
+            return true;
         }
 
         public void ReRenderFile(bool StayPosition, bool StayStatus)
@@ -214,6 +223,7 @@ namespace LAP
                 Renderer.StreamStatus = Audio.Status.Stopped;
                 Renderer.Dispose();
                 Renderer = null;
+                SetPlaybackState(NAudio.Wave.PlaybackState.Stopped);
             }
 
             RaiseEvent(LAPP.Player.Action.RendererDisposed);
@@ -251,20 +261,10 @@ namespace LAP
             else Manager.PlayNext();
         }
 
-        internal void PlayFile(LAPP.IO.MediaFile File)
+        internal bool PlayFile(LAPP.IO.MediaFile File)
         {
-            SetFile(File);
-            RenderFile(File);
-        }
-
-        private void SetFile(LAPP.IO.MediaFile File)
-        {
-            if(LastFile != null)
-            {
-                LastFile.Dispose();
-            }
-            LastFile = PlayingFile;
             PlayingFile = File;
+            return RenderFile(File);
         }
 
         internal void RunFile()
@@ -273,8 +273,7 @@ namespace LAP
             MC.MediaStateButton.MediaState = MVPUC.Buttons.MediaStateButton.State.Pause;
             Renderer.StreamStatus = Audio.Status.Playing;
             TaskbarManager.State = Utils.Taskbar.ButtonState.Pause;
-            Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Playing);
-            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Playing);
+            SetPlaybackState(NAudio.Wave.PlaybackState.Playing);
         }
 
         internal void PauseFile()
@@ -283,8 +282,7 @@ namespace LAP
             MC.MediaStateButton.MediaState = MVPUC.Buttons.MediaStateButton.State.Play;
             Renderer.StreamStatus = Audio.Status.Paused;
             TaskbarManager.State = Utils.Taskbar.ButtonState.Play;
-            Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Paused);
-            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Paused);
+            SetPlaybackState(NAudio.Wave.PlaybackState.Paused);
         }
 
         internal void StopFile(bool ClearImage)
@@ -293,9 +291,6 @@ namespace LAP
             MC.MediaStateButton.MediaState = MVPUC.Buttons.MediaStateButton.State.Play;
 
             DisposeRenderer();
-
-            LastFile?.Dispose();
-            LastFile = null;
 
             if (ClearImage)
             {
@@ -318,10 +313,9 @@ namespace LAP
                     va.Animate(Utils.Config.Setting.Values.BackgroundImageAnimationDuration, bgImage, Visibility.Hidden);
                 }
                 MC.HideStatus();
-            }
 
-            Manager.PlaybackStateChanged(NAudio.Wave.PlaybackState.Stopped);
-            RaiseEvent(LAPP.Player.Action.PlaybackState, NAudio.Wave.PlaybackState.Stopped);
+                SetPlaybackState(NAudio.Wave.PlaybackState.Stopped);
+            }
 
             SeekBar.Value = SeekBar.Minimum;
             if (TaskbarManager != null) TaskbarManager.HideButtons();

@@ -2,9 +2,47 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.Linq;
 
 namespace ClearUC
 {
+    internal static class BitmapImageExtensions
+    {
+        public static bool IsEqual(this BitmapImage image1, BitmapImage image2)
+        {
+            if (image1 == null || image2 == null)
+            {
+                return false;
+            }
+            return image1.ToBytes().SequenceEqual(image2.ToBytes());
+        }
+
+        public static byte[] ToBytes(this BitmapImage image)
+        {
+            byte[] data = new byte[] { };
+            if (image != null)
+            {
+                try
+                {
+                    var encoder = new BmpBitmapEncoder();
+                    encoder.Frames.Add(BitmapFrame.Create(image, null, null, null));
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        encoder.Save(ms);
+                        data = ms.ToArray();
+                    }
+                    return data;
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return data;
+        }
+    }
+
     /// <summary>
     /// MaskImage.xaml の相互作用ロジック
     /// </summary>
@@ -25,17 +63,23 @@ namespace ClearUC
             {
                 if (Transition)
                 {
-                    HiddenImageControl.Source = value;
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        if (!((BitmapImage)value).IsEqual(((BitmapImage)VisibleImageControl.Source)))
+                        {
+                            HiddenImageControl.Source = value;
 
-                    Utils.AnimationHelper.Double hide = new Utils.AnimationHelper.Double();
-                    hide.Animate(VisibleImageControl.Opacity, 0, TransitionDuration, null, OpacityProperty, VisibleImageControl);
+                            Utils.AnimationHelper.Double hide = new Utils.AnimationHelper.Double();
+                            hide.Animate(VisibleImageControl.Opacity, 0, TransitionDuration, null, OpacityProperty, VisibleImageControl);
 
-                    Utils.AnimationHelper.Double show = new Utils.AnimationHelper.Double();
-                    show.Animate(HiddenImageControl.Opacity, 1, TransitionDuration, null, OpacityProperty, HiddenImageControl);
+                            Utils.AnimationHelper.Double show = new Utils.AnimationHelper.Double();
+                            show.Animate(HiddenImageControl.Opacity, 1, TransitionDuration, null, OpacityProperty, HiddenImageControl);
 
-                    Image bf = VisibleImageControl, bb = HiddenImageControl;
-                    VisibleImageControl = bb;
-                    HiddenImageControl = bf;
+                            Image bf = VisibleImageControl, bb = HiddenImageControl;
+                            VisibleImageControl = bb;
+                            HiddenImageControl = bf;
+                        }
+                    }));
                 }
                 else
                 {

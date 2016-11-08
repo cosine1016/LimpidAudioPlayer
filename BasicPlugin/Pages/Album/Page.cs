@@ -136,6 +136,7 @@ namespace BasicPlugin.Pages.Album
         private Border border = BorderHelper.GetBorderFromXAML(Resources.Shapes.Disc, 35, 35, new Thickness(0, 5, 0, 0));
         private ListSubItem CreateAlbumItem = new ListSubItem();
         private Setting set;
+        private FileItem LastFile = null;
         
         private PageItemCollection TopItems = new PageItemCollection();
 
@@ -178,26 +179,23 @@ namespace BasicPlugin.Pages.Album
         {
             FileItem Item = GetPlayingItem();
 
-            if(Item != null)
+            for (int i = 0; Items.Count > i; i++)
             {
-                for (int i = 0; Items.Count > i; i++)
+                ListSubItem lsi = GetSubItem(Items[i]);
+                if (lsi != null)
                 {
-                    ListSubItem lsi = GetSubItem(Items[i]);
-                    if(lsi != null)
-                    {
-                        lsi.StatusLabelText = null;
+                    lsi.StatusLabelText = null;
 
-                        if (Item == Items[i])
+                    if (Item == Items[i])
+                    {
+                        switch (PlaybackState)
                         {
-                            switch (PlaybackState)
-                            {
-                                case PlaybackState.Playing:
-                                    lsi.StatusLabelText = Common.Setting.Play;
-                                    break;
-                                case PlaybackState.Paused:
-                                    lsi.StatusLabelText = Common.Setting.Pause;
-                                    break;
-                            }
+                            case PlaybackState.Playing:
+                                lsi.StatusLabelText = Common.Setting.Play;
+                                break;
+                            case PlaybackState.Paused:
+                                lsi.StatusLabelText = Common.Setting.Pause;
+                                break;
                         }
                     }
                 }
@@ -214,6 +212,8 @@ namespace BasicPlugin.Pages.Album
 
         public override void Update()
         {
+            if (PageLevel == Level.Top)
+                UpdatePage(PageLevel);
         }
 
         protected override PageItemCollection GetTopItems()
@@ -257,6 +257,7 @@ namespace BasicPlugin.Pages.Album
             {
                 ListAnimativeItem Lai = new ListAnimativeItem(true);
                 Lai.SearchText = Data.Tracks[i].Title;
+                Lai.ItemClicked += Lai_ItemClicked;
 
                 ListSubItem lsi = new ListSubItem();
                 Lai.ItemsHeight = lsi.Height;
@@ -301,6 +302,11 @@ namespace BasicPlugin.Pages.Album
             }
         }
 
+        private void Lai_ItemClicked(object sender, ClearUC.ItemClickedEventArgs e)
+        {
+            UpdateOrder(new OrderManager(Items));
+        }
+
         private void Explorer_Click(object sender, RoutedEventArgs e)
         {
             ListButtonsItem.ListButton lb = sender as ListButtonsItem.ListButton;
@@ -316,8 +322,6 @@ namespace BasicPlugin.Pages.Album
         {
             Items.Clear();
             CreateTrackPage(e);
-            UpdateOrder(new OrderManager(Items));
-
             UpdatePage(Level.Current);
         }
 
@@ -328,6 +332,11 @@ namespace BasicPlugin.Pages.Album
 
         private void WriteSetting()
         {
+        }
+
+        protected override void Initialize(FileItem FileItem)
+        {
+            LastFile = FileItem;
         }
     }
 }

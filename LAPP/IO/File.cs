@@ -10,6 +10,57 @@ using RWTag;
 
 namespace LAPP.IO
 {
+    internal static class BitmapCacher
+    {
+        internal class Cache
+        {
+            internal byte[] Bytes { get; set; }
+            public System.Windows.Media.Imaging.BitmapImage Image { get; internal set; }
+        }
+
+        private static List<Cache> Caches { get; } = new List<Cache>();
+
+        public static System.Windows.Media.Imaging.BitmapImage DoCache(byte[] Image, string Album)
+        {
+            if (string.IsNullOrEmpty(Album))
+                return GetImage(Image);
+            else
+            {
+                for (int i = 0; Caches.Count > i; i++)
+                {
+                    if (Caches[i].Bytes.SequenceEqual(Image))
+                        return Caches[i].Image;
+                }
+
+                Cache cache = new Cache()
+                {
+                    Bytes = Image,
+                    Image = GetImage(Image)
+                };
+
+                Caches.Add(cache);
+
+                return cache.Image;
+            }
+        }
+
+        private static System.Windows.Media.Imaging.BitmapImage GetImage(byte[] Image)
+        {
+            using (WrappingStream stream = new WrappingStream(new MemoryStream(Image)))
+            {
+                System.Windows.Media.Imaging.BitmapImage art;
+                art = new System.Windows.Media.Imaging.BitmapImage();
+                art.BeginInit();
+                art.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+                art.StreamSource = stream;
+                art.EndInit();
+                art.Freeze();
+
+                return art;
+            }
+        }
+    }
+
     public class FileItem : PageItem
     {
         public FileItem(MediaFile File, ListItem ListItem, bool Playable) : base(ListItem)
@@ -23,7 +74,7 @@ namespace LAPP.IO
         public MediaFile File { get; set; }
     }
 
-    public class MediaFile : IDisposable, ICloneable
+    public class MediaFile : ICloneable
     {
         private TagReader Reader = new TagReader();
         private Tag tag;
@@ -35,8 +86,10 @@ namespace LAPP.IO
             {
                 fp = FilePath;
                 tag = Reader.GetTag(fs, System.IO.Path.GetExtension(FilePath));
-                if(tag.Image != null)
-                    ms = new MemoryStream(tag.Image);
+                if (tag.Image != null)
+                {
+                    art = BitmapCacher.DoCache(tag.Image, tag.Album);
+                }
             }
         }
 
@@ -86,21 +139,9 @@ namespace LAPP.IO
         }
 
         System.Windows.Media.Imaging.BitmapImage art = null;
-        MemoryStream ms = null;
-        public System.Windows.Media.ImageSource Artwork
+        public System.Windows.Media.Imaging.BitmapImage Artwork
         {
-            get
-            {
-                if(art == null && ms != null)
-                {
-                    art = new System.Windows.Media.Imaging.BitmapImage();
-                    art.BeginInit();
-                    art.StreamSource = ms;
-                    art.EndInit();
-                }
-
-                return art;
-            }
+            get { return art; }
         }
 
         public string Lyrics
@@ -118,15 +159,6 @@ namespace LAPP.IO
             get { return fp; }
         }
 
-        public void Dispose()
-        {
-            if(ms != null)
-            {
-                ms.Dispose();
-                ms = null;
-            }
-        }
-
         public object Clone()
         {
             return new MediaFile(new Tag() { Album = Album, Artist = Artist,
@@ -136,6 +168,99 @@ namespace LAPP.IO
                 Data = tag.Data, Date = tag.Date,
                 Name = tag.Name, ImageDescription = tag.ImageDescription,
                 ImageMIMEType = tag.ImageMIMEType });
+        }
+    }
+
+    public class WrappingStream : Stream
+    {
+        Stream m_streamBase;
+
+        public override bool CanRead
+        {
+            get { return m_streamBase.CanRead; }
+        }
+
+        public override bool CanSeek
+        {
+            get { return m_streamBase.CanSeek; }
+        }
+
+        public override bool CanWrite
+        {
+            get { return m_streamBase.CanWrite; }
+        }
+
+        public override long Length
+        {
+            get { return m_streamBase.Length; }
+        }
+
+        public override long Position
+        {
+            get { return m_streamBase.Position; }
+            set { m_streamBase.Position = value; }
+        }
+
+        public WrappingStream(Stream streamBase)
+        {
+            if (streamBase == null)
+            {
+                throw new ArgumentNullException("streamBase");
+            }
+            m_streamBase = streamBase;
+        }
+        
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken)
+        {
+            ThrowIfDisposed();
+            return m_streamBase.ReadAsync(buffer, offset, count, cancellationToken);
+        }
+        public new Task<int> ReadAsync(byte[] buffer, int offset, int count)
+        {
+            ThrowIfDisposed();
+            return m_streamBase.ReadAsync(buffer, offset, count);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                m_streamBase.Dispose();
+                m_streamBase = null;
+            }
+            base.Dispose(disposing);
+        }
+        private void ThrowIfDisposed()
+        {
+            if (m_streamBase == null)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+        }
+
+        public override void Flush()
+        {
+            m_streamBase.Flush();
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            return m_streamBase.Seek(offset, origin);
+        }
+
+        public override void SetLength(long value)
+        {
+            m_streamBase.SetLength(value);
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return m_streamBase.Read(buffer, offset, count);
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            m_streamBase.Write(buffer, offset, count);
         }
     }
 }

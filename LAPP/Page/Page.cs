@@ -70,19 +70,6 @@ namespace LAPP
             base.Clear();
         }
 
-        public int[] GetFileItemIndexes()
-        {
-            List<int> indexes = new List<int>(Count);
-            for (int i = 0; Count > i; i++)
-            {
-                FileItem item = Items[i] as FileItem;
-                if (item != null && item.File != null)
-                    indexes.Add(i);
-            }
-
-            return indexes.ToArray();
-        }
-
         public ListItem[] GetListItems()
         {
             ListItem[] li = new ListItem[Count];
@@ -353,7 +340,9 @@ namespace LAPP
 
     public class RunFileEventArgs : EventArgs
     {
-        public FileItem Item;
+        public FileItem Item { get; set; }
+
+        public bool Success { get; set; } = false;
 
         public RunFileEventArgs(FileItem Item)
         {
@@ -387,6 +376,7 @@ namespace LAPP
         }
 
         public bool Search { get; protected set; } = true;
+        public bool UpdateImage { get; protected set; } = true;
 
         public void PlayAnyFile()
         {
@@ -412,11 +402,9 @@ namespace LAPP
             if(man != null)
             {
                 Manager.OrderEnded -= Manager_OrderEnded;
-                Manager.IndexChanged -= Manager_IndexChanged;
             }
 
             Manager.OrderEnded += Manager_OrderEnded;
-            Manager.IndexChanged += Manager_IndexChanged;
             Manager.Loop = Loop;
             Manager.Shuffle = Shuffle;
 
@@ -425,14 +413,10 @@ namespace LAPP
 
         protected FileItem GetPlayingItem()
         {
-            if (man.Index > -1)
+            if (man.PlayingIndex > -1)
                 return man.GetFile();
             else
                 return null;
-        }
-
-        private void Manager_IndexChanged(object sender, EventArgs e)
-        {
         }
 
         private void Manager_OrderEnded(object sender, EventArgs e)
@@ -459,7 +443,7 @@ namespace LAPP
         {
             FileItem File = man.GetFile();
 
-            if(File != null)
+            if (File != null)
             {
                 Initialize(File);
                 RunFile?.Invoke(this, new RunFileEventArgs(File));
@@ -467,12 +451,12 @@ namespace LAPP
         }
 
         /// <summary>
-        /// ファイルを再生します。
+        /// OrderManager内の指定されたファイルを再生します。
         /// </summary>
         public void PlayFile(FileItem File)
         {
             man.SetFile(File);
-            if(man.Index > -1)
+            if (man.PlayingIndex > -1)
             {
                 Initialize(File);
                 RunFile?.Invoke(this, new RunFileEventArgs(File));
@@ -485,7 +469,6 @@ namespace LAPP
         public ManageablePage()
         {
             InitializeTopItems();
-            Items = GetItems(Level.Top);
         }
 
         protected virtual void UpdatePage(Level Level)
@@ -500,6 +483,8 @@ namespace LAPP
             {
                 Add(Items[i]);
             }
+
+            PageLevel = Level;
         }
 
         public ManageablePage(Border Border, string Title) : this()
@@ -508,9 +493,8 @@ namespace LAPP
             this.Title = Title;
         }
 
-        private int PlayingNumber { get; set; } = -1;
-
         protected virtual PageItemCollection Items { get; set; } = new PageItemCollection();
+        protected virtual Level PageLevel { get; set; } = Level.Top;
 
         public override void ItemClicked(PageItem Item, PageItemClickedEventArgs e)
         {
@@ -522,19 +506,10 @@ namespace LAPP
             }
         }
 
-        protected override void Initialize(FileItem FileItem)
-        {
-            int index = Items.IndexOf(FileItem);
-            PlayingNumber = index;
-        }
-
         public override PageItemCollection GetItems(Level PageLevel)
         {
             if (PageLevel == Level.Top)
-            {
-                Items.Clear();
-                Items.AddRange(GetTopItems().ToArray());
-            }
+                return GetTopItems();
 
             return Items;
         }
@@ -603,7 +578,7 @@ namespace LAPP
             Index = -1;
         }
 
-        public int Index
+        private int Index
         {
             get { return currentIndex; }
             set
@@ -635,6 +610,15 @@ namespace LAPP
 
                     IndexChanged?.Invoke(this, new EventArgs());
                 }
+            }
+        }
+
+        public int PlayingIndex
+        {
+            get
+            {
+                if (Shuffle) return ShuffledIndexes[Index];
+                else return Index;
             }
         }
 
@@ -680,8 +664,20 @@ namespace LAPP
             {
                 if(File == Files[i])
                 {
-                    Index = i;
-                    return;
+                    if (Shuffle)
+                    {
+                        foreach(int j in ShuffledIndexes)
+                            if(j == i)
+                            {
+                                Index = j;
+                                return;
+                            }
+                    }
+                    else
+                    {
+                        Index = i;
+                        return;
+                    }
                 }
             }
 

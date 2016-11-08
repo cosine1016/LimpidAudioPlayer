@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace BasicPlugin
 {
-    class Utils
+    public static class Utils
     {
-        internal static void ShowExplorerWithFile(string File)
+        public static void ShowExplorerWithFile(string File)
         {
             System.Diagnostics.Process.Start("EXPLORER.EXE",
                 @"/select,""" + File + "\"");
         }
 
-        internal static void ShowExplorerWithDirectory(string Directory)
+        public static void ShowExplorerWithDirectory(string Directory)
         {
             System.Diagnostics.Process.Start(Directory);
         }

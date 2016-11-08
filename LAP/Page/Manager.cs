@@ -11,6 +11,8 @@ namespace LAP.Page
 {
     class Manager : IDisposable
     {
+        private LAPP.Page PlayingPage;
+
         public event EventHandler<RunFileEventArgs> RunFile;
         public event EventHandler Stop;
 
@@ -81,7 +83,16 @@ namespace LAP.Page
 
         private void Page_RunFile(object sender, RunFileEventArgs e)
         {
+            for(int i = 0;Pages.Count > i; i++)
+            {
+                Pages[i].PlaybackStateChanged(NAudio.Wave.PlaybackState.Stopped);
+            }
+
             RunFile?.Invoke(sender, e);
+            if (e.Success)
+                PlayingPage = (LAPP.Page)sender;
+            else
+                PlayingPage = null;
         }
 
         private int LastActiveIndex { get; set; } = -1;
@@ -152,20 +163,17 @@ namespace LAP.Page
 
         public void PlaybackStateChanged(NAudio.Wave.PlaybackState PlaybackState)
         {
-            LAPP.Page cur = GetCurrentPage();
-            cur?.PlaybackStateChanged(PlaybackState);
+            PlayingPage?.PlaybackStateChanged(PlaybackState);
         }
 
         public void PlayNext()
         {
-            LAPP.Page cur = GetCurrentPage();
-            cur?.PlayNext();
+            PlayingPage?.PlayNext();
         }
 
         public void PlayLast()
         {
-            LAPP.Page cur = GetCurrentPage();
-            cur?.PlayLast();
+            PlayingPage?.PlayLast();
         }
 
         public void Dispose()

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LAP.Dialogs"
         xmlns:UserControls="clr-namespace:LAP.UserControls" x:Class="LAP.Dialogs.LogWindow"
         mc:Ignorable="d"
-        Title="LogWindow" Height="291.329" Width="465.607" WindowStyle="None" AllowsTransparency="True" Background="#B2000000" StateChanged="Window_StateChanged" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
+        Title="LogWindow" Height="439.85" Width="767.545" WindowStyle="None" AllowsTransparency="True" Background="#B2000000" StateChanged="Window_StateChanged" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" ResizeBorderThickness="6" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
     </WindowChrome.WindowChrome>
