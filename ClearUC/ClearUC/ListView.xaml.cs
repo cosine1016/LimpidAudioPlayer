@@ -110,19 +110,7 @@ namespace ClearUC
             set { sc.HorizontalScrollBarVisibility = value; }
         }
 
-        public Brush ItemFillBrush
-        {
-            get { return ibf; }
-            set { ibf = value; }
-        }
-
         public ListItemCollection Items { get; set; } = new ListItemCollection();
-
-        public Brush ItemStrokeBrush
-        {
-            get { return ibs; }
-            set { ibs = value; }
-        }
 
         public double SearchBoxAnimationDuration { get; set; } = 100;
 
@@ -231,14 +219,15 @@ namespace ClearUC
                         {
                             if (CheckVisibility == true)
                             {
-                                if (Items[i].Visibility == Visibility.Visible)
+                                if (Items[i].Visibility == Visibility.Visible && !double.IsNaN(Items[i].Height))
                                 {
                                     t += Items[i].Height;
                                 }
                             }
                             else
                             {
-                                t += Items[i].Height;
+                                if(!double.IsNaN(Items[i].Height))
+                                    t += Items[i].Height;
                             }
                         }
                     }
@@ -264,14 +253,15 @@ namespace ClearUC
                     {
                         if (CheckVisibility == true)
                         {
-                            if (Items[i].Visibility == Visibility.Visible)
+                            if (Items[i].Visibility == Visibility.Visible && !double.IsNaN(Items[i].Height))
                             {
                                 t += Items[i].Height;
                             }
                         }
                         else
                         {
-                            t += Items[i].Height;
+                            if (!double.IsNaN(Items[i].Height))
+                                t += Items[i].Height;
                         }
                     }
                 }
@@ -311,6 +301,7 @@ namespace ClearUC
 
             Item.HorizontalAlignment = HorizontalAlignment.Stretch;
             Item.VerticalAlignment = VerticalAlignment.Top;
+            
             Item.Width = double.NaN;
             Item.Index = Items.Count;
 

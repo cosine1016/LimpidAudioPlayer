@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestPlugin", "TestPlugin\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicPlugin", "BasicPlugin\BasicPlugin.csproj", "{DEB2A4E3-23E3-4C02-9AD5-2ADFBAB6CDBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LAP Text Localizer", "LAP Text Localizer\LAP Text Localizer.csproj", "{F23DB449-31A0-424F-92C3-31E3936B2F02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,18 @@ Global
 		{DEB2A4E3-23E3-4C02-9AD5-2ADFBAB6CDBB}.Release|x64.Build.0 = Release|Any CPU
 		{DEB2A4E3-23E3-4C02-9AD5-2ADFBAB6CDBB}.Release|x86.ActiveCfg = Release|Any CPU
 		{DEB2A4E3-23E3-4C02-9AD5-2ADFBAB6CDBB}.Release|x86.Build.0 = Release|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Debug|x64.Build.0 = Debug|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Debug|x86.Build.0 = Debug|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Release|x64.ActiveCfg = Release|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Release|x64.Build.0 = Release|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Release|x86.ActiveCfg = Release|Any CPU
+		{F23DB449-31A0-424F-92C3-31E3936B2F02}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

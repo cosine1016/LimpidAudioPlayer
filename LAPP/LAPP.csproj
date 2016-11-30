@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Events.cs" />
     <Compile Include="IO\Async.cs" />
+    <Compile Include="Localize.cs" />
     <Compile Include="Player\Receiver.cs" />
     <Compile Include="Setting\ISettingItem.cs" />
     <Compile Include="IO\File.cs" />
@@ -66,6 +67,9 @@
     <Compile Include="Utils\NotifyPropertyChangedEx.cs" />
     <Compile Include="Utils\Path.cs" />
     <Compile Include="Player\Utils.cs" />
+    <Compile Include="Wave\Helper\Classes.cs" />
+    <Compile Include="Wave\Helper\Interfaces.cs" />
+    <Compile Include="Wave\Helper\Stream.cs" />
     <Compile Include="Wave\Plugin.cs" />
   </ItemGroup>
   <ItemGroup>

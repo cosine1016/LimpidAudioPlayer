@@ -260,7 +260,10 @@ namespace LAP
                 Dialogs.UnhandledExceptionDialog dlg = new Dialogs.UnhandledExceptionDialog();
                 dlg.ErrorMsg.Text = ExceptionInformation.ToString();
                 dlg.ShowDialog();
-                Process.GetCurrentProcess().Kill();
+                if (dlg.ExitApp)
+                    Process.GetCurrentProcess().Kill();
+                else
+                    e.Handled = true;
             }
         }
 

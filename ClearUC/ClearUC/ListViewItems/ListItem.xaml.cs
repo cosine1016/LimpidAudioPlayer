@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -9,7 +10,7 @@ namespace ClearUC.ListViewItems
     /// <summary>
     /// ListItem.xaml の相互作用ロジック
     /// </summary>
-    public partial class ListItem : UserControl
+    public partial class ListItem : Grid
     {
         public event EventHandler ImageIndexChanged;
 
@@ -90,6 +91,20 @@ namespace ClearUC.ListViewItems
             ItemClicked?.Invoke(this, e);
         }
 
+        protected virtual void OnAlignmentChanged(DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (e.Property == VerticalAlignmentProperty)
+                OnAlignmentChanged(e);
+            if (e.Property == HorizontalAlignmentProperty)
+                OnAlignmentChanged(e);
+            base.OnPropertyChanged(e);
+        }
+
         private void Init(ImageSourceList ImageSources)
         {
             MouseLeave += ListItem_MouseLeave;
@@ -118,6 +133,5 @@ namespace ClearUC.ListViewItems
             }
         }
 
-        public class ImageSourceList : List<ImageSource> { }
-    }
+        public class ImageSourceList : List<ImageSource> { }    }
 }

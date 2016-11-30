@@ -23,11 +23,11 @@ namespace LAP
         internal Utils.GUI GUIMan = null;
         private NAudio.Wave.PlaybackState LastPlaybackState = NAudio.Wave.PlaybackState.Stopped;
 
-        private void RaiseEvent(LAPP.Player.Action Action, params object[] Args)
+        private void RaiseEvent(LAPP.Player.Receiver.Action Action, params object[] Args)
         {
-            LAPP.Player.RaiseReceivedEvent(new LAPP.Player.EventReceiveArgs(Action, Args));
+            LAPP.Player.Receiver.RaiseReceivedEvent(new LAPP.Player.Receiver.EventReceiveArgs(Action, Args));
         }
-        private void RaiseEvent(LAPP.Player.Action Action)
+        private void RaiseEvent(LAPP.Player.Receiver.Action Action)
         {
             RaiseEvent(Action, null);
         }
@@ -38,7 +38,7 @@ namespace LAP
             {
                 LastPlaybackState = State;
                 Manager.PlaybackStateChanged(State);
-                RaiseEvent(LAPP.Player.Action.PlaybackState, State);
+                RaiseEvent(LAPP.Player.Receiver.Action.PlaybackState, State);
             }
         }
 
@@ -49,7 +49,7 @@ namespace LAP
             if (Utils.InstanceData.ErrorRaise)
                 throw new Exception("-ErrorRaiseが引数として与えられました");
 
-            RaiseEvent(LAPP.Player.Action.Boot);
+            RaiseEvent(LAPP.Player.Receiver.Action.Boot);
         }
 
         private void PluginManager_PluginChanged(object sender, EventArgs e)
@@ -95,7 +95,7 @@ namespace LAP
             {
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Utils.Config.Language.Strings.ExceptionMessage.ASIOException, Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("ASIO_EXCEPTION"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
                 na.ShowMessage();
                 return false;
             }
@@ -104,13 +104,16 @@ namespace LAP
                 Dialogs.LogWindow.Append(ex.Message);
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Utils.Config.Language.Strings.ExceptionMessage.RenderingError, Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("RENDERING_ERROR"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
                 na.ShowMessage();
                 return false;
             }
 
             SeekBar.Maximum = Renderer.AudioFileReader.Length;
             ApplyVolume();
+
+            Utils.Animation.Visible ta = new Utils.Animation.Visible();
+            ta.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, TimeL, Visibility.Visible);
 
             seekt.Interval = 20;
             seekt.Start();
@@ -164,7 +167,7 @@ namespace LAP
             {
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Utils.Config.Language.Strings.ExceptionMessage.ASIOException, Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("ASIO_EXCEPTION"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
                 na.ShowMessage();
                 return;
             }
@@ -173,7 +176,7 @@ namespace LAP
                 Dialogs.LogWindow.Append(ex.Message);
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Utils.Config.Language.Strings.ExceptionMessage.RenderingError, Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("RENDERING_ERROR"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
                 na.ShowMessage();
                 return;
             }
@@ -208,13 +211,17 @@ namespace LAP
                 Renderer.AudioFileReader.Volume = 0;
             }
 
-            RaiseEvent(LAPP.Player.Action.VolumeChanged, Renderer.AudioFileReader.Volume);
+            RaiseEvent(LAPP.Player.Receiver.Action.VolumeChanged, Renderer.AudioFileReader.Volume);
         }
 
         private void DisposeRenderer()
         {
             seekt.Stop();
             seekt.Tick -= Seekt_Tick;
+
+            Utils.Animation.Visible va = new Utils.Animation.Visible();
+            va.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, TimeL, Visibility.Hidden);
+            TimeL.Content = "00:00 / 00:00";
 
             if (Renderer != null)
             {
@@ -226,14 +233,14 @@ namespace LAP
                 SetPlaybackState(NAudio.Wave.PlaybackState.Stopped);
             }
 
-            RaiseEvent(LAPP.Player.Action.RendererDisposed);
+            RaiseEvent(LAPP.Player.Receiver.Action.RendererDisposed);
         }
 
         private void InitializeRenderer(string FilePath)
         {
             if (Renderer != null) DisposeRenderer();
 
-            RaiseEvent(LAPP.Player.Action.Render);
+            RaiseEvent(LAPP.Player.Receiver.Action.Render);
             Renderer = new Audio();
 
             Renderer.OpenFile(FilePath,
@@ -241,7 +248,7 @@ namespace LAP
 
             Dialogs.LogWindow.Append("File Open : " + FilePath);
 
-            RaiseEvent(LAPP.Player.Action.Rendered);
+            RaiseEvent(LAPP.Player.Receiver.Action.Rendered);
 
             Renderer.PlaybackStopped += Renderer_PlaybackStopped;
 
@@ -327,7 +334,7 @@ namespace LAP
             {
                 seekt.Stop();
                 Renderer.AudioFileReader.Position = SeekBar.Value;
-                RaiseEvent(LAPP.Player.Action.Seek, Renderer.AudioFileReader.Position);
+                RaiseEvent(LAPP.Player.Receiver.Action.Seek, Renderer.AudioFileReader.Position);
                 seekt.Start();
             }
         }
@@ -337,11 +344,16 @@ namespace LAP
             if (Renderer != null && Renderer.AudioFileReader != null)
             {
                 SeekBar.Value = Renderer.AudioFileReader.Position;
-                MC.PlayingStatus.SetTime(Renderer.AudioFileReader.CurrentTime, Renderer.AudioFileReader.TotalTime);
+                SetTime(Renderer.AudioFileReader.CurrentTime, Renderer.AudioFileReader.TotalTime);
                 if (Renderer.AudioFileReader.Position >= Renderer.AudioFileReader.Length - 3000)
                     if (Repeat.ToggleState == MVPUC.Toggles.Repeat.State.SingleRepeat) ReRenderFile(false, true);
                     else Manager.PlayNext();
             }
+        }
+
+        private void SetTime(TimeSpan Remain, TimeSpan Duration)
+        {
+            TimeL.Content = Remain.ToString(@"mm\:ss") + " / " + Duration.ToString(@"mm\:ss");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -370,7 +382,7 @@ namespace LAP
                     break;
             }
 
-            RaiseEvent(LAPP.Player.Action.WindowState, WindowState);
+            RaiseEvent(LAPP.Player.Receiver.Action.WindowState, WindowState);
         }
     }
 }

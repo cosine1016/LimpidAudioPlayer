@@ -124,6 +124,7 @@
     <Compile Include="Dialogs\UnhandledExceptionDialog.xaml.cs">
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Localize.cs" />
     <Compile Include="Page\Manager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -155,9 +156,6 @@
     <Compile Include="Dialogs\Creator.xaml.cs">
       <DependentUpon>Creator.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Equalizer.xaml.cs">
-      <DependentUpon>Equalizer.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Resources\Taskbar.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -183,12 +181,10 @@
     <Compile Include="Utils\Classes.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Converter.cs" />
-    <Compile Include="Utils\Dialogs.cs" />
     <Compile Include="Utils\Equalizer.cs" />
     <Compile Include="Utils\InstanceData.cs" />
     <Compile Include="Utils\Notification.cs" />
     <Compile Include="Utils\Pages.cs" />
-    <Compile Include="Utils\Strings.cs" />
     <Compile Include="Utils\Paths.cs" />
     <Compile Include="Utils\Shapes.xaml.cs">
       <DependentUpon>Shapes.xaml</DependentUpon>
@@ -201,10 +197,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\Creator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\Equalizer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

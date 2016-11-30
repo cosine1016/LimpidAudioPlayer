@@ -19,7 +19,7 @@ namespace LAP.Dialogs
         {
             InitializeComponent();
 
-            Caption.Title = cnf.Language.Strings.Config;
+            Caption.Title = Localize.Get("0_CONFIG");
             MW = MainWindow;
 
             if (Category != null && Category.Length > 0)
@@ -100,7 +100,7 @@ namespace LAP.Dialogs
     {
         public OutputCategory()
         {
-            Header = cnf.Language.Strings.ConfigWindow.Output.Header;
+            Header = Localize.Get("CONFIG_OUTPUT");
             UIControl = aos;
         }
 

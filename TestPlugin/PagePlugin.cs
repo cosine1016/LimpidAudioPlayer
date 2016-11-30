@@ -16,16 +16,13 @@ namespace TestPlugin
     {
         protected override void InitializeTopItems()
         {
+            Searchable = false;
             TopItems.Clear();
 
-            OpenB = new ListButtonsItem.ListButton(OpenDirItem);
-            OpenB.Content = "Open";
-            OpenB.Click += OpenB_Click;
+            ContainerItem item = new ContainerItem(true, true, true);
+            item.Children.Add(new Button() { Content = "Test Button" });
 
-            OpenDirItem.Add(OpenB);
-            OpenDirPageItem = new PageItem(OpenDirItem);
-
-            TopItems.Add(OpenDirPageItem);
+            TopItems.Add(item);
         }
 
         private PageItemCollection TopItems = new PageItemCollection();

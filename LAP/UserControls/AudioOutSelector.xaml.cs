@@ -70,7 +70,7 @@ namespace LAP.UserControls
                     NAudio.CoreAudioApi.MMDeviceCollection col =
                         dev.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.DeviceState.Active);
 
-                    comboBox.Items.Add("<" + Utils.Config.Language.Strings.Default + ">");
+                    comboBox.Items.Add("<" + Localize.Get("0_DEFAULT") + ">");
 
                     for (int i = 0; col.Count > i; i++)
                     {
@@ -110,7 +110,7 @@ namespace LAP.UserControls
                     else
                     {
                         Utils.Notification notice = new Utils.Notification(Parent,
-                            Utils.Config.Language.Strings.ConfigWindow.Output.ASIODevNotFound, Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                            Localize.Get("ASIO_DEV_NOTFOUND"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
                         notice.ShowMessage();
                         if (Utils.Config.Setting.WaveOut.OutputDevice == SelectedDevice)
                         {

@@ -7,7 +7,6 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <local:MaskImage x:Name="maskimage" MaskOpacity="0" Radius="50" Stretch="UniformToFill" StretchDirection="Both" />
         <Rectangle x:Name="bg" Fill="#7F000000" Stroke="#7F000000" />
         <ScrollViewer x:Name="sc" Foreground="#00000000" VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
             <Grid x:Name="parent" RenderTransformOrigin="0.5,0.5">

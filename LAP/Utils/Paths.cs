@@ -19,7 +19,7 @@ namespace LAP.Utils
 
         public static string SettingFilePath = LAPP.Utils.Path.GetPath(@"{LAP}\Setting.limpidcnf");
 
-        public string UsingLanguage { get; set; } = @"{LAP}\Languages\English.xml";
+        public string UsingLanguage { get; set; } = @"{LAP}\Languages\English.loc";
 
         public string Equalizer { get; set; } = @"{LAP}\Equalizer\";
 

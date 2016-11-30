@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LAP.Dialogs"
         mc:Ignorable="d"
-        Title="UnhandledExceptionDialog" Height="283.194" Width="563.025" ResizeMode="NoResize" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
+        Title="UnhandledExceptionDialog" Height="283.194" Width="563.025" ResizeMode="NoResize" Icon="/LAP;component/Properties/Limpid Audio Player.ico" Initialized="Window_Initialized">
     <Grid>
         <Button x:Name="English" Content="English" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="83" Height="23" Click="English_Click" />
         <Button x:Name="Japanese" Content="Japanese" HorizontalAlignment="Left" Margin="98,10,0,0" VerticalAlignment="Top" Width="83" Height="23" Click="Japanese_Click" />
@@ -14,5 +14,6 @@
         <Button x:Name="DoNotReport" Content="Do not report this error" HorizontalAlignment="Left" Margin="246,174,0,0" VerticalAlignment="Top" Width="147" Height="27" Click="DoNotReport_Click" />
         <TextBlock x:Name="textBlock" Margin="10,38,10,0" TextWrapping="Wrap" Text="An error has occured. Please click the button below to report the error." VerticalAlignment="Top" Height="41" />
         <TextBlock x:Name="ContainsData" Margin="10,201,10,5" TextWrapping="Wrap" Text="This app will send informations about your OS, CPU, memory, application's path, and the error info only." />
+        <Button x:Name="IgnoreB" Content="Ignore the error" HorizontalAlignment="Left" Margin="10,174,0,0" VerticalAlignment="Top" Width="118" Height="27" Click="IgnoreB_Click" Visibility="Collapsed"/>
     </Grid>
 </Window>

@@ -11,7 +11,7 @@ namespace LAP.Dialogs
         {
             InitializeComponent();
 
-            Caption.Title = Utils.Config.Language.Strings.Creator;
+            Caption.Title = Localize.Get("0_CREATOR");
 
             LicenseTab.ActiveItemChanged += LicenseTab_ActiveItemChanged;
 
@@ -20,7 +20,7 @@ namespace LAP.Dialogs
 
             LicenseTab.ActiveIndex = 0;
 
-            LVersion.Content = "バージョン:" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            LVersion.Content = Localize.Get("0_VERSION") + ":" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void LicenseTab_ActiveItemChanged(object sender, System.EventArgs e)

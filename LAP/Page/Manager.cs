@@ -36,6 +36,7 @@ namespace LAP.Page
                     page.ClearPageRequested += Page_ClearPageRequested;
                     page.PageItemChanged += Page_PageItemChanged;
                     page.OrderEnded += Page_OrderEnded;
+                    page.PropertyChanged += Page_PropertyChanged;
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     page = (LAPP.Page)e.OldItems[0];
@@ -43,10 +44,22 @@ namespace LAP.Page
                     page.ClearPageRequested -= Page_ClearPageRequested;
                     page.PageItemChanged -= Page_PageItemChanged;
                     page.OrderEnded -= Page_OrderEnded;
+                    page.PropertyChanged -= Page_PropertyChanged;
                     break;
             }
 
             UpdateTab();
+        }
+
+        private void Page_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            LAPP.Page page = (LAPP.Page)sender;
+            switch (e.PropertyName)
+            {
+                case LAPP.Page.SearchableProperty:
+                    LV.SearchBoxVisible = page.Searchable;
+                    break;
+            }
         }
 
         private void Page_OrderEnded(object sender, EventArgs e)
@@ -112,6 +125,7 @@ namespace LAP.Page
                 items = Pages[Tab.ActiveIndex].GetItems(Level.Current);
                 if (items != null)
                 {
+                    LV.SearchBoxVisible = Pages[Tab.ActiveIndex].Searchable;
                     LV.Items.AddRange(items.GetListItems());
                     items.ItemClicked += (obj, args) =>
                     {

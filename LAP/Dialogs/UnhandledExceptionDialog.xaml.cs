@@ -17,6 +17,8 @@ namespace LAP.Dialogs
     /// </summary>
     public partial class UnhandledExceptionDialog : Window
     {
+        internal bool ExitApp { get; private set; } = true;
+
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
@@ -76,7 +78,8 @@ namespace LAP.Dialogs
                 ReportError = "エラーを報告する",
                 DoNotReportError = "エラーを報告しない",
                 NetworkHasNotAvailable = "ネットワークの接続が確認できませんでした。可能であればsupport@ksprogram.mods.jpまでメールで報告してください。",
-                UploadFailed = "エラー報告に失敗しました。可能であればsupport@ksprogram.mods.jpまでメールで報告してください。"
+                UploadFailed = "エラー報告に失敗しました。可能であればsupport@ksprogram.mods.jpまでメールで報告してください。",
+                IgnoreTheError = "エラーを無視する"
             };
 
         private DialogLanguage EngLang =
@@ -88,7 +91,8 @@ namespace LAP.Dialogs
                 ReportError = "Report this error",
                 DoNotReportError = "Do not report this error",
                 NetworkHasNotAvailable = "Network has not available. Please send an email about this error to support@ksprogram.mods.jp",
-                UploadFailed = "Failed to send report. Please send an email about this error to support@ksprogram.mods.jp"
+                UploadFailed = "Failed to send report. Please send an email about this error to support@ksprogram.mods.jp",
+                IgnoreTheError = "Ignore the error"
             };
 
         private DialogLanguage CurrentLanguage;
@@ -116,6 +120,7 @@ namespace LAP.Dialogs
             ContainsData.Text = Lang.CantainsData;
             Report.Content = Lang.ReportError;
             DoNotReport.Content = Lang.DoNotReportError;
+            IgnoreB.Content = Lang.IgnoreTheError;
 
             CurrentLanguage = Lang;
         }
@@ -129,15 +134,18 @@ namespace LAP.Dialogs
             public string DoNotReportError { get; set; }
             public string NetworkHasNotAvailable { get; set; }
             public string UploadFailed { get; set; }
+            public string IgnoreTheError { get; set; }
         }
 
         private void Report_Click(object sender, RoutedEventArgs e)
         {
+            ExitApp = true;
             SendReport(ErrorMsg.Text);
         }
 
         private void DoNotReport_Click(object sender, RoutedEventArgs e)
         {
+            ExitApp = true;
             Close();
         }
 
@@ -174,6 +182,19 @@ namespace LAP.Dialogs
             {
                 MessageBox.Show(CurrentLanguage.NetworkHasNotAvailable);
             }
+        }
+
+        private void IgnoreB_Click(object sender, RoutedEventArgs e)
+        {
+            ExitApp = false;
+            Close();
+        }
+
+        private void Window_Initialized(object sender, EventArgs e)
+        {
+#if DEBUG
+            IgnoreB.Visibility = Visibility.Visible;
+#endif
         }
     }
 }

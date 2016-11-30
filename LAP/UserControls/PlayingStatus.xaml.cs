@@ -28,17 +28,6 @@ namespace LAP.UserControls
         public PlayingStatus()
         {
             InitializeComponent();
-
-            if (Image == null)
-            {
-                TimeL.Height = Height;
-                TimeL.Background.Opacity = 0;
-            }
-            else
-            {
-                TimeL.Height = TimeH;
-                TimeL.Background.Opacity = 0.7;
-            }
         }
 
         public object Title
@@ -59,24 +48,10 @@ namespace LAP.UserControls
             set
             {
                 image.Source = value;
-
-                if (value == null)
-                {
-                    TimeL.Height = Height;
-                    TimeL.Background.Opacity = 0;
-                }
-                else
-                {
-                    TimeL.Height = TimeH;
-                    TimeL.Background.Opacity = 0.7;
-                }
             }
         }
 
-        public void SetTime(TimeSpan Remain, TimeSpan Duration)
-        {
-            TimeL.Content = Remain.ToString(@"mm\:ss") + " / " + Duration.ToString(@"mm\:ss");
-        }
+        public Brush MouseEnterBrush { get; set; }
 
         private bool f = false;
 

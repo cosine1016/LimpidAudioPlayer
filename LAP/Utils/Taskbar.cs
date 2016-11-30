@@ -42,12 +42,12 @@ namespace LAP.Utils
                 {
                     case ButtonState.Play:
                         PlayPauseButton.Icon = ToIcon(Resources.Taskbar.Play);
-                        PlayPauseButton.Tooltip = Utils.Config.Language.Strings.Status.Playing;
+                        PlayPauseButton.Tooltip = Localize.Get("1_PLAYING");
                         break;
 
                     case ButtonState.Pause:
                         PlayPauseButton.Icon = ToIcon(Resources.Taskbar.Pause);
-                        PlayPauseButton.Tooltip = Utils.Config.Language.Strings.Status.Pause;
+                        PlayPauseButton.Tooltip = Localize.Get("1_PAUSE");
                         break;
                 }
             }
@@ -55,15 +55,15 @@ namespace LAP.Utils
 
         public void AddButtons()
         {
-            PlayPauseButton = new ThumbnailToolBarButton(ToIcon(Resources.Taskbar.Play), Utils.Config.Language.Strings.Status.Playing);
+            PlayPauseButton = new ThumbnailToolBarButton(ToIcon(Resources.Taskbar.Play), Localize.Get("1_PLAYING"));
             PlayPauseButton.Click += PlayPauseButton_Click;
             PlayPauseButton.Visible = false;
 
-            NextButton = new ThumbnailToolBarButton(ToIcon(Resources.Taskbar.FastForward), Utils.Config.Language.Strings.MediaControl.Next);
+            NextButton = new ThumbnailToolBarButton(ToIcon(Resources.Taskbar.FastForward), Localize.Get("1_PLAYNEXT"));
             NextButton.Click += NextButton_Click;
             NextButton.Visible = false;
 
-            BackButton = new ThumbnailToolBarButton(ToIcon(Resources.Taskbar.Rewind), Utils.Config.Language.Strings.MediaControl.Back);
+            BackButton = new ThumbnailToolBarButton(ToIcon(Resources.Taskbar.Rewind), Localize.Get("1_PLAYLAST"));
             BackButton.Click += BackButton_Click;
             BackButton.Visible = false;
 

@@ -52,7 +52,7 @@ namespace LAP.Utils
             MW.MediaInformationRoot.Visibility = Visibility.Hidden;
 
             Config.ReadSetting(Paths.SettingFilePath);
-            Config.ReadLanguage(Config.Setting.Paths.UsingLanguage);
+            Localize.Load(Config.Setting.Paths.UsingLanguage);
 
             ApplyConfig();
         }
@@ -70,7 +70,7 @@ namespace LAP.Utils
             double PerHeight = 35;
 
             OpenItem = new ListSubItem();
-            OpenItem.MainLabelText = Utils.Config.Language.Strings.OptionalView.Open;
+            OpenItem.MainLabelText = Localize.Get("0_OPEN");
             OpenItem.SubLabelVisibility = Visibility.Hidden;
             OpenItem.Height = PerHeight;
             MW.OptionalView.Items.Add(OpenItem);
@@ -78,7 +78,7 @@ namespace LAP.Utils
             MW.OptionalView.Items.Add(new Separator());
 
             ConfigItem = new ListSubItem();
-            ConfigItem.MainLabelText = Utils.Config.Language.Strings.OptionalView.Config;
+            ConfigItem.MainLabelText = Localize.Get("0_CONFIG");
             ConfigItem.SubLabelVisibility = Visibility.Hidden;
             ConfigItem.Height = PerHeight;
             MW.OptionalView.Items.Add(ConfigItem);
@@ -87,7 +87,7 @@ namespace LAP.Utils
             {
                 LogWindow = new LAP.Dialogs.LogWindow();
                 LogItem = new ListSubItem();
-                LogItem.MainLabelText = "Log";
+                LogItem.MainLabelText = Localize.Get("0_LOG");
                 LogItem.SubLabelVisibility = Visibility.Hidden;
                 LogItem.Height = PerHeight;
                 MW.OptionalView.Items.Add(LogItem);
@@ -96,7 +96,7 @@ namespace LAP.Utils
             MW.OptionalView.Items.Add(new Separator());
 
             CreatorItem = new ListSubItem();
-            CreatorItem.MainLabelText = Config.Language.Strings.OptionalView.Creator;
+            CreatorItem.MainLabelText = Localize.Get("0_CREATOR");
             CreatorItem.SubLabelVisibility = Visibility.Hidden;
             CreatorItem.Height = PerHeight;
             MW.OptionalView.Items.Add(CreatorItem);
@@ -104,7 +104,7 @@ namespace LAP.Utils
             MW.OptionalView.Items.Add(new Separator());
 
             ExitItem = new ListSubItem();
-            ExitItem.MainLabelText = Utils.Config.Language.Strings.OptionalView.Exit;
+            ExitItem.MainLabelText = Localize.Get("0_EXIT");
             ExitItem.SubLabelVisibility = Visibility.Hidden;
             ExitItem.Height = PerHeight;
             MW.OptionalView.Items.Add(ExitItem);
@@ -296,7 +296,7 @@ namespace LAP.Utils
 
         private void Program_NotImplementedException(object sender, EventArgs e)
         {
-            Notification na = new Notification(MW.ParentGrid, Config.Language.Strings.ExceptionMessage.NotImplemented,
+            Notification na = new Notification(MW.ParentGrid, Localize.Get("NOTIMPLEMENTED"),
                 Config.Setting.Brushes.Notification.Message.Brush);
             na.ShowMessage();
         }
@@ -404,7 +404,7 @@ namespace LAP.Utils
             MW.Manager.Dispose();
 
             Config.WriteSetting(Paths.SettingFilePath);
-            Config.WriteLanguage(Config.Setting.Paths.UsingLanguage);
+            Localize.Save(Config.Setting.Paths.UsingLanguage);
 
             RaiseEvent(LAPP.Player.Receiver.Action.WindowClosing);
         }

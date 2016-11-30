@@ -350,10 +350,17 @@ namespace LAPP
         }
     }
 
-    public abstract class Page : BasePage<PageItem, ItemSelectedEventArgs, PageItemCollection>
+    public abstract class Page : BasePage<PageItem, ItemSelectedEventArgs, PageItemCollection>, INotifyPropertyChanged
     {
+        public const string SearchableProperty = "Searchable";
         public event EventHandler<RunFileEventArgs> RunFile;
         public event EventHandler OrderEnded;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string PropertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(PropertyName));
+        }
 
         private bool loop, shuffle;
         public bool Loop
@@ -375,7 +382,16 @@ namespace LAPP
             }
         }
 
-        public bool Search { get; protected set; } = true;
+        bool _search = true;
+        public bool Searchable
+        {
+            get { return _search; }
+            protected set
+            {
+                _search = value;
+                OnPropertyChanged(SearchableProperty);
+            }
+        }
         public bool UpdateImage { get; protected set; } = true;
 
         public void PlayAnyFile()

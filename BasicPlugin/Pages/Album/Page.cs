@@ -87,6 +87,7 @@ namespace BasicPlugin.Pages.Album
         {
             ListAnimativeItem Lai = new ListAnimativeItem(true);
 
+            ListAlbumItem album = new ListAlbumItem();
             ListSubItem lsi = new ListSubItem();
             Lai.ItemsHeight = lsi.Height;
             lsi.MainLabelText = Data.Album;
@@ -118,6 +119,13 @@ namespace BasicPlugin.Pages.Album
             Lai.ItemClicked += Lai_ItemClicked;
 
             return Lai;
+        }
+
+        int height = 60;
+        public int EachHeight
+        {
+            get { return height; }
+            set { height = value; }
         }
 
         private void Edit_Click(object sender, RoutedEventArgs e)
