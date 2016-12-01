@@ -70,6 +70,7 @@ namespace LAP
                         Utils.InstanceData.DoNotInitialize = true;
                         System.IO.Directory.CreateDirectory(Utils.PluginManager.PluginDirectory);
                         break;
+                        break;
 
                     case "-Hash":
 #if DEBUG == false
@@ -111,6 +112,13 @@ namespace LAP
                         else if (Arg.StartsWith("-Output"))
                         {
                             OutputParser(Arg);
+                        }
+                        else if (Arg.StartsWith("-Loc"))
+                        {
+                            Utils.InstanceData.OverrideLanguage = true;
+                            int ind = Arg.IndexOf("=");
+                            Utils.InstanceData.LocalizeFilePath =
+                                Arg.Substring(ind + 1, Arg.Length - ind - 1);
                         }
                         else
                         {

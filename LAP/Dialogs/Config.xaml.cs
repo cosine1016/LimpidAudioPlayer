@@ -130,12 +130,13 @@ namespace LAP.Dialogs
     {
         public Plugin()
         {
+            Header = Localize.Get(Strings.Plugin);
             UIControl = new UserControls.PluginOption();
         }
 
         public Border Border { get; set; }
 
-        public string Header { get; set; } = "Plugin";
+        public string Header { get; set; }
 
         public UIElement UIControl { get; set; }
 

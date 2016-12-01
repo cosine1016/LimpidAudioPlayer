@@ -54,7 +54,6 @@ namespace LAPP.IO
                 art.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
                 art.StreamSource = stream;
                 art.EndInit();
-                art.Freeze();
 
                 return art;
             }

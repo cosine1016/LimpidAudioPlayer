@@ -86,6 +86,8 @@ namespace LAP.Dialogs
         public LogWindow()
         {
             InitializeComponent();
+            Caption.Title = Localize.Get(Strings.Log);
+
             Closing += LogWindow_Closing;
             Closed += LogWindow_Closed;
             Loaded += LogWindow_Loaded;

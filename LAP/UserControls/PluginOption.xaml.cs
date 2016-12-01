@@ -24,6 +24,8 @@ namespace LAP.UserControls
         {
             InitializeComponent();
             UpdateTab();
+
+            EnableL.Content = Localize.Get("ENABLE");
         }
 
         public void UpdateTab()

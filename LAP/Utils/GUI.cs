@@ -70,7 +70,7 @@ namespace LAP.Utils
             double PerHeight = 35;
 
             OpenItem = new ListSubItem();
-            OpenItem.MainLabelText = Localize.Get("0_OPEN");
+            OpenItem.MainLabelText = Localize.Get(Strings.Open);
             OpenItem.SubLabelVisibility = Visibility.Hidden;
             OpenItem.Height = PerHeight;
             MW.OptionalView.Items.Add(OpenItem);
@@ -78,7 +78,7 @@ namespace LAP.Utils
             MW.OptionalView.Items.Add(new Separator());
 
             ConfigItem = new ListSubItem();
-            ConfigItem.MainLabelText = Localize.Get("0_CONFIG");
+            ConfigItem.MainLabelText = Localize.Get(Strings.Config);
             ConfigItem.SubLabelVisibility = Visibility.Hidden;
             ConfigItem.Height = PerHeight;
             MW.OptionalView.Items.Add(ConfigItem);
@@ -87,7 +87,7 @@ namespace LAP.Utils
             {
                 LogWindow = new LAP.Dialogs.LogWindow();
                 LogItem = new ListSubItem();
-                LogItem.MainLabelText = Localize.Get("0_LOG");
+                LogItem.MainLabelText = Localize.Get(Strings.Log);
                 LogItem.SubLabelVisibility = Visibility.Hidden;
                 LogItem.Height = PerHeight;
                 MW.OptionalView.Items.Add(LogItem);
@@ -96,7 +96,7 @@ namespace LAP.Utils
             MW.OptionalView.Items.Add(new Separator());
 
             CreatorItem = new ListSubItem();
-            CreatorItem.MainLabelText = Localize.Get("0_CREATOR");
+            CreatorItem.MainLabelText = Localize.Get(Strings.Creator);
             CreatorItem.SubLabelVisibility = Visibility.Hidden;
             CreatorItem.Height = PerHeight;
             MW.OptionalView.Items.Add(CreatorItem);
@@ -104,7 +104,7 @@ namespace LAP.Utils
             MW.OptionalView.Items.Add(new Separator());
 
             ExitItem = new ListSubItem();
-            ExitItem.MainLabelText = Localize.Get("0_EXIT");
+            ExitItem.MainLabelText = Localize.Get(Strings.Exit);
             ExitItem.SubLabelVisibility = Visibility.Hidden;
             ExitItem.Height = PerHeight;
             MW.OptionalView.Items.Add(ExitItem);

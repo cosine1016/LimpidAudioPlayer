@@ -31,6 +31,10 @@ namespace LAP.Utils
 
         public static bool OverrideOutput { get; set; } = false;
 
+        public static bool OverrideLanguage { get; set; } = false;
+
+        public static string LocalizeFilePath { get; set; }
+
         public static System.Diagnostics.ProcessStartInfo UpdateProcessInfo { get; set; } = null;
     }
 }

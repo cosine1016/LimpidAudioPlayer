@@ -257,6 +257,47 @@ namespace LAP_Text_Localizer
             MainView.Items.Remove(lvi);
         }
 
+        private void exportIDsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                System.IO.StreamWriter sw = new System.IO.StreamWriter(saveFileDialog2.FileName);
+                for (int i = 0; MainView.Items.Count > i; i++)
+                {
+                    sw.Write(MainView.Items[i].SubItems[1].Text + "\r\n");
+                }
+                sw.Close();
+            }
+        }
+
+        private void importIDsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                InitEditMode(false, null);
+                System.IO.StreamReader sr = new System.IO.StreamReader(openFileDialog2.FileName);
+                while(sr.Peek() > -1)
+                {
+                    MainView.Items.Add(new ListViewItem(new string[] { "", sr.ReadLine() }));
+                }
+                sr.Close();
+
+                if(MainView.Items.Count > 0)
+                {
+                    MainView.Items[0].Selected = true;
+                    MainView.Items[0].BeginEdit();
+                }
+            }
+        }
+
+        private void MainView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(MainView.SelectedIndices.Count > 0 && e.KeyCode == Keys.F2)
+            {
+                MainView.Items[MainView.SelectedIndices[0]].BeginEdit();
+            }
+        }
+
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if(saveFileDialog1.ShowDialog() == DialogResult.OK)

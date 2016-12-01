@@ -25,6 +25,9 @@ namespace LAP.UserControls
                 AmplifyN.Value = (int)(Utils.Config.Setting.WaveOut.Amplify * 100);
                 SwitchButton();
             }
+
+            AmplifyL.Content = Localize.Get("AMPLIFY");
+            LatencyL.Content = Localize.Get("LATENCY");
         }
 
         public Utils.WaveOut.ASIOConfig ASIOConfig { get; set; }
@@ -70,7 +73,7 @@ namespace LAP.UserControls
                     NAudio.CoreAudioApi.MMDeviceCollection col =
                         dev.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.DeviceState.Active);
 
-                    comboBox.Items.Add("<" + Localize.Get("0_DEFAULT") + ">");
+                    comboBox.Items.Add("<" + Localize.Get("DEFAULT") + ">");
 
                     for (int i = 0; col.Count > i; i++)
                     {

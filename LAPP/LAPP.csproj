@@ -35,7 +35,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="RWTag">
-      <HintPath>..\..\..\ERTag\ERTag\bin\Debug\RWTag.dll</HintPath>
+      <HintPath>..\..\ERTag\ERTag\bin\Debug\RWTag.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -48,8 +48,8 @@
     <Compile Include="Pages\Album\Album.xaml.cs">
       <DependentUpon>Album.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Album\ListAlbumItem.xaml.cs">
-      <DependentUpon>ListAlbumItem.xaml</DependentUpon>
+    <Compile Include="Pages\Album\AlbumItem.xaml.cs">
+      <DependentUpon>AlbumItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Album\Page.cs" />
     <Compile Include="Pages\Album\Setting.cs" />
@@ -93,7 +93,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\Album\ListAlbumItem.xaml">
+    <Page Include="Pages\Album\AlbumItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

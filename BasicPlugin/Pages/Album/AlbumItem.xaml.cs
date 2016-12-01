@@ -18,7 +18,7 @@ namespace BasicPlugin.Pages.Album
     /// <summary>
     /// ListAlbumItem.xaml の相互作用ロジック
     /// </summary>
-    public partial class ListAlbumItem : ClearUC.ListViewItems.ListItem
+    public partial class ListAlbumItem : UserControl
     {
         int maximum = 5, width = 10;
 
