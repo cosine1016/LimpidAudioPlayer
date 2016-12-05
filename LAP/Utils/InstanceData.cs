@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LAP.Utils
 {
-    public class InstanceData
+    internal class InstanceData
     {
         public static bool UseDefaultSetting { get; set; } = false;
 
@@ -27,7 +27,7 @@ namespace LAP.Utils
 
         public static bool UpdateMode { get; set; } = false;
 
-        public static WaveOut.Devices OverrideDevice { get; set; }
+        public static Config.WaveOut.Devices OverrideDevice { get; set; }
 
         public static bool OverrideOutput { get; set; } = false;
 

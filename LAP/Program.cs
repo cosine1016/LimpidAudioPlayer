@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace LAP
 {
@@ -163,17 +164,17 @@ namespace LAP
             {
                 case "wave":
                 case "wav":
-                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.Wave;
+                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.Wave;
                     break;
                 case "directsound":
                 case "ds":
-                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.DirectSound;
+                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.DirectSound;
                     break;
                 case "wasapi":
-                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.WASAPI;
+                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.WASAPI;
                     break;
                 case "asio":
-                    Utils.InstanceData.OverrideDevice = Utils.WaveOut.Devices.ASIO;
+                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.ASIO;
                     break;
                 default:
                     Utils.InstanceData.OverrideOutput = false;
@@ -212,7 +213,7 @@ namespace LAP
                     return;
                 }
 
-                if (Utils.Config.Setting != null && Utils.PluginManager.InitializedPlugin.Count > 0)
+                if (Config.Current != null && Utils.PluginManager.InitializedPlugin.Count > 0)
                 {
                     for(int i = 0;Utils.PluginManager.InitializedPlugin.Count > i; i++)
                     {

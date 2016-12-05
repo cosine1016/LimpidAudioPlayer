@@ -88,14 +88,13 @@ namespace LAP
                 TitleT.Content = File.Title;
                 ArtistT.Content = File.Artist;
                 AlbumT.Content = File.Album;
-                LyricsT.Text = File.Lyrics;
-                ArtworkI.Source = File.Artwork;
+                //TODO Plugin Events
             }
             catch (Audio.ASIOException)
             {
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Localize.Get("ASIO_EXCEPTION"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("ASIO_EXCEPTION"), Constants.ErrorBrush);
                 na.ShowMessage();
                 return false;
             }
@@ -104,7 +103,7 @@ namespace LAP
                 Dialogs.LogWindow.Append(ex.Message);
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Localize.Get("RENDERING_ERROR"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("RENDERING_ERROR"), Constants.ErrorBrush);
                 na.ShowMessage();
                 return false;
             }
@@ -113,7 +112,7 @@ namespace LAP
             ApplyVolume();
 
             Utils.Animation.Visible ta = new Utils.Animation.Visible();
-            ta.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, TimeL, Visibility.Visible);
+            ta.Animate(Config.Current.Animation[Enums.Animation.Default], TimeL, Visibility.Visible);
 
             seekt.Interval = 20;
             seekt.Start();
@@ -126,7 +125,7 @@ namespace LAP
             if (bgImage.Visibility == Visibility.Hidden)
             {
                 Utils.Animation.Visible va = new Utils.Animation.Visible();
-                va.Animate(Utils.Config.Setting.Values.BackgroundImageAnimationDuration, bgImage, Visibility.Visible);
+                va.Animate(Config.Current.Animation[Enums.Animation.BackgroundImage], bgImage, Visibility.Visible);
             }
 
             MC.PlayingStatus.Title = File.Title;
@@ -167,7 +166,7 @@ namespace LAP
             {
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Localize.Get("ASIO_EXCEPTION"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("ASIO_EXCEPTION"), Constants.ErrorBrush);
                 na.ShowMessage();
                 return;
             }
@@ -176,7 +175,7 @@ namespace LAP
                 Dialogs.LogWindow.Append(ex.Message);
                 StopFile(true);
                 Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Localize.Get("RENDERING_ERROR"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Localize.Get("RENDERING_ERROR"), Constants.ErrorBrush);
                 na.ShowMessage();
                 return;
             }
@@ -220,7 +219,7 @@ namespace LAP
             seekt.Tick -= Seekt_Tick;
 
             Utils.Animation.Visible va = new Utils.Animation.Visible();
-            va.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, TimeL, Visibility.Hidden);
+            va.Animate(Config.Current.Animation[Enums.Animation.Default], TimeL, Visibility.Hidden);
             TimeL.Content = "00:00 / 00:00";
 
             if (Renderer != null)
@@ -260,7 +259,7 @@ namespace LAP
             if (e.Exception != null)
             {
                 Utils.Notification ne = new Utils.Notification(ParentGrid, e.Exception.Message, null,
-                    Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                    Constants.ErrorBrush);
                 ne.ShowMessage();
             }
 
@@ -303,7 +302,7 @@ namespace LAP
             {
                 Utils.Animation.SwitchVisibility sv = new Utils.Animation.SwitchVisibility();
                 if (MediaInformationRoot.Visibility == Visibility.Visible)
-                    sv.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, LibraryRoot, MediaInformationRoot);
+                    sv.Animate(Config.Current.Animation[Enums.Animation.Default], LibraryRoot, MediaInformationRoot);
 
                 if (bgImage.Image != null)
                 {
@@ -317,7 +316,7 @@ namespace LAP
                     };
                     va.AnimationCompleted += handler;
 
-                    va.Animate(Utils.Config.Setting.Values.BackgroundImageAnimationDuration, bgImage, Visibility.Hidden);
+                    va.Animate(Config.Current.Animation[Enums.Animation.Default], bgImage, Visibility.Hidden);
                 }
                 MC.HideStatus();
 

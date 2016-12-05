@@ -13,18 +13,18 @@ namespace LAP.Utils
 
         public static PageCollection GetPages()
         {
-            if (Config.Setting.Pages.PageCollection != null)
-                if (Config.Setting.Pages.PageCollection.Length != 0)
+            if (Config.Current.sArrayValue[Enums.sArrayValue.Pages] != null)
+                if (Config.Current.sArrayValue[Enums.sArrayValue.Pages].Length != 0)
                 {
                     try
                     {
                         PageCollection pages = null;
-                        for (int i = 0; Config.Setting.Pages.PageCollection.Length > i; i++)
+                        for (int i = 0; Config.Current.sArrayValue[Enums.sArrayValue.Pages].Length > i; i++)
                         {
-                            if (Config.Setting.Pages.PageCollection[i] == "Plugin")
+                            if (Config.Current.sArrayValue[Enums.sArrayValue.Pages][i] == "Plugin")
                                 pages = PluginManager.GetPages();
                             {
-                                LAPP.Page p = Utility.GetPageFromString(Config.Setting.Pages.PageCollection[i]);
+                                LAPP.Page p = Utility.GetPageFromString(Config.Current.sArrayValue[Enums.sArrayValue.Pages][i]);
                                 if (p != null)
                                 {
                                     pages = new PageCollection(false);

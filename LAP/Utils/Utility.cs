@@ -57,26 +57,7 @@ namespace LAP.Utils
             System.Environment.Exit(ExitCode);
         }
 
-        internal static object DeepCopy(object target)
-        {
-            object result;
-            BinaryFormatter b = new BinaryFormatter();
 
-            MemoryStream mem = new MemoryStream();
-
-            try
-            {
-                b.Serialize(mem, target);
-                mem.Position = 0;
-                result = b.Deserialize(mem);
-            }
-            finally
-            {
-                mem.Close();
-            }
-
-            return result;
-        }
 
         internal static WriteableBitmap GetImageSourceFromFile(string Path)
         {
@@ -150,7 +131,7 @@ namespace LAP.Utils
 
         internal static IWavePlayer CreateSoundDevice()
         {
-            WaveOut.Devices device = Config.Setting.WaveOut.OutputDevice;
+            Config.WaveOut.Devices device = Config.Current.Output.OutputDevice;
             if (InstanceData.OverrideOutput)
             {
                 device = InstanceData.OverrideDevice;
@@ -162,34 +143,34 @@ namespace LAP.Utils
 
             switch (device)
             {
-                case WaveOut.Devices.ASIO:
-                    if (string.IsNullOrEmpty(Config.Setting.WaveOut.ASIO.DriverName))
+                case Config.WaveOut.Devices.ASIO:
+                    if (string.IsNullOrEmpty(Config.Current.Output.ASIO.DriverName))
                         return new AsioOut();
                     else
-                        return new AsioOut(Config.Setting.WaveOut.ASIO.DriverName);
+                        return new AsioOut(Config.Current.Output.ASIO.DriverName);
 
-                case WaveOut.Devices.DirectSound:
-                    return new DirectSoundOut(Config.Setting.WaveOut.DirectSound.Latency);
+                case Config.WaveOut.Devices.DirectSound:
+                    return new DirectSoundOut(Config.Current.Output.DirectSound.Latency);
 
-                case WaveOut.Devices.Wave:
+                case Config.WaveOut.Devices.Wave:
                     return new NAudio.Wave.WaveOut();
 
-                case WaveOut.Devices.WASAPI:
-                    Config.Setting.WaveOut.WASAPI.ShareMode = AudioClientShareMode.Exclusive;
-                    if (string.IsNullOrEmpty(Config.Setting.WaveOut.WASAPI.DeviceFriendlyName))
-                        return new WasapiOut(Config.Setting.WaveOut.WASAPI.ShareMode, false, Config.Setting.WaveOut.WASAPI.Latency);
+                case Config.WaveOut.Devices.WASAPI:
+                    Config.Current.Output.WASAPI.ShareMode = AudioClientShareMode.Exclusive;
+                    if (string.IsNullOrEmpty(Config.Current.Output.WASAPI.DeviceFriendlyName))
+                        return new WasapiOut(Config.Current.Output.WASAPI.ShareMode, false, Config.Current.Output.WASAPI.Latency);
                     else
                     {
                         MMDeviceCollection col = new MMDeviceEnumerator().EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
                         MMDevice dev = new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
                         for (int i = 0; col.Count > i; i++)
-                            if (col[i].FriendlyName == Config.Setting.WaveOut.WASAPI.DeviceFriendlyName)
+                            if (col[i].FriendlyName == Config.Current.Output.WASAPI.DeviceFriendlyName)
                             {
                                 dev = col[i];
                                 break;
                             }
 
-                        return new WasapiOut(dev, Config.Setting.WaveOut.WASAPI.ShareMode, false, Config.Setting.WaveOut.WASAPI.Latency);
+                        return new WasapiOut(dev, Config.Current.Output.WASAPI.ShareMode, false, Config.Current.Output.WASAPI.Latency);
                     }
 
                 default:
@@ -199,23 +180,23 @@ namespace LAP.Utils
 
         private static MMDevice dev = null;
 
-        internal static NAudio.CoreAudioApi.MMDevice GetCaptureDevice()
+        internal static MMDevice GetCaptureDevice()
         {
             if (dev == null)
             {
-                MMDeviceEnumerator Devices = new NAudio.CoreAudioApi.MMDeviceEnumerator();
-                if (string.IsNullOrEmpty(Config.Setting.Values.MicDevice))
+                MMDeviceEnumerator Devices = new MMDeviceEnumerator();
+                if (string.IsNullOrEmpty(Config.Current.sValue[Enums.sValue.MicDeviceName]))
                 {
-                    dev = Devices.GetDefaultAudioEndpoint(NAudio.CoreAudioApi.DataFlow.Capture,
+                    dev = Devices.GetDefaultAudioEndpoint(DataFlow.Capture,
                         Role.Communications);
-                    Config.Setting.Values.MicDevice = dev.ToString();
+                    Config.Current.sValue[Enums.sValue.MicDeviceName] = dev.ToString();
                 }
                 else
                 {
                     MMDeviceCollection devColl = Devices.EnumerateAudioEndPoints(DataFlow.Capture, DeviceState.Active);
                     for (int i = 0; devColl.Count > i; i++)
                     {
-                        if (devColl[i].ToString() == Config.Setting.Values.MicDevice)
+                        if (devColl[i].ToString() == Config.Current.sValue[Enums.sValue.MicDeviceName])
                         {
                             dev = devColl[i];
                             break;

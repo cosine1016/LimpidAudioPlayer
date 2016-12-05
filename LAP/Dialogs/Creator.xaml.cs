@@ -20,7 +20,8 @@ namespace LAP.Dialogs
 
             LicenseTab.ActiveIndex = 0;
 
-            LVersion.Content = Localize.Get(Strings.Version) + ":" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            CreatorL.Content = Localize.Get(Strings.Creator) + " : Kaisei Sunaga";
+            VersionL.Content = Localize.Get(Strings.Version) + " : " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void LicenseTab_ActiveItemChanged(object sender, System.EventArgs e)

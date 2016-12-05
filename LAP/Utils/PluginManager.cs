@@ -132,19 +132,19 @@ namespace LAP.Utils
                 }
                 catch(ReflectionTypeLoadException ex)
                 {
-                    LAP.Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
-                    LAP.Dialogs.LogWindow.Append(ex.LoaderExceptions.ToString());
+                    Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
+                    Dialogs.LogWindow.Append(ex.LoaderExceptions.ToString());
                 }
                 catch (Exception)
                 {
-                    LAP.Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
+                    Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
                 }
             }
         }
 
         private static void LoadInfo()
         {
-            string PluginInfoFile = Config.Setting.Paths.PluginInfoPath;
+            string PluginInfoFile = Config.Current.Path[Enums.Path.PluginManagementFile];
             if (File.Exists(PluginInfoFile))
             {
                 try
@@ -163,7 +163,7 @@ namespace LAP.Utils
 
         private static void SaveInfo()
         {
-            string PluginInfoFile = Config.Setting.Paths.PluginInfoPath;
+            string PluginInfoFile = Config.Current.Path[Enums.Path.PluginManagementFile];
             try
             {
                 XmlSerializer ser = new XmlSerializer(typeof(PluginInfoCollection));
@@ -223,12 +223,9 @@ namespace LAP.Utils
 
                     if (Instance != null)
                     {
-                        LAP.Dialogs.LogWindow.Append("Plugin loaded : " + Path);
-                        return;
+                        Dialogs.LogWindow.Append("Plugin loaded : " + Path);
                     }
                 }
-
-                throw new Exception();
             }
 
             public string Path { get; set; }

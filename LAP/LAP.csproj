@@ -115,6 +115,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Dialogs\Config.xaml.cs">
       <DependentUpon>Config.xaml</DependentUpon>
     </Compile>
@@ -124,6 +126,9 @@
     <Compile Include="Dialogs\UnhandledExceptionDialog.xaml.cs">
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\Path.cs" />
+    <Compile Include="Enums\Animation.cs" />
+    <Compile Include="Enums\Value.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="Page\Manager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -145,7 +150,6 @@
     <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\PluginManager.cs" />
     <Compile Include="Utils\Update.cs" />
-    <Compile Include="Utils\WaveOut.cs" />
     <Compile Include="Visualize\Spectrum.xaml.cs">
       <DependentUpon>Spectrum.xaml</DependentUpon>
     </Compile>
@@ -179,7 +183,6 @@
     <Compile Include="Utils\Boolean.cs" />
     <Compile Include="Utils\Brushes.cs" />
     <Compile Include="Utils\Classes.cs" />
-    <Compile Include="Utils\Config.cs" />
     <Compile Include="Utils\Converter.cs" />
     <Compile Include="Utils\Equalizer.cs" />
     <Compile Include="Utils\InstanceData.cs" />

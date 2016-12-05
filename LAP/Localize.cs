@@ -9,18 +9,22 @@ namespace LAP
 {
     public enum Strings
     {
-        Open, Config, Creator, Log, Exit,
+        Title, Open, Config, Creator, Log, Exit,
         Play, Pause, Stop, Next, Back,
         Version, Plugin
     }
 
     internal class Localize
     {
+        public const string KEY_LCID = "LCID";
+
+        public static event EventHandler LanguageChanged;
+
         public static bool ExportLog { get; set; } = true;
 
         public static string Get(string Key)
         {
-            string str = CurrentLanguage.Strings[Key];
+            string str = Current.Strings[Key];
 
             if (Key == str)
                 Dialogs.LogWindow.Append("Key Was Not Found : " + Key);
@@ -74,12 +78,7 @@ namespace LAP
             return Get(ids);
         }
 
-        public static LAPP.Localize CurrentLanguage { get; private set; }
-        public static void Save(string Path)
-        {
-            if(!string.IsNullOrEmpty(CurrentLanguage?.SupportVersion) && CurrentLanguage?.Strings != null)
-                LAPP.Localize.Save(Path, CurrentLanguage);
-        }
+        public static LAPP.Localize Current { get; private set; }
 
         public static void Load(string Path)
         {
@@ -88,15 +87,17 @@ namespace LAP
                 if (Utils.InstanceData.OverrideLanguage)
                 {
                     Dialogs.LogWindow.Append("Language was overridden");
-                    CurrentLanguage = LAPP.Localize.Load(Utils.InstanceData.LocalizeFilePath);
+                    Current = LAPP.Localize.Load(Utils.InstanceData.LocalizeFilePath);
                 }
                 else
-                    CurrentLanguage = LAPP.Localize.Load(Path);
+                    Current = LAPP.Localize.Load(Path);
+                LanguageChanged?.Invoke(null, null);
             }
             catch (Exception)
             {
                 Dialogs.LogWindow.Append("Failed to loading localize file");
-                CurrentLanguage = new LAPP.Localize();
+                Current = new LAPP.Localize();
+                LanguageChanged?.Invoke(null, null);
             }
         }
     }

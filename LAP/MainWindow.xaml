@@ -28,15 +28,13 @@
                 <Label x:Name="TitleT" Height="55" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="21.333" HorizontalContentAlignment="Center" Foreground="White" FontWeight="Thin" />
                 <Label x:Name="AlbumT" Content="Album" Height="40" Margin="0,60,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" HorizontalContentAlignment="Center" Foreground="White" FontWeight="Thin" />
                 <Label x:Name="ArtistT" Content="Artist" Height="40" Margin="0,105,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" HorizontalContentAlignment="Center" Foreground="White" FontWeight="Thin" />
-                <Image x:Name="ArtworkI" Margin="0,150,0,0" />
-                <TextBox x:Name="LyricsT" Margin="0,150,0,0" TextWrapping="Wrap" Text="Lyrics" Background="#B2000000" BorderBrush="#00ABADB3" Foreground="White" SelectionBrush="#FF323232" FontSize="18.667" FontWeight="Thin" TextAlignment="Center" IsReadOnly="True" BorderThickness="0" Opacity="0" Visibility="Hidden" />
+                <Grid x:Name="PluginPanel" Margin="0,150,0,0">
+                    <Grid x:Name="SidePanel" HorizontalAlignment="Left" Width="264"/>
+                </Grid>
             </Grid>
             <Grid x:Name="LibraryRoot">
                 <ClearUC:ListView x:Name="library" Margin="0,0,0,57" />
                 <ClearUC:Tab x:Name="Tab" Height="57" VerticalAlignment="Bottom" Width="Auto" Background="#B2000000" />
-            </Grid>
-            <Grid x:Name="PluginPanel">
-                <Grid x:Name="SidePanel" HorizontalAlignment="Left" Width="264"/>
             </Grid>
         </Grid>
         <Grid x:Name="CaptionRoot" Height="35" VerticalAlignment="Top" Background="#19000000">

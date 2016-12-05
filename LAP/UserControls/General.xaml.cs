@@ -24,5 +24,10 @@ namespace LAP.UserControls
         {
             InitializeComponent();
         }
+
+        public void Apply()
+        {
+            Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
+        }
     }
 }

@@ -6,15 +6,16 @@
         xmlns:UserControls="clr-namespace:LAP.UserControls" xmlns:local="clr-namespace:LAP.Dialogs"
         xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.Dialogs.Creator"
         mc:Ignorable="d"
-        Title="Creator" Height="320" Width="610.084" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="#B2000000" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
+        Title="Creator" Height="393.501" Width="627.115" WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Background="#B2000000" Icon="/LAP;component/Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
         <WindowChrome x:Name="Chrome" UseAeroCaptionButtons="False" CornerRadius="0" GlassFrameThickness="0" CaptionHeight="35" />
     </WindowChrome.WindowChrome>
     <Grid>
         <UserControls:Caption x:Name="Caption" Height="35" Width="Auto" VerticalAlignment="Top" Background="#E5323232" MaximizeButtonVisible="False" MinimizeButtonVisible="False" CloseButtonVisible="True" OptionalButtonVisible="False" />
-        <TextBox x:Name="License" TextWrapping="Wrap" FontWeight="Thin" VerticalScrollBarVisibility="Visible" Background="{x:Null}" Foreground="White" SelectionBrush="{x:Null}" IsReadOnly="True" BorderBrush="{x:Null}" FontSize="14" Height="173" VerticalAlignment="Bottom" />
-        <ClearUC:Tab x:Name="LicenseTab" Margin="0,107,0,0" Height="40" Width="Auto" VerticalAlignment="Top" />
-        <Label x:Name="label" Content="製作者：砂賀開晴" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" Height="45" Width="159" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
-        <Label x:Name="LVersion" Content="バージョン:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="174,40,0,0" Height="45" Width="265" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
+        <TextBox x:Name="License" TextWrapping="Wrap" FontWeight="Thin" VerticalScrollBarVisibility="Visible" Background="{x:Null}" Foreground="White" SelectionBrush="{x:Null}" IsReadOnly="True" BorderBrush="{x:Null}" FontSize="14" Height="216" VerticalAlignment="Bottom" />
+        <ClearUC:Tab x:Name="LicenseTab" Margin="0,138,0,0" Height="40" Width="Auto" VerticalAlignment="Top" />
+        <Label x:Name="CreatorL" Content="Creator：Kaisei Sunaga" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" Height="45" Width="257" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
+        <Label x:Name="VersionL" Content="Version : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="272,40,0,0" Height="45" Width="265" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
+        <ClearUC:LinkLabel x:Name="ContactL" Content="Contact : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,85,0,0" Height="45" Width="257" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
     </Grid>
 </Window>

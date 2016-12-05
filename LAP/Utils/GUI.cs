@@ -18,7 +18,7 @@ namespace LAP.Utils
         private ListSubItem CreatorItem;
         private ListSubItem ExitItem;
         private ListSubItem LogItem;
-        private LAP.Dialogs.LogWindow LogWindow;
+        private Dialogs.LogWindow LogWindow;
 
         private void RaiseEvent(LAPP.Player.Receiver.Action Action, params object[] Args)
         {
@@ -51,15 +51,9 @@ namespace LAP.Utils
             MW.LibraryRoot.Visibility = Visibility.Visible;
             MW.MediaInformationRoot.Visibility = Visibility.Hidden;
 
-            Config.ReadSetting(Paths.SettingFilePath);
-            Localize.Load(Config.Setting.Paths.UsingLanguage);
-
-            ApplyConfig();
-        }
-
-        public void ApplyConfig()
-        {
-            MW.library.SearchBoxVisible = Config.Setting.Boolean.SearchBox;
+            //この順番は変更するとエラー起こす
+            Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
+            Config.Load(Config.Current.Path[Enums.Path.SettingFile]);
         }
 
         private void InitializeLAPPanel()
@@ -121,6 +115,7 @@ namespace LAP.Utils
         {
             Program.NotImplementedException += Program_NotImplementedException;
             PluginManager.PluginChanged += PluginManager_PluginChanged;
+            Localize.LanguageChanged += Localize_LanguageChanged;
 
             LAPP.Events.Notice += Events_Noticed;
 
@@ -143,9 +138,6 @@ namespace LAP.Utils
                     MW.Manager.PlayLast();
             };
 
-            MW.MediaInformationRoot.PreviewMouseUp += MediaInformationRoot_PreviewMouseUp;
-            MW.MediaInformationRoot.PreviewMouseDown += MediaInformationRoot_PreviewMouseDown;
-
             MW.MC.FFButton.FastForward += FFButton_FastForward;
             MW.MC.RewButton.Rewind += RewButton_Rewind;
             MW.MC.PlayingStatus.MouseClick += PlayingStatus_MouseClick;
@@ -166,6 +158,16 @@ namespace LAP.Utils
             MW.Closing += Window_Closing;
         }
 
+        private void Localize_LanguageChanged(object sender, EventArgs e)
+        {
+            OpenItem.MainLabelText = Localize.Get(Strings.Open);
+            ConfigItem.MainLabelText = Localize.Get(Strings.Config);
+            if (InstanceData.LogMode)
+                LogItem.MainLabelText = Localize.Get(Strings.Log);
+            CreatorItem.MainLabelText = Localize.Get(Strings.Creator);
+            ExitItem.MainLabelText = Localize.Get(Strings.Exit);
+        }
+
         private void Events_Noticed(object sender, LAPP.Events.NotificationEventArgs e)
         {
             Notification notif = new Notification(MW.ParentGrid, e.Text, e.FillBrush);
@@ -173,79 +175,7 @@ namespace LAP.Utils
             notif.ShowMessage();
         }
 
-        FrameworkElement itemhidden;
-        private void MediaInformationRoot_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (mirmrf)
-            {
-                Animation.SwitchVisibility sv = new Animation.SwitchVisibility();
-                if (MW.LyricsT.Visibility == Visibility.Hidden)
-                {
-                    sv.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.LyricsT, MW.ArtworkI);
-                    RaiseEvent(LAPP.Player.Receiver.Action.MediaLyrics, true);
-                    RaiseEvent(LAPP.Player.Receiver.Action.MediaArtwork, false);
-                }
-                else
-                {
-                    sv.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.ArtworkI, MW.LyricsT);
-                    RaiseEvent(LAPP.Player.Receiver.Action.MediaLyrics, false);
-                    RaiseEvent(LAPP.Player.Receiver.Action.MediaArtwork, true);
-                }
-            }
-            mirmrf = false;
-
-            if (mirmcf || mirmlf)
-            {
-                Animation.Visible va = new Animation.Visible();
-
-                if(itemhidden != null)
-                {
-                    if(MW.LyricsT.Visibility == Visibility.Hidden &&
-                        MW.ArtworkI.Visibility == Visibility.Hidden)
-                    {
-                        va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, itemhidden, Visibility.Visible);
-                        itemhidden = null;
-                        mirmcf = false;
-                        RaiseEvent(LAPP.Player.Receiver.Action.MediaHidden, false);
-                        return;
-                    }
-                }
-
-                switch (MW.LyricsT.Visibility)
-                {
-                    case Visibility.Visible:
-                        va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.LyricsT, Visibility.Hidden);
-                        itemhidden = MW.LyricsT;
-                        RaiseEvent(LAPP.Player.Receiver.Action.MediaHidden, true);
-                        break;
-                }
-
-                switch (MW.ArtworkI.Visibility)
-                {
-                    case Visibility.Visible:
-                        va.Animate(Config.Setting.Values.MediaInformationLyricsAnimationDuration, MW.ArtworkI, Visibility.Hidden);
-                        itemhidden = MW.ArtworkI;
-                        RaiseEvent(LAPP.Player.Receiver.Action.MediaHidden, true);
-                        break;
-                }
-            }
-            mirmcf = false;
-            mirmlf = false;
-        }
-
-        private bool mirmrf = false, mirmcf = false, mirmlf = false;
-        private void MediaInformationRoot_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.MiddleButton == MouseButtonState.Pressed)
-                mirmcf = true;
-            if (e.RightButton == MouseButtonState.Pressed)
-                mirmrf = true;
-            if(e.LeftButton == MouseButtonState.Pressed)
-            {
-                if (e.StylusDevice != null)
-                    mirmlf = true;
-            }
-        }
+        private bool mirmcf = false;
 
         private void PluginManager_PluginChanged(object sender, PluginChangedEventArgs e)
         {
@@ -297,7 +227,7 @@ namespace LAP.Utils
         private void Program_NotImplementedException(object sender, EventArgs e)
         {
             Notification na = new Notification(MW.ParentGrid, Localize.Get("NOTIMPLEMENTED"),
-                Config.Setting.Brushes.Notification.Message.Brush);
+                Constants.ErrorBrush);
             na.ShowMessage();
         }
 
@@ -353,12 +283,12 @@ namespace LAP.Utils
                     Animation.SwitchVisibility sv = new Animation.SwitchVisibility();
                     if (MW.MediaInformationRoot.Visibility == Visibility.Hidden)
                     {
-                        sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.MediaInformationRoot, MW.LibraryRoot);
+                        sv.Animate(Config.Current.Animation[Enums.Animation.Default], MW.MediaInformationRoot, MW.LibraryRoot);
                         RaiseEvent(LAPP.Player.Receiver.Action.MediaInformation, true);
                     }
                     else
                     {
-                        sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.LibraryRoot, MW.MediaInformationRoot);
+                        sv.Animate(Config.Current.Animation[Enums.Animation.Default], MW.LibraryRoot, MW.MediaInformationRoot);
                         RaiseEvent(LAPP.Player.Receiver.Action.MediaInformation, false);
                     }
                 }
@@ -390,7 +320,7 @@ namespace LAP.Utils
             if (MW.MediaInformationRoot.Visibility == Visibility.Visible)
             {
                 Animation.SwitchVisibility sv = new Animation.SwitchVisibility();
-                sv.Animate(Config.Setting.Values.PlayingStatusAnimationDuration, MW.LibraryRoot, MW.MediaInformationRoot);
+                sv.Animate(Config.Current.Animation[Enums.Animation.Default], MW.LibraryRoot, MW.MediaInformationRoot);
             }
             else
             {
@@ -403,9 +333,7 @@ namespace LAP.Utils
             MW.StopFile(true);
             MW.Manager.Dispose();
 
-            Config.WriteSetting(Paths.SettingFilePath);
-            Localize.Save(Config.Setting.Paths.UsingLanguage);
-
+            Config.Save(Config.Current.Path[Enums.Path.SettingFile]);
             RaiseEvent(LAPP.Player.Receiver.Action.WindowClosing);
         }
 

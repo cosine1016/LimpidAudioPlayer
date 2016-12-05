@@ -10,19 +10,19 @@ namespace LAP.UserControls
     /// </summary>
     public partial class AudioOutSelector : UserControl
     {
-        public event EventHandler AudioOutputChanged;
+        internal event EventHandler AudioOutputChanged;
 
-        public AudioOutSelector()
+        internal AudioOutSelector()
         {
             InitializeComponent();
 
             if (System.ComponentModel.DesignerProperties.GetIsInDesignMode(this) == false)
             {
-                SelectedDevice = Utils.Config.Setting.WaveOut.OutputDevice;
-                ASIOConfig = (Utils.WaveOut.ASIOConfig)Utils.Config.Setting.WaveOut.ASIO.Clone();
-                WASAPIConfig = (Utils.WaveOut.WASAPIConfig)Utils.Config.Setting.WaveOut.WASAPI.Clone();
-                DSConfig = (Utils.WaveOut.DirectSoundConfig)Utils.Config.Setting.WaveOut.DirectSound.Clone();
-                AmplifyN.Value = (int)(Utils.Config.Setting.WaveOut.Amplify * 100);
+                SelectedDevice = Config.Current.Output.OutputDevice;
+                ASIOConfig = (Config.WaveOut.ASIOConfig)Config.Current.Output.ASIO.Clone();
+                WASAPIConfig = (Config.WaveOut.WASAPIConfig)Config.Current.Output.WASAPI.Clone();
+                DSConfig = (Config.WaveOut.DirectSoundConfig)Config.Current.Output.DirectSound.Clone();
+                AmplifyN.Value = (int)(Config.Current.Output.Amplify * 100);
                 SwitchButton();
             }
 
@@ -30,14 +30,14 @@ namespace LAP.UserControls
             LatencyL.Content = Localize.Get("LATENCY");
         }
 
-        public Utils.WaveOut.ASIOConfig ASIOConfig { get; set; }
-        public Brush DisabledButtonBrush { get; set; } = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+        internal Config.WaveOut.ASIOConfig ASIOConfig { get; set; }
+        internal Brush DisabledButtonBrush { get; set; } = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
 
-        public Utils.WaveOut.DirectSoundConfig DSConfig { get; set; }
-        public Brush EnabledButtonBrush { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
+        internal Config.WaveOut.DirectSoundConfig DSConfig { get; set; }
+        internal Brush EnabledButtonBrush { get; set; } = new SolidColorBrush(Color.FromArgb(255, 50, 50, 50));
 
-        public Utils.WaveOut.Devices SelectedDevice { get; set; }
-        public Utils.WaveOut.WASAPIConfig WASAPIConfig { get; set; }
+        internal Config.WaveOut.Devices SelectedDevice { get; set; }
+        internal Config.WaveOut.WASAPIConfig WASAPIConfig { get; set; }
         private bool DisableUpdate { get; set; } = false;
 
         public void SwitchButton()
@@ -57,14 +57,14 @@ namespace LAP.UserControls
             Wave.Background = DisabledButtonBrush;
             switch (SelectedDevice)
             {
-                case Utils.WaveOut.Devices.DirectSound:
+                case Config.WaveOut.Devices.DirectSound:
                     Latency.IsEnabled = true;
                     Latency.Value = DSConfig.Latency;
 
                     DirectSound.Background = EnabledButtonBrush;
                     break;
 
-                case Utils.WaveOut.Devices.WASAPI:
+                case Config.WaveOut.Devices.WASAPI:
                     Latency.IsEnabled = true;
                     checkBox.IsEnabled = true;
                     comboBox.IsEnabled = true;
@@ -95,7 +95,7 @@ namespace LAP.UserControls
                     WASAPI.Background = EnabledButtonBrush;
                     break;
 
-                case Utils.WaveOut.Devices.ASIO:
+                case Config.WaveOut.Devices.ASIO:
                     comboBox.IsEnabled = true;
                     DisableUpdate = false;
 
@@ -113,16 +113,16 @@ namespace LAP.UserControls
                     else
                     {
                         Utils.Notification notice = new Utils.Notification(Parent,
-                            Localize.Get("ASIO_DEV_NOTFOUND"), Utils.Config.Setting.Brushes.Notification.Error.Brush);
+                            Localize.Get("ASIO_DEV_NOTFOUND"), Constants.ErrorBrush);
                         notice.ShowMessage();
-                        if (Utils.Config.Setting.WaveOut.OutputDevice == SelectedDevice)
+                        if (Config.Current.Output.OutputDevice == SelectedDevice)
                         {
-                            SelectedDevice = Utils.WaveOut.Devices.DirectSound;
+                            SelectedDevice = Config.WaveOut.Devices.DirectSound;
                             SwitchButton();
                         }
                         else
                         {
-                            SelectedDevice = Utils.Config.Setting.WaveOut.OutputDevice;
+                            SelectedDevice = Config.Current.Output.OutputDevice;
                             SwitchButton();
                         }
                         return;
@@ -131,7 +131,7 @@ namespace LAP.UserControls
                     DisableUpdate = true;
                     break;
 
-                case Utils.WaveOut.Devices.Wave:
+                case Config.WaveOut.Devices.Wave:
                     Wave.Background = EnabledButtonBrush;
                     break;
             }
@@ -143,7 +143,7 @@ namespace LAP.UserControls
 
         private void ASIO_Click(object sender, RoutedEventArgs e)
         {
-            SelectedDevice = Utils.WaveOut.Devices.ASIO;
+            SelectedDevice = Config.WaveOut.Devices.ASIO;
             SwitchButton();
         }
 
@@ -167,11 +167,11 @@ namespace LAP.UserControls
             if (comboBox.SelectedItem == null) return;
             switch (SelectedDevice)
             {
-                case Utils.WaveOut.Devices.ASIO:
+                case Config.WaveOut.Devices.ASIO:
                     ASIOConfig.DriverName = comboBox.SelectedItem.ToString();
                     break;
 
-                case Utils.WaveOut.Devices.WASAPI:
+                case Config.WaveOut.Devices.WASAPI:
                     if (comboBox.SelectedIndex > 0)
                         WASAPIConfig.DeviceFriendlyName = comboBox.SelectedItem.ToString();
                     else
@@ -183,7 +183,7 @@ namespace LAP.UserControls
 
         private void DirectSound_Click(object sender, RoutedEventArgs e)
         {
-            SelectedDevice = Utils.WaveOut.Devices.DirectSound;
+            SelectedDevice = Config.WaveOut.Devices.DirectSound;
             SwitchButton();
         }
 
@@ -193,11 +193,11 @@ namespace LAP.UserControls
 
             switch (SelectedDevice)
             {
-                case Utils.WaveOut.Devices.DirectSound:
+                case Config.WaveOut.Devices.DirectSound:
                     DSConfig.Latency = Latency.Value;
                     break;
 
-                case Utils.WaveOut.Devices.WASAPI:
+                case Config.WaveOut.Devices.WASAPI:
                     WASAPIConfig.Latency = Latency.Value;
                     break;
             }
@@ -205,13 +205,13 @@ namespace LAP.UserControls
 
         private void WASAPI_Click(object sender, RoutedEventArgs e)
         {
-            SelectedDevice = Utils.WaveOut.Devices.WASAPI;
+            SelectedDevice = Config.WaveOut.Devices.WASAPI;
             SwitchButton();
         }
 
         private void Wave_Click(object sender, RoutedEventArgs e)
         {
-            SelectedDevice = Utils.WaveOut.Devices.Wave;
+            SelectedDevice = Config.WaveOut.Devices.Wave;
             SwitchButton();
         }
     }

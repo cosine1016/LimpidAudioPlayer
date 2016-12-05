@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using cnf = LAP.Utils.Config;
+using cnf = LAP.Config;
 using LAPP.Setting;
 
 namespace LAP.Dialogs
@@ -26,13 +26,18 @@ namespace LAP.Dialogs
                 this.Category = Category;
             else
             {
-                this.Category = new ISettingItem[2];
-                
+                List<ISettingItem> set = new List<ISettingItem>();
+
+                GeneralCategory general = new GeneralCategory();
+                set.Add(general);
+
                 OutputCategory output = new OutputCategory();
-                this.Category[0] = output;
+                set.Add(output);
 
                 Plugin plg = new Plugin();
-                this.Category[1] = plg;
+                set.Add(plg);
+
+                this.Category = set.ToArray();
             }
 
             TabContent.Children.Clear();
@@ -76,7 +81,7 @@ namespace LAP.Dialogs
                 Category[i].Apply();
             }
 
-            cnf.WriteSetting(Utils.Paths.SettingFilePath);
+            cnf.Save(cnf.Current.Path[Enums.Path.SettingFile]);
 
             MW.ReRenderFile(true, true);
             Close();
@@ -93,6 +98,32 @@ namespace LAP.Dialogs
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+    }
+
+    internal class GeneralCategory : ISettingItem
+    {
+        public GeneralCategory()
+        {
+            Header = Localize.Get("GENERAL");
+            UIControl = gen;
+        }
+
+        public Border Border { get; set; }
+
+        public string Header { get; set; }
+
+        public UIElement UIControl { get; set; }
+
+        private UserControls.General gen = new UserControls.General();
+
+        public void Apply()
+        {
+            gen.Apply();
+        }
+
+        public void Dispose()
+        {
         }
     }
 
@@ -114,11 +145,11 @@ namespace LAP.Dialogs
 
         public void Apply()
         {
-            cnf.Setting.WaveOut.OutputDevice = aos.SelectedDevice;
-            cnf.Setting.WaveOut.ASIO = aos.ASIOConfig;
-            cnf.Setting.WaveOut.WASAPI = aos.WASAPIConfig;
-            cnf.Setting.WaveOut.DirectSound = aos.DSConfig;
-            cnf.Setting.WaveOut.Amplify = (float)aos.AmplifyN.Value / 100;
+            cnf.Current.Output.OutputDevice = aos.SelectedDevice;
+            cnf.Current.Output.ASIO = aos.ASIOConfig;
+            cnf.Current.Output.WASAPI = aos.WASAPIConfig;
+            cnf.Current.Output.DirectSound = aos.DSConfig;
+            cnf.Current.Output.Amplify = (float)aos.AmplifyN.Value / 100;
         }
 
         public void Dispose()

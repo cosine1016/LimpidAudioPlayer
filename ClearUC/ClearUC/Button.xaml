@@ -67,5 +67,4 @@
             </Setter>
         </Style>
     </Button.Resources>
-    <Grid />
 </Button>

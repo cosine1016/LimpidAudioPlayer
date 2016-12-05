@@ -10,7 +10,7 @@ namespace ClearUC.ListViewItems
     /// <summary>
     /// ListItem.xaml の相互作用ロジック
     /// </summary>
-    public partial class ListItem : Grid
+    public abstract partial class ListItem : Grid
     {
         public event EventHandler ImageIndexChanged;
 

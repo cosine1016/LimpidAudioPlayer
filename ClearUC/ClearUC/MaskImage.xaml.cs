@@ -69,10 +69,7 @@ namespace ClearUC
                     {
                         if (!((BitmapImage)value).IsEqual(((BitmapImage)VisibleImageControl.Source)))
                         {
-                            BitmapImage bimage = (BitmapImage)value;
-                            bimage.DecodePixelHeight = DecodePixelHeight;
-                            bimage.DecodePixelWidth = (int)(1.0 * bimage.PixelHeight / DecodePixelHeight * bimage.PixelWidth);
-                            HiddenImageControl.Source = bimage;
+                            HiddenImageControl.Source = value;
 
                             Utils.AnimationHelper.Double hide = new Utils.AnimationHelper.Double();
                             hide.Animate(VisibleImageControl.Opacity, 0, TransitionDuration, null, OpacityProperty, VisibleImageControl);
@@ -88,10 +85,7 @@ namespace ClearUC
                 }
                 else
                 {
-                    BitmapImage bimage = (BitmapImage)value;
-                    bimage.DecodePixelHeight = DecodePixelHeight;
-                    bimage.DecodePixelWidth = (int)(1.0 * bimage.PixelHeight / DecodePixelHeight * bimage.PixelWidth);
-                    VisibleImageControl.Source = bimage;
+                    VisibleImageControl.Source = value;
                 }
             }
         }

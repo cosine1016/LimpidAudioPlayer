@@ -6,73 +6,7 @@
              xmlns:local="clr-namespace:LAP.UserControls"
              xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.UserControls.PlayingStatus"
              mc:Ignorable="d" ClipToBounds="True" Width="369.489" MouseDown="UserControl_MouseDown" MouseLeave="UserControl_MouseLeave" MouseEnter="UserControl_MouseEnter" MouseUp="UserControl_MouseUp">
-    <UserControl.Resources>
-        <Storyboard x:Key="OnMouseEnter">
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Parent">
-                <EasingColorKeyFrame KeyTime="0" Value="{Binding Background.(GradientBrush.GradientStops)[1].(GradientStop.Color)}"/>
-                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#FFFFAE00"/>
-            </ColorAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Offset)" Storyboard.TargetName="Parent">
-                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="Parent">
-                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(LinearGradientBrush.StartPoint)" Storyboard.TargetName="Parent">
-                <EasingPointKeyFrame KeyTime="0" Value="0,0.5"/>
-                <EasingPointKeyFrame KeyTime="0:0:0.5" Value="0,0.5"/>
-            </PointAnimationUsingKeyFrames>
-            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(LinearGradientBrush.EndPoint)" Storyboard.TargetName="Parent">
-                <EasingPointKeyFrame KeyTime="0" Value="1,1"/>
-                <EasingPointKeyFrame KeyTime="0:0:0.5" Value="1,1"/>
-            </PointAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.SpreadMethod)" Storyboard.TargetName="Parent">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static GradientSpreadMethod.Pad}"/>
-            </ObjectAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Key="OnMouseLeave">
-            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Color)" Storyboard.TargetName="Parent">
-                <SplineColorKeyFrame KeyTime="0" Value="#FFFFAE00"/>
-                <SplineColorKeyFrame KeyTime="0:0:0.5" Value="Black"/>
-            </ColorAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[0].(GradientStop.Offset)" Storyboard.TargetName="Parent">
-                <SplineDoubleKeyFrame KeyTime="0" Value="1"/>
-                <SplineDoubleKeyFrame KeyTime="0:0:0.5" Value="1"/>
-            </DoubleAnimationUsingKeyFrames>
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.GradientStops)[1].(GradientStop.Offset)" Storyboard.TargetName="Parent">
-                <SplineDoubleKeyFrame KeyTime="0" Value="0"/>
-                <SplineDoubleKeyFrame KeyTime="0:0:0.5" Value="0"/>
-            </DoubleAnimationUsingKeyFrames>
-            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(LinearGradientBrush.StartPoint)" Storyboard.TargetName="Parent">
-                <SplinePointKeyFrame KeyTime="0" Value="0,0.5"/>
-                <SplinePointKeyFrame KeyTime="0:0:0.5" Value="0,0.5"/>
-            </PointAnimationUsingKeyFrames>
-            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(LinearGradientBrush.EndPoint)" Storyboard.TargetName="Parent">
-                <SplinePointKeyFrame KeyTime="0" Value="1,1"/>
-                <SplinePointKeyFrame KeyTime="0:0:0.5" Value="1,1"/>
-            </PointAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(GradientBrush.SpreadMethod)" Storyboard.TargetName="Parent">
-                <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static GradientSpreadMethod.Pad}"/>
-            </ObjectAnimationUsingKeyFrames>
-        </Storyboard>
-    </UserControl.Resources>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="UIElement.MouseEnter" SourceName="Parent">
-            <BeginStoryboard x:Name="OnMouseEnter_BeginStoryboard" Storyboard="{StaticResource OnMouseEnter}"/>
-        </EventTrigger>
-        <EventTrigger RoutedEvent="UIElement.MouseLeave" SourceName="Parent">
-            <BeginStoryboard x:Name="OnMouseLeave_BeginStoryboard" Storyboard="{StaticResource OnMouseLeave}"/>
-        </EventTrigger>
-    </UserControl.Triggers>
     <Grid x:Name="Parent"  HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
-        <Grid.Background>
-            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                <GradientStop Color="Black" Offset="0"/>
-                <GradientStop Color="White" Offset="1"/>
-            </LinearGradientBrush>
-        </Grid.Background>
         <Image x:Name="image" Height="78" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78" />
         <Label x:Name="TitleL" Content="Title" Height="41" Margin="10,0,78,0" VerticalAlignment="Top" Foreground="White" FontWeight="Thin" FontSize="16" VerticalContentAlignment="Bottom" />
         <Label x:Name="AlbumL" Content="Album" Height="37" Margin="10,41,78,0" VerticalAlignment="Top" Foreground="White" FontWeight="Thin" FontSize="13.333" />

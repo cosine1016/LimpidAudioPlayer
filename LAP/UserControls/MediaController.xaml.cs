@@ -51,16 +51,8 @@ namespace LAP.UserControls
             {
                 if (ActualWidth >= StatusVisibleWidth)
                 {
-                    if (Utils.Config.Setting.Boolean.AnimateItems)
-                    {
-                        Utils.Animation.Visible va = new Utils.Animation.Visible();
-                        va.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, PlayingStatus, Visibility.Visible);
-                    }
-                    else
-                    {
-                        PlayingStatus.Opacity = 1;
-                        PlayingStatus.Visibility = Visibility.Visible;
-                    }
+                    Utils.Animation.Visible va = new Utils.Animation.Visible();
+                    va.Animate(Config.Current.Animation[Enums.Animation.Default], PlayingStatus, Visibility.Visible);
                 }
             }));
         }
@@ -70,15 +62,8 @@ namespace LAP.UserControls
             if (vis == false) return;
             vis = false;
 
-            if (Utils.Config.Setting.Boolean.AnimateItems)
-            {
-                Utils.Animation.Visible va = new Utils.Animation.Visible();
-                va.Animate(Utils.Config.Setting.Values.PlayingStatusAnimationDuration, PlayingStatus, Visibility.Hidden);
-            }
-            else
-            {
-                PlayingStatus.Visibility = Visibility.Hidden;
-            }
+            Utils.Animation.Visible va = new Utils.Animation.Visible();
+            va.Animate(Config.Current.Animation[Enums.Animation.Default], PlayingStatus, Visibility.Hidden);
         }
 
         public int StatusVisibleWidth { get; set; } = 930;

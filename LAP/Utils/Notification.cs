@@ -33,29 +33,12 @@ namespace LAP.Utils
             P.Children.Add(NB);
             NB.Minimize();
             NB.Message = Message;
-            NB.Animate = Utils.Config.Setting.Boolean.AnimateItems;
-            NB.AnimationDuration = Utils.Config.Setting.Values.NotificationAnimationDuration;
-            NB.ShowingDuration = Utils.Config.Setting.Values.NotificationShowingDuration;
+            NB.AnimationDuration = Config.Current.Animation[Enums.Animation.Notification];
+            NB.ShowingDuration = Config.Current.Animation[Enums.Animation.Notification];
             NB.Click += NB_Click;
         }
 
-        public Notification(Panel Parent, string Message, Brush BackgroundBrush)
-        {
-            NB = new NotificationBar();
-            P = Parent;
-            NB.BackgroundBrush = BackgroundBrush;
-            NB.Animate = false;
-            NB.ShowEnterLabel = false;
-            NB.HorizontalAlignment = HorizontalAlignment.Stretch;
-            NB.VerticalAlignment = VerticalAlignment.Top;
-            P.Children.Add(NB);
-            NB.Minimize();
-            NB.Message = Message;
-            NB.Animate = Utils.Config.Setting.Boolean.AnimateItems;
-            NB.AnimationDuration = Utils.Config.Setting.Values.NotificationAnimationDuration;
-            NB.ShowingDuration = Utils.Config.Setting.Values.NotificationShowingDuration;
-            NB.Click += NB_Click;
-        }
+        public Notification(Panel Parent, string Message, Brush BackgroundBrush) : this(Parent, Message, null, BackgroundBrush) { }
 
         public Brush BackgroundBrush
         {

@@ -8,9 +8,10 @@ namespace BasicPlugin.Pages.Album
 {
     public class Setting
     {
+        internal static Setting Current = new Setting();
         internal const string AlbumSettingFileName = "Album.cnf";
         internal const string AlbumExtension = ".limpidal";
-        public string AlbumDirectory { get; set; } = LAPP.Utils.Path.GetPath(LAPP.Utils.Path.LAPSetting + @"Album");
+        public string AlbumDirectory { get; set; } = @"Album";//TODO Set Dir name
         public string CreateAlbumStr { get; set; } = "Create Album";
     }
 }

@@ -157,7 +157,6 @@ namespace BasicPlugin.Pages.Album
     {
         private Border border = BorderHelper.GetBorderFromXAML(Resources.Shapes.Disc, 35, 35, new Thickness(0, 5, 0, 0));
         private ListSubItem CreateAlbumItem = new ListSubItem();
-        private Setting set;
         private FileItem LastFile = null;
         
         private PageItemCollection TopItems = new PageItemCollection();
@@ -168,20 +167,17 @@ namespace BasicPlugin.Pages.Album
 
         protected override void InitializeTopItems()
         {
-            ReadSetting();
-
             TopItems.CollectionChanged += TopItems_CollectionChanged;
             TopItems.Clear();
-
-            Directory.CreateDirectory(set.AlbumDirectory);
-            string[] Paths = Directory.GetFiles(set.AlbumDirectory, "*" + Setting.AlbumExtension);
+            
+            string[] Paths = Directory.GetFiles(Setting.Current.AlbumDirectory, "*" + Setting.AlbumExtension);
             foreach (string Path in Paths)
                 AddAlbum(Path);
 
             TopItems.Add(new ClearUC.ListViewItems.Separator());
 
             CreateAlbumItem.ItemClicked += CreateAlbumItem_ItemClicked;
-            CreateAlbumItem.MainLabelText = set.CreateAlbumStr;
+            CreateAlbumItem.MainLabelText = Setting.Current.CreateAlbumStr;
             CreateAlbumItem.SubLabelVisibility = Visibility.Hidden;
             TopItems.Add(CreateAlbumItem);
         }
@@ -198,11 +194,6 @@ namespace BasicPlugin.Pages.Album
         }
 
         public override string Title { get; protected set; } = "Album";
-
-        public override void Dispose()
-        {
-            WriteSetting();
-        }
 
         public override void PlaybackStateChanged(PlaybackState PlaybackState)
         {
@@ -354,18 +345,13 @@ namespace BasicPlugin.Pages.Album
             UpdatePage(Level.Current);
         }
 
-        private void ReadSetting()
-        {
-            set = new Setting();
-        }
-
-        private void WriteSetting()
-        {
-        }
-
         protected override void Initialize(FileItem FileItem)
         {
             LastFile = FileItem;
+        }
+
+        public override void Dispose()
+        {
         }
     }
 }

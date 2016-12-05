@@ -35,7 +35,7 @@ namespace LAPP
         /// プラグインに割り当てられたフォルダパスを取得します。このフォルダを利用するかどうかは自由です
         /// </summary>
         /// <returns>フォルダパス</returns>
-        public string GetPath()
+        public string GetConfigPath()
         {
             string Path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"/LAP/Config/Plugin/" + Title + "/";
             Directory.CreateDirectory(Path);

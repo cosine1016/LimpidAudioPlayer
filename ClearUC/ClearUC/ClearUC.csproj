@@ -91,6 +91,9 @@
     <Compile Include="EditableLabel.xaml.cs">
       <DependentUpon>EditableLabel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LinkLabel.xaml.cs">
+      <DependentUpon>LinkLabel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ListViewItems\ContainerItem.xaml.cs">
       <DependentUpon>ContainerItem.xaml</DependentUpon>
     </Compile>
@@ -159,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="EditableLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LinkLabel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
