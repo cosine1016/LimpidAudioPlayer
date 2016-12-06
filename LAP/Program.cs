@@ -158,9 +158,8 @@ namespace LAP
 
         private static void Initialize()
         {
-            //この順番は変更するとエラー起こす
-            Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
             Config.Load(Config.Current.Path[Enums.Path.SettingFile]);
+            Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
         }
 
         private static void OutputParser(string Arg)

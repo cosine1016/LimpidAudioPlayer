@@ -9,15 +9,13 @@ namespace LAP
 {
     public enum Strings
     {
-        Title, Open, Config, Creator, Log, Exit,
+        Title, Open, Config, Creator, Log, Exit, Unknown,
         Play, Pause, Stop, Next, Back,
         Version, Plugin
     }
 
     internal class Localize
     {
-        public const string KEY_LCID = "LCID";
-
         public static event EventHandler LanguageChanged;
 
         public static bool ExportLog { get; set; } = true;
@@ -52,6 +50,9 @@ namespace LAP
                 case Strings.Exit:
                     ids = "0_EXIT";
                     break;
+                case Strings.Unknown:
+                    ids = "0_UNKNOWN";
+                    break;
                 case Strings.Play:
                     ids = "1_PLAY";
                     break;
@@ -80,6 +81,8 @@ namespace LAP
 
         public static LAPP.Localize Current { get; private set; }
 
+        public static string CurrentFilePath { get; private set; }
+
         public static void Load(string Path)
         {
             try
@@ -88,15 +91,21 @@ namespace LAP
                 {
                     Dialogs.LogWindow.Append("Language was overridden");
                     Current = LAPP.Localize.Load(Utils.InstanceData.LocalizeFilePath);
+                    CurrentFilePath = Utils.InstanceData.LocalizeFilePath;
                 }
                 else
+                {
                     Current = LAPP.Localize.Load(Path);
+                    CurrentFilePath = Path;
+                }
+
                 LanguageChanged?.Invoke(null, null);
             }
             catch (Exception)
             {
                 Dialogs.LogWindow.Append("Failed to loading localize file");
                 Current = new LAPP.Localize();
+                CurrentFilePath = null;
                 LanguageChanged?.Invoke(null, null);
             }
         }

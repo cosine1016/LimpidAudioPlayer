@@ -8,13 +8,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="76"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <ComboBox x:Name="InstallLangC" Margin="10,10,10,0" VerticalAlignment="Top" Height="22"/>
+        <ComboBox x:Name="LangC" Margin="10,36,10,0" VerticalAlignment="Top" Height="22"/>
 
-        <ClearUC:Button x:Name="InstallLangB" Margin="0,37,10,10" Height="Auto" Width="115" Content="Install Language" HorizontalAlignment="Right"/>
+        <ClearUC:Button x:Name="InstallLangB" Margin="10,63,0,0" Height="29" Width="121" Content="Install Language" Click="InstallLangB_Click" Grid.RowSpan="2" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <Label x:Name="LangL" Content="Language" Margin="10,10,10,0" VerticalAlignment="Top" Foreground="White" FontWeight="Thin" Height="26"/>
 
     </Grid>
 </UserControl>
