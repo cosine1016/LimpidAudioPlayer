@@ -69,8 +69,8 @@ namespace LAP
 
                     case "-InitPluginDir":
                         Utils.InstanceData.DoNotInitialize = true;
-                        System.IO.Directory.CreateDirectory(Utils.PluginManager.PluginDirectory);
-                        break;
+                        Initialize();
+                        System.IO.Directory.CreateDirectory(Config.Current.Path[Enums.Path.PluginDirectory]);
                         break;
 
                     case "-Hash":
@@ -138,7 +138,10 @@ namespace LAP
 
             if (Utils.InstanceData.DoNotInitialize == false)
             {
-                UpdateMan.AutoUpdate(true);
+                Initialize();
+
+                if(Config.Current.bValue[Enums.bValue.AutoUpdate])
+                    UpdateMan.AutoUpdate(true);
 
                 App = new App();
                 App.ShutdownMode = System.Windows.ShutdownMode.OnMainWindowClose;
@@ -151,6 +154,13 @@ namespace LAP
 
                 App.Run();
             }
+        }
+
+        private static void Initialize()
+        {
+            //この順番は変更するとエラー起こす
+            Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
+            Config.Load(Config.Current.Path[Enums.Path.SettingFile]);
         }
 
         private static void OutputParser(string Arg)

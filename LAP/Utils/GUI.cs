@@ -38,22 +38,18 @@ namespace LAP.Utils
 
         public void Initialize()
         {
-            InitializeInterfaceAndConfig();
+            InitializeInterface();
             InitializeTaskBarManager();
             InitializeLAPPanel();
             AssociateEvents();
             InitializeTabAndManager();
         }
 
-        private void InitializeInterfaceAndConfig()
+        private void InitializeInterface()
         {
             ClearUC.Dialogs.Dialog.DialogIcon = Utility.ToImageSource(Properties.Resources.Limpid_Audio_Player);
             MW.LibraryRoot.Visibility = Visibility.Visible;
             MW.MediaInformationRoot.Visibility = Visibility.Hidden;
-
-            //この順番は変更するとエラー起こす
-            Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
-            Config.Load(Config.Current.Path[Enums.Path.SettingFile]);
         }
 
         private void InitializeLAPPanel()

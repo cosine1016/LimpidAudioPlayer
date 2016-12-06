@@ -9,8 +9,6 @@ namespace LAP.Utils
 {
     public class Pages
     {
-        public string[] PageCollection { get; set; } = new string[] { "Album", "Playlist", "Plugin" };
-
         public static PageCollection GetPages()
         {
             if (Config.Current.sArrayValue[Enums.sArrayValue.Pages] != null)

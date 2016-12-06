@@ -30,8 +30,6 @@ namespace LAP.Utils
 
     public class PluginManager
     {
-        public const string PluginDirectory = @"Plugin\";
-
         public static List<Plugin> InitializedPlugin { get; set; }
 
         private static PluginInfoCollection InfoCollection { get; set; }
@@ -105,7 +103,7 @@ namespace LAP.Utils
 
         static PluginManager()
         {
-            if (!Directory.Exists(PluginDirectory))
+            if (!Directory.Exists(Config.Current.Path[Enums.Path.PluginDirectory]))
             {
                 System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(Assembly.GetExecutingAssembly().Location);
                 psi.Verb = "RunAs";
@@ -120,7 +118,7 @@ namespace LAP.Utils
         private static void LoadPlugin()
         {
             InitializedPlugin = new List<Plugin>();
-            string[] files = Directory.GetFiles(PluginDirectory, "*.dll", SearchOption.TopDirectoryOnly);
+            string[] files = Directory.GetFiles(Config.Current.Path[Enums.Path.PluginDirectory], "*.dll", SearchOption.TopDirectoryOnly);
 
             for (int i = 0; files.Length > i; i++)
             {

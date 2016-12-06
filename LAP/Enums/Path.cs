@@ -8,9 +8,19 @@ namespace LAP.Enums
 {
     public enum Path
     {
+        [Config(@"$LAP$Languages\English.loc")]
         LanguageFile,
+
+        [Config(@"$LAP$Languages\")]
         LanguageDirectory,
+
+        [Config(@"$LAP$Setting.lcnf")]
         SettingFile,
-        PluginManagementFile
+
+        [Config(@"$LAP$Plugin\Management.xml")]
+        PluginManagementFile,
+
+        [Config(@"$LAP$Plugin\")]
+        PluginDirectory
     }
 }

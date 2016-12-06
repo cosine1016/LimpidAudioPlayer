@@ -47,15 +47,5 @@ namespace LAP.Utils
             int i = System.BitConverter.ToInt32(bs, 0);
             return Math.Abs(i % MaxValue);
         }
-
-        public static string BrushToString(SolidColorBrush Brush)
-        {
-            return Brush.ToString();
-        }
-
-        public static SolidColorBrush StringToBrush(string Brush)
-        {
-            return new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(Brush));
-        }
     }
 }

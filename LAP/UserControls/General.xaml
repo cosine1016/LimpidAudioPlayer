@@ -12,9 +12,9 @@
             <RowDefinition Height="76"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <ComboBox x:Name="comboBox" Margin="10,10,10,0" VerticalAlignment="Top" Height="22"/>
+        <ComboBox x:Name="InstallLangC" Margin="10,10,10,0" VerticalAlignment="Top" Height="22"/>
 
-        <ClearUC:Button x:Name="button" Margin="0,37,10,10" Height="Auto" Width="115" Content="Install Language" HorizontalAlignment="Right"/>
+        <ClearUC:Button x:Name="InstallLangB" Margin="0,37,10,10" Height="Auto" Width="115" Content="Install Language" HorizontalAlignment="Right"/>
 
     </Grid>
 </UserControl>

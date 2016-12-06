@@ -126,6 +126,8 @@
     <Compile Include="Dialogs\UnhandledExceptionDialog.xaml.cs">
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Enums\Brushes.cs" />
+    <Compile Include="Enums\HelperClass.cs" />
     <Compile Include="Enums\Path.cs" />
     <Compile Include="Enums\Animation.cs" />
     <Compile Include="Enums\Value.cs" />
@@ -147,7 +149,6 @@
       <DependentUpon>PluginOption.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\GUI.cs" />
-    <Compile Include="Utils\Library.cs" />
     <Compile Include="Utils\PluginManager.cs" />
     <Compile Include="Utils\Update.cs" />
     <Compile Include="Visualize\Spectrum.xaml.cs">
@@ -180,21 +181,17 @@
       <DependentUpon>PlayingStatus.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Animation.cs" />
-    <Compile Include="Utils\Boolean.cs" />
-    <Compile Include="Utils\Brushes.cs" />
     <Compile Include="Utils\Classes.cs" />
     <Compile Include="Utils\Converter.cs" />
     <Compile Include="Utils\Equalizer.cs" />
     <Compile Include="Utils\InstanceData.cs" />
     <Compile Include="Utils\Notification.cs" />
     <Compile Include="Utils\Pages.cs" />
-    <Compile Include="Utils\Paths.cs" />
     <Compile Include="Utils\Shapes.xaml.cs">
       <DependentUpon>Shapes.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Taskbar.cs" />
     <Compile Include="Utils\Utility.cs" />
-    <Compile Include="Utils\Values.cs" />
     <Page Include="Dialogs\Config.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

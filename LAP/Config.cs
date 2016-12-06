@@ -16,23 +16,11 @@ namespace LAP
     {
         public ConfigDictionary() { }
         public ConfigDictionary(Func<TKey, TValue> KeyConverter) { this.KeyConverter = KeyConverter; }
-        public ConfigDictionary(Func<TKey, TValue> KeyConverter, TKey[] Keys, TValue[] Values) : this(KeyConverter)
-        {
-            if (Keys.Length != Values.Length)
-                throw new Exception("Keys' Length must be the same as Values'");
-
-            for (int i = 0; Keys.Length > i; i++)
-            {
-                SetDefaultValue(Keys[i], Values[i]);
-                this[Keys[i]] = Values[i];
-            }
-        }
 
         public Func<TKey, TValue> KeyConverter { get; set; } = null;
         public Func<TValue, TValue> SettingValueFunction { get; set; } = null;
         public Func<TValue, TValue> GettingValueFunction { get; set; } = null;
 
-        private Dictionary<TKey, TValue> DefValues = new Dictionary<TKey, TValue>();
         public new TValue this[TKey Key]
         {
             get
@@ -54,37 +42,28 @@ namespace LAP
                 if (SettingValueFunction != null)
                     val = SettingValueFunction(val);
 
-                if (!ContainsKey(Key))
-                {
-                    if (KeyConverter != null)
-                        DefValues[Key] = KeyConverter(Key);
-                    else
-                        DefValues[Key] = default(TValue);
-                }
-
                 base[Key] = val;
             }
         }
-
-        public void SetDefaultValue(TKey Key, TValue Value)
-        {
-            DefValues[Key] = Value;
-        }
-
         public TValue GetDefaultValue(TKey Key)
         {
-            if (!DefValues.ContainsKey(Key))
+            ConfigAttribute attribute = Attribute.GetCustomAttribute(typeof(TKey).GetField(Key.ToString()),
+                typeof(ConfigAttribute)) as ConfigAttribute;
+
+            if (attribute != null)
+            {
+                if (GettingValueFunction != null)
+                    return GettingValueFunction((TValue)attribute.Default);
+                else
+                    return (TValue)attribute.Default;
+            }
+            else
             {
                 if (KeyConverter != null)
-                    DefValues[Key] = KeyConverter(Key);
+                    return KeyConverter(Key);
                 else
-                    DefValues[Key] = default(TValue);
+                    return default(TValue);
             }
-
-            if (GettingValueFunction != null)
-                return GettingValueFunction(DefValues[Key]);
-            else
-                return DefValues[Key];
         }
 
         public XmlSchema GetSchema()
@@ -141,40 +120,22 @@ namespace LAP
         public const string LoadingError_T = "T_LOADCNF";
         public const string LoadingError_M = "M_LOADCNF";
 
-        public Config()
+        private Config()
         {
             Path.GettingValueFunction = PathFunc;
         }
 
         public static Config Current { get; private set; } = new Config();
 
-        public ConfigDictionary<Enums.Path, string> Path { get; set; } = new ConfigDictionary<Enums.Path, string>(
-            new Func<Enums.Path, string>((Key) => { return Key.ToString(); }),
-            new Enums.Path[] 
-            {
-                Enums.Path.LanguageDirectory,
-                Enums.Path.LanguageFile,
-                Enums.Path.SettingFile
-            },
-            new string[]
-            {
-                @"$LAP$Languages\English.loc",
-                @"$LAP$Languages\English.loc",
-                @"$LAP$Setting.lcnf"
-            });
+        public ConfigDictionary<Enums.Path, string> Path { get; set; }
+            = new ConfigDictionary<Enums.Path, string>(
+            new Func<Enums.Path, string>((Key) => { return Key.ToString(); }));
 
-        public ConfigDictionary<Animation, int> Animation { get; set; } = new ConfigDictionary<Animation, int>(
-            new Func<Enums.Animation, int>((key) => { return 0; }),
-            new Animation[]
-            {
-                Enums.Animation.Default,
-                Enums.Animation.Notification
-            },
-            new int[]
-            {
-                200,
-                3000
-            });
+        public ConfigDictionary<Animation, int> Animation { get; set; }
+            = new ConfigDictionary<Animation, int>(
+            new Func<Enums.Animation, int>((key) => { return 0; }));
+
+        public ConfigDictionary<bValue, bool> bValue { get; set; } = new ConfigDictionary<bValue, bool>();
 
         public ConfigDictionary<iValue, int> iValue { get; set; } = new ConfigDictionary<iValue, int>();
 
@@ -219,7 +180,12 @@ namespace LAP
 
         private string PathFunc(string Value)
         {
-            Value = Value.Replace("$LAP$", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\LAP\");
+            Value = Value.Replace("$LAP$",
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\LAP\");
+            Value = Value.Replace("$PRG$",
+                System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\");
+
+
             return Value;
         }
 

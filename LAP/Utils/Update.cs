@@ -320,6 +320,7 @@ namespace LAP.Utils
             try
             {
                 webreq = (HttpWebRequest)WebRequest.Create(URL);
+                webreq.Timeout = 5000;
                 wres = (HttpWebResponse)webreq.GetResponse();
                 if ((int)wres.StatusCode >= 200 && (int)wres.StatusCode < 300)
                 {
