@@ -56,7 +56,7 @@
     <Compile Include="IO\Async.cs" />
     <Compile Include="Localize.cs" />
     <Compile Include="Player\Receiver.cs" />
-    <Compile Include="Setting\ISettingItem.cs" />
+    <Compile Include="Setting\Setting.cs" />
     <Compile Include="IO\File.cs" />
     <Compile Include="Utils\BorderHelper.cs" />
     <Compile Include="Utils\EventArgs.cs" />

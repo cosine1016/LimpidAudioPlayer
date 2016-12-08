@@ -20,7 +20,7 @@ namespace LAP.Enums
         [Config(@"$LAP$Plugin\Management.xml")]
         PluginManagementFile,
 
-        [Config(@"$LAP$Plugin\")]
+        [Config(@"$PRG$Plugin\")]
         PluginDirectory
     }
 }

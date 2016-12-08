@@ -65,13 +65,15 @@ namespace LAP.UserControls
             LangFiles = files;
         }
 
-        public void Apply()
+        public LAPP.Setting.ApplyInfo Apply()
         {
             if(InstallLangC.SelectedIndex > -1)
             {
                 Config.Current.Path[Enums.Path.LanguageFile] = LangFiles[InstallLangC.SelectedIndex];
                 Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
             }
+
+            return new LAPP.Setting.ApplyInfo(true, false, true, false);
         }
     }
 }

@@ -8,8 +8,13 @@ namespace LAP.Enums
 {
     public enum Animation
     {
+        [Config(100)]
         Default,
+
+        [Config(3000)]
         Notification,
+
+        [Config(300)]
         BackgroundImage
     }
 }

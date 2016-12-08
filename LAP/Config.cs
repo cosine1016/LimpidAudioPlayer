@@ -127,13 +127,9 @@ namespace LAP
 
         public static Config Current { get; private set; } = new Config();
 
-        public ConfigDictionary<Enums.Path, string> Path { get; set; }
-            = new ConfigDictionary<Enums.Path, string>(
-            new Func<Enums.Path, string>((Key) => { return Key.ToString(); }));
+        public ConfigDictionary<Enums.Path, string> Path { get; set; } = new ConfigDictionary<Enums.Path, string>();
 
-        public ConfigDictionary<Animation, int> Animation { get; set; }
-            = new ConfigDictionary<Animation, int>(
-            new Func<Enums.Animation, int>((key) => { return 0; }));
+        public ConfigDictionary<Animation, int> Animation { get; set; } = new ConfigDictionary<Animation, int>();
 
         public ConfigDictionary<bValue, bool> bValue { get; set; } = new ConfigDictionary<bValue, bool>();
 

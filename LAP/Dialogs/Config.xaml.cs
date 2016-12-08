@@ -76,15 +76,39 @@ namespace LAP.Dialogs
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
+            bool Restart = false, CloseDlg = false, Rerender = false;
             for (int i = 0; Category.Length > i; i++)
             {
-                Category[i].Apply();
+                ApplyInfo ai = Category[i].Apply();
+
+                if (ai.RestartApp)
+                    Restart = true;
+
+                if (ai.CloseDialog)
+                    CloseDlg = true;
+
+                if (ai.RerenderFile)
+                    Rerender = true;
             }
 
             cnf.Save(cnf.Current.Path[Enums.Path.SettingFile]);
 
-            MW.ReRenderFile(true, true);
-            Close();
+            if (Restart)
+            {
+                Application.Current.Shutdown();
+                System.Windows.Forms.Application.Restart();
+                return;
+            }
+
+            if (CloseDlg)
+            {
+                Close();
+            }
+
+            if (Rerender)
+            {
+                MW.ReRenderFile(true, true);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -117,9 +141,9 @@ namespace LAP.Dialogs
 
         private UserControls.General gen = new UserControls.General();
 
-        public void Apply()
+        public ApplyInfo Apply()
         {
-            gen.Apply();
+            return gen.Apply();
         }
 
         public void Dispose()
@@ -143,13 +167,19 @@ namespace LAP.Dialogs
 
         private UserControls.AudioOutSelector aos = new UserControls.AudioOutSelector();
 
-        public void Apply()
+        public ApplyInfo Apply()
         {
-            cnf.Current.Output.OutputDevice = aos.SelectedDevice;
-            cnf.Current.Output.ASIO = aos.ASIOConfig;
-            cnf.Current.Output.WASAPI = aos.WASAPIConfig;
-            cnf.Current.Output.DirectSound = aos.DSConfig;
-            cnf.Current.Output.Amplify = (float)aos.AmplifyN.Value / 100;
+            try
+            {
+                cnf.Current.Output.OutputDevice = aos.SelectedDevice;
+                cnf.Current.Output.ASIO = aos.ASIOConfig;
+                cnf.Current.Output.WASAPI = aos.WASAPIConfig;
+                cnf.Current.Output.DirectSound = aos.DSConfig;
+                cnf.Current.Output.Amplify = (float)aos.AmplifyN.Value / 100;
+
+                return new ApplyInfo(true);
+            }
+            catch (Exception) { return new ApplyInfo(false); }
         }
 
         public void Dispose()
@@ -171,8 +201,11 @@ namespace LAP.Dialogs
 
         public UIElement UIControl { get; set; }
 
-        public void Apply()
+        public ApplyInfo Apply()
         {
+            ApplyInfo ai = new ApplyInfo(true);
+
+            return ai;
         }
 
         public void Dispose()
