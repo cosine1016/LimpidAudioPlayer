@@ -222,23 +222,6 @@ namespace LAP
                     return;
                 }
 
-                if (Config.Current != null && Utils.PluginManager.InitializedPlugin.Count > 0)
-                {
-                    for(int i = 0;Utils.PluginManager.InitializedPlugin.Count > i; i++)
-                    {
-                        System.Reflection.Assembly asm = Utils.PluginManager.InitializedPlugin[i].Asm;
-                        if(asm.GetName().Name == e.Exception.Source)
-                        {
-                            e.Handled = true;
-
-                            Utils.PluginManager.UnloadPlugin(Utils.PluginManager.InitializedPlugin[i]);
-                            ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.OKOnly, "Plugin Error",
-                                asm.GetName().Name + " is not compatible plugin\nThe plugin was unloaded");
-                            return;
-                        }
-                    }
-                }
-                
                 try
                 {
                     if (e.Handled) return;

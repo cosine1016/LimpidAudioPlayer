@@ -133,6 +133,8 @@ namespace LAP
             MC.PlayingStatus.Image = File.Artwork;
             MC.VisibleStatus();
 
+            PlayingFile = File;
+
             TaskbarManager.VisibleButtons();
 
             if (AutoRun) RunFile();
@@ -269,7 +271,6 @@ namespace LAP
 
         internal bool PlayFile(LAPP.IO.MediaFile File)
         {
-            PlayingFile = File;
             return RenderFile(File);
         }
 

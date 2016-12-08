@@ -16,7 +16,23 @@ namespace LAP
 
     internal class Localize
     {
-        public static event EventHandler LanguageChanged;
+        private static List<Action> ChangedActions = new List<Action>();
+
+        public static void AddLanguageChangedAction(Action Action)
+        {
+            ChangedActions.Add(Action);
+            Action();
+        }
+
+        public static void RemoveLanguageChangedAction(Action Action)
+        {
+            ChangedActions.Remove(Action);
+        }
+
+        ~Localize()
+        {
+            ChangedActions.Clear();
+        }
 
         public static bool ExportLog { get; set; } = true;
 
@@ -99,14 +115,26 @@ namespace LAP
                     CurrentFilePath = Path;
                 }
 
-                LanguageChanged?.Invoke(null, null);
+                ChangeLanguage();
             }
             catch (Exception)
             {
                 Dialogs.LogWindow.Append("Failed to loading localize file");
                 Current = new LAPP.Localize();
                 CurrentFilePath = null;
-                LanguageChanged?.Invoke(null, null);
+                ChangeLanguage();
+            }
+        }
+
+        private static void ChangeLanguage()
+        {
+            for(int i = 0;ChangedActions.Count > i; i++)
+            {
+                try
+                {
+                    ChangedActions[i]();
+                }
+                catch (Exception) { Dialogs.LogWindow.Append("Applying Language Failed"); }
             }
         }
     }

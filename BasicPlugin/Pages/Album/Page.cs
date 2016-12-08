@@ -169,12 +169,15 @@ namespace BasicPlugin.Pages.Album
         {
             TopItems.CollectionChanged += TopItems_CollectionChanged;
             TopItems.Clear();
-            
-            string[] Paths = Directory.GetFiles(Setting.Current.AlbumDirectory, "*" + Setting.AlbumExtension);
-            foreach (string Path in Paths)
-                AddAlbum(Path);
 
-            TopItems.Add(new ClearUC.ListViewItems.Separator());
+            if (Directory.Exists(Setting.Current.AlbumDirectory))
+            {
+                string[] Paths = Directory.GetFiles(Setting.Current.AlbumDirectory, "*" + Setting.AlbumExtension);
+                foreach (string Path in Paths)
+                    AddAlbum(Path);
+
+                TopItems.Add(new ClearUC.ListViewItems.Separator());
+            }
 
             CreateAlbumItem.ItemClicked += CreateAlbumItem_ItemClicked;
             CreateAlbumItem.MainLabelText = Setting.Current.CreateAlbumStr;

@@ -26,8 +26,7 @@ namespace LAP.UserControls
                 SwitchButton();
             }
 
-            AmplifyL.Content = Localize.Get("AMPLIFY");
-            LatencyL.Content = Localize.Get("LATENCY");
+            Localize.AddLanguageChangedAction(UpdateLang);
         }
 
         internal Config.WaveOut.ASIOConfig ASIOConfig { get; set; }
@@ -38,7 +37,18 @@ namespace LAP.UserControls
 
         internal Config.WaveOut.Devices SelectedDevice { get; set; }
         internal Config.WaveOut.WASAPIConfig WASAPIConfig { get; set; }
+
+        internal bool RerenderFile = false;
+
         private bool DisableUpdate { get; set; } = false;
+        private ListBoxItem Default { get; set; } = new ListBoxItem();
+
+        private void UpdateLang()
+        {
+            AmplifyL.Content = Localize.Get("AMPLIFY");
+            LatencyL.Content = Localize.Get("LATENCY");
+            Default.Content = "<" + Localize.Get("DEFAULT") + ">";
+        }
 
         public void SwitchButton()
         {
@@ -73,7 +83,7 @@ namespace LAP.UserControls
                     NAudio.CoreAudioApi.MMDeviceCollection col =
                         dev.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.DeviceState.Active);
 
-                    comboBox.Items.Add("<" + Localize.Get("DEFAULT") + ">");
+                    comboBox.Items.Add(Default);
 
                     for (int i = 0; col.Count > i; i++)
                     {
@@ -145,6 +155,7 @@ namespace LAP.UserControls
         {
             SelectedDevice = Config.WaveOut.Devices.ASIO;
             SwitchButton();
+            RerenderFile = true;
         }
 
         private void checkBox_Checked(object sender, RoutedEventArgs e)
@@ -152,6 +163,7 @@ namespace LAP.UserControls
             if (DisableUpdate) return;
 
             WASAPIConfig.ShareMode = NAudio.CoreAudioApi.AudioClientShareMode.Exclusive;
+            RerenderFile = true;
         }
 
         private void checkBox_Unchecked(object sender, RoutedEventArgs e)
@@ -159,6 +171,7 @@ namespace LAP.UserControls
             if (DisableUpdate) return;
 
             WASAPIConfig.ShareMode = NAudio.CoreAudioApi.AudioClientShareMode.Shared;
+            RerenderFile = true;
         }
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -169,6 +182,7 @@ namespace LAP.UserControls
             {
                 case Config.WaveOut.Devices.ASIO:
                     ASIOConfig.DriverName = comboBox.SelectedItem.ToString();
+                    RerenderFile = true;
                     break;
 
                 case Config.WaveOut.Devices.WASAPI:
@@ -177,6 +191,7 @@ namespace LAP.UserControls
                     else
                         WASAPIConfig.DeviceFriendlyName = null;
                     WASAPIConfig.DeviceIndex = comboBox.SelectedIndex;
+                    RerenderFile = true;
                     break;
             }
         }
@@ -185,6 +200,7 @@ namespace LAP.UserControls
         {
             SelectedDevice = Config.WaveOut.Devices.DirectSound;
             SwitchButton();
+            RerenderFile = true;
         }
 
         private void Latency_ValueChanged(object sender, EventArgs e)
@@ -201,18 +217,21 @@ namespace LAP.UserControls
                     WASAPIConfig.Latency = Latency.Value;
                     break;
             }
+            RerenderFile = true;
         }
 
         private void WASAPI_Click(object sender, RoutedEventArgs e)
         {
             SelectedDevice = Config.WaveOut.Devices.WASAPI;
             SwitchButton();
+            RerenderFile = true;
         }
 
         private void Wave_Click(object sender, RoutedEventArgs e)
         {
             SelectedDevice = Config.WaveOut.Devices.Wave;
             SwitchButton();
+            RerenderFile = true;
         }
     }
 }

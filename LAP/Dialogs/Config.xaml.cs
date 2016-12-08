@@ -15,11 +15,36 @@ namespace LAP.Dialogs
         private readonly ISettingItem[] Category = null;
         private MainWindow MW;
 
+        private void UpdateLanguage()
+        {
+            Caption.Title = Localize.Get("0_CONFIG");
+            Apply.Content = Localize.Get("APPLY");
+            Cancel.Content = Localize.Get("CANCEL");
+            UpdateTab();
+        }
+
+        private void UpdateTab()
+        {
+            TabContent.Children.Clear();
+            Tab.Items.Clear();
+            for (int i = 0; this.Category.Length > i; i++)
+            {
+                if (this.Category[i] != null)
+                {
+                    this.Category[i].UIControl.Visibility = Visibility.Hidden;
+
+                    TabContent.Children.Add(this.Category[i].UIControl);
+                    Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
+                }
+            }
+
+            Tab.ActiveIndex = 0;
+        }
+
         internal Config(MainWindow MainWindow, ISettingItem[] Category = null)
         {
             InitializeComponent();
 
-            Caption.Title = Localize.Get("0_CONFIG");
             MW = MainWindow;
 
             if (Category != null && Category.Length > 0)
@@ -40,19 +65,6 @@ namespace LAP.Dialogs
                 this.Category = set.ToArray();
             }
 
-            TabContent.Children.Clear();
-            Tab.Items.Clear();
-            for (int i = 0; this.Category.Length > i; i++)
-            {
-                if(this.Category[i] != null)
-                {
-                    this.Category[i].UIControl.Visibility = Visibility.Hidden;
-
-                    TabContent.Children.Add(this.Category[i].UIControl);
-                    Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
-                }
-            }
-
             System.Collections.ObjectModel.Collection<ISettingItem> sets
                 = Utils.PluginManager.GetSettings();
             for (int s = 0; sets.Count > s; s++)
@@ -64,6 +76,8 @@ namespace LAP.Dialogs
             Tab.ActiveItemChanged += Tab_ActiveItemChanged;
 
             if (Tab.Items.Count > 0) Tab.ActiveIndex = 0;
+
+            Localize.AddLanguageChangedAction(UpdateLanguage);
         }
 
         private void Tab_ActiveItemChanged(object sender, EventArgs e)
@@ -129,9 +143,16 @@ namespace LAP.Dialogs
     {
         public GeneralCategory()
         {
-            Header = Localize.Get("GENERAL");
+            Action = new Action(() =>
+            {
+                Header = Localize.Get("GENERAL");
+            });
+            Localize.AddLanguageChangedAction(Action);
+
             UIControl = gen;
         }
+
+        private Action Action;
 
         public Border Border { get; set; }
 
@@ -148,6 +169,7 @@ namespace LAP.Dialogs
 
         public void Dispose()
         {
+            Localize.RemoveLanguageChangedAction(Action);
         }
     }
 
@@ -155,9 +177,16 @@ namespace LAP.Dialogs
     {
         public OutputCategory()
         {
-            Header = Localize.Get("CONFIG_OUTPUT");
+            Action = new Action(() =>
+            {
+                Header = Localize.Get("CONFIG_OUTPUT");
+            });
+            Localize.AddLanguageChangedAction(Action);
+
             UIControl = aos;
         }
+
+        private Action Action;
 
         public Border Border { get; set; }
 
@@ -177,13 +206,14 @@ namespace LAP.Dialogs
                 cnf.Current.Output.DirectSound = aos.DSConfig;
                 cnf.Current.Output.Amplify = (float)aos.AmplifyN.Value / 100;
 
-                return new ApplyInfo(true);
+                return new ApplyInfo(true, false, false, aos.RerenderFile);
             }
             catch (Exception) { return new ApplyInfo(false); }
         }
 
         public void Dispose()
         {
+            Localize.RemoveLanguageChangedAction(Action);
         }
     }
 
@@ -191,9 +221,16 @@ namespace LAP.Dialogs
     {
         public Plugin()
         {
-            Header = Localize.Get(Strings.Plugin);
+            Action = new Action(() =>
+            {
+                Header = Localize.Get(Strings.Plugin);
+            });
+            Localize.AddLanguageChangedAction(Action);
+
             UIControl = new UserControls.PluginOption();
         }
+
+        private Action Action;
 
         public Border Border { get; set; }
 
@@ -210,6 +247,7 @@ namespace LAP.Dialogs
 
         public void Dispose()
         {
+            Localize.RemoveLanguageChangedAction(Action);
         }
     }
 }

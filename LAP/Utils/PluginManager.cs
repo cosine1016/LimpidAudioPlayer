@@ -30,11 +30,17 @@ namespace LAP.Utils
 
     public class PluginManager
     {
-        public static List<Plugin> InitializedPlugin { get; set; }
+        private static List<Plugin> InitializedPlugin { get; set; }
 
         private static PluginInfoCollection InfoCollection { get; set; }
 
         public static event EventHandler<PluginChangedEventArgs> PluginChanged;
+
+        internal static Plugin[] GetPlugins() { return InitializedPlugin.ToArray(); }
+
+        internal static Plugin GetPlugin(int Index) { return InitializedPlugin[Index]; }
+
+        internal static int PluginCount { get { return InitializedPlugin.Count; } }
 
         internal static LAPP.PageCollection GetPages()
         {
@@ -122,20 +128,11 @@ namespace LAP.Utils
 
             for (int i = 0; files.Length > i; i++)
             {
-                try
+                Plugin plg = new Plugin(files[i]);
+                if (plg.Instance != null)
                 {
-                    Plugin plg = new Plugin(files[i]);
                     plg.EnableChanged += Plg_EnableChanged;
                     InitializedPlugin.Add(plg);
-                }
-                catch(ReflectionTypeLoadException ex)
-                {
-                    Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
-                    Dialogs.LogWindow.Append(ex.LoaderExceptions.ToString());
-                }
-                catch (Exception)
-                {
-                    Dialogs.LogWindow.Append("Failed to load plugin : " + files[i]);
                 }
             }
         }
@@ -156,7 +153,10 @@ namespace LAP.Utils
                 catch (Exception) { InfoCollection = new PluginInfoCollection(); }
             }
             else
+            {
                 InfoCollection = new PluginInfoCollection();
+                SaveInfo();
+            }
         }
 
         private static void SaveInfo()

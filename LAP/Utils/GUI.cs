@@ -43,6 +43,8 @@ namespace LAP.Utils
             InitializeLAPPanel();
             AssociateEvents();
             InitializeTabAndManager();
+
+            Localize.AddLanguageChangedAction(Localize_LanguageChanged);
         }
 
         private void InitializeInterface()
@@ -111,7 +113,6 @@ namespace LAP.Utils
         {
             Program.NotImplementedException += Program_NotImplementedException;
             PluginManager.PluginChanged += PluginManager_PluginChanged;
-            Localize.LanguageChanged += Localize_LanguageChanged;
 
             LAPP.Events.Notice += Events_Noticed;
 
@@ -154,7 +155,7 @@ namespace LAP.Utils
             MW.Closing += Window_Closing;
         }
 
-        private void Localize_LanguageChanged(object sender, EventArgs e)
+        private void Localize_LanguageChanged()
         {
             OpenItem.MainLabelText = Localize.Get(Strings.Open);
             ConfigItem.MainLabelText = Localize.Get(Strings.Config);

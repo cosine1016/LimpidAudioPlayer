@@ -31,8 +31,10 @@ namespace LAP.UserControls
         public void UpdateTab()
         {
             PluginT.Items.Clear();
-            for (int i = 0; Utils.PluginManager.InitializedPlugin.Count > i; i++)
-                PluginT.Items.Add(new ClearUC.Tab.TabItem(Utils.PluginManager.InitializedPlugin[i].Instance.Title));
+
+            Utils.PluginManager.Plugin[] plgs = Utils.PluginManager.GetPlugins();
+            for (int i = 0; plgs.Length > i; i++)
+                PluginT.Items.Add(new ClearUC.Tab.TabItem(plgs[i].Instance.Title));
             InfoGrid.Visibility = Visibility.Hidden;
         }
 
@@ -64,7 +66,7 @@ namespace LAP.UserControls
         private LAP.Utils.PluginManager.Plugin GetActiveItem()
         {
             if (PluginT.ActiveIndex < 0) return null;
-            return Utils.PluginManager.InitializedPlugin[PluginT.ActiveIndex];
+            return Utils.PluginManager.GetPlugin(PluginT.ActiveIndex);
         }
 
         private void URLB_Click(object sender, RoutedEventArgs e)

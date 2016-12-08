@@ -18,8 +18,9 @@ namespace LAP.UserControls
     /// <summary>
     /// General.xaml の相互作用ロジック
     /// </summary>
-    public partial class General : UserControl
+    public partial class General : UserControl, IDisposable
     {
+        bool CloseDialog = false;
         LAPP.Localize[] Langs;
         string[] LangFiles;
 
@@ -27,11 +28,10 @@ namespace LAP.UserControls
         {
             InitializeComponent();
 
-            Localize_LanguageChanged(null, null);
-            Localize.LanguageChanged += Localize_LanguageChanged;
+            Localize.AddLanguageChangedAction(Localize_LanguageChanged);
         }
 
-        private void Localize_LanguageChanged(object sender, EventArgs e)
+        private void Localize_LanguageChanged()
         {
             InstallLangB.Content = Localize.Get("INSTALL_LANG");
             LangL.Content = Localize.Get("LANGUAGE");
@@ -84,7 +84,7 @@ namespace LAP.UserControls
                 Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
             }
 
-            return new LAPP.Setting.ApplyInfo(true, false, true, false);
+            return new LAPP.Setting.ApplyInfo(true, false, CloseDialog, false);
         }
 
         private void InstallLangB_Click(object sender, RoutedEventArgs e)
@@ -116,11 +116,16 @@ namespace LAP.UserControls
                         return;
                     }
                 }
-
+                
                 File.Copy(ofd.FileName, Dest, true);
             }
 
             UpdateLang();
+        }
+
+        public void Dispose()
+        {
+            Localize.RemoveLanguageChangedAction(Localize_LanguageChanged);
         }
     }
 }
