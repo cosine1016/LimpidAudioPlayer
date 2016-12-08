@@ -12,120 +12,161 @@ using System.Xml.Schema;
 
 namespace LAP
 {
-    public class ConfigDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
-    {
-        public ConfigDictionary() { }
-        public ConfigDictionary(Func<TKey, TValue> KeyConverter) { this.KeyConverter = KeyConverter; }
-
-        public Func<TKey, TValue> KeyConverter { get; set; } = null;
-        public Func<TValue, TValue> SettingValueFunction { get; set; } = null;
-        public Func<TValue, TValue> GettingValueFunction { get; set; } = null;
-
-        public new TValue this[TKey Key]
-        {
-            get
-            {
-                if (ContainsKey(Key))
-                {
-                    TValue ret = base[Key];
-                    if (GettingValueFunction != null)
-                        ret = GettingValueFunction(ret);
-
-                    return ret;
-                }
-                else
-                    return GetDefaultValue(Key);
-            }
-            set
-            {
-                TValue val = value;
-                if (SettingValueFunction != null)
-                    val = SettingValueFunction(val);
-
-                base[Key] = val;
-            }
-        }
-        public TValue GetDefaultValue(TKey Key)
-        {
-            ConfigAttribute attribute = Attribute.GetCustomAttribute(typeof(TKey).GetField(Key.ToString()),
-                typeof(ConfigAttribute)) as ConfigAttribute;
-
-            if (attribute != null)
-            {
-                if (GettingValueFunction != null)
-                    return GettingValueFunction((TValue)attribute.Default);
-                else
-                    return (TValue)attribute.Default;
-            }
-            else
-            {
-                if (KeyConverter != null)
-                    return KeyConverter(Key);
-                else
-                    return default(TValue);
-            }
-        }
-
-        public XmlSchema GetSchema()
-        {
-            return null;
-        }
-
-        public void ReadXml(XmlReader reader)
-        {
-            if (reader.IsEmptyElement)
-                return;
-
-            XmlSerializer serializer = new XmlSerializer(typeof(KeyValue));
-
-            reader.Read();
-
-            while (reader.NodeType != XmlNodeType.EndElement)
-            {
-                KeyValue kv = serializer.Deserialize(reader) as KeyValue;
-                if (kv != null)
-                    Add(kv.Key, kv.Value);
-            }
-            reader.Read();
-        }
-
-        public void WriteXml(XmlWriter writer)
-        {
-            if(Keys.Count > 0)
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(KeyValue));
-                foreach (var key in Keys)
-                {
-                    serializer.Serialize(writer, new KeyValue(key, this[key]));
-                }
-            }
-        }
-
-        public class KeyValue
-        {
-            public KeyValue() { }
-            public KeyValue(TKey key, TValue value)
-            {
-                Key = key;
-                Value = value;
-            }
-
-            public TKey Key { get; set; }
-            public TValue Value { get; set; }
-        }
-    }
-
     public class Config
     {
-        public const string LoadingError_T = "T_LOADCNF";
-        public const string LoadingError_M = "M_LOADCNF";
+        public class ConfigDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+        {
+            public ConfigDictionary() { }
+            public ConfigDictionary(Func<TKey, TValue> KeyConverter) { this.KeyConverter = KeyConverter; }
+
+            public Func<TKey, TValue> KeyConverter { get; set; } = null;
+            public Func<TValue, TValue> SettingValueFunction { get; set; } = null;
+            public Func<TValue, TValue> GettingValueFunction { get; set; } = null;
+
+            public new TValue this[TKey Key]
+            {
+                get
+                {
+                    if (ContainsKey(Key))
+                    {
+                        TValue ret = base[Key];
+                        if (GettingValueFunction != null)
+                            ret = GettingValueFunction(ret);
+
+                        return ret;
+                    }
+                    else
+                        return GetDefaultValue(Key);
+                }
+                set
+                {
+                    TValue val = value;
+                    if (SettingValueFunction != null)
+                        val = SettingValueFunction(val);
+
+                    base[Key] = val;
+                }
+            }
+
+            public TValue GetDefault(TKey Key)
+            {
+                ConfigAttribute attribute = Attribute.GetCustomAttribute(typeof(TKey).GetField(Key.ToString()),
+                    typeof(ConfigAttribute)) as ConfigAttribute;
+
+                if (attribute != null)
+                {
+                    if (GettingValueFunction != null)
+                        return GettingValueFunction((TValue)attribute.Default);
+                    else
+                        return (TValue)attribute.Default;
+                }
+                else
+                    throw new Exception("Default value is not set");
+            }
+
+            public TValue GetDefaultValue(TKey Key)
+            {
+                ConfigAttribute attribute = Attribute.GetCustomAttribute(typeof(TKey).GetField(Key.ToString()),
+                    typeof(ConfigAttribute)) as ConfigAttribute;
+
+                if (attribute != null)
+                {
+                    if (GettingValueFunction != null)
+                        return GettingValueFunction((TValue)attribute.Default);
+                    else
+                        return (TValue)attribute.Default;
+                }
+                else
+                {
+                    if (KeyConverter != null)
+                        return KeyConverter(Key);
+                    else
+                        return default(TValue);
+                }
+            }
+
+            public void Reset(TKey Key)
+            {
+                TValue val = GetDefaultValue(Key);
+                this[Key] = val;
+            }
+
+            public XmlSchema GetSchema()
+            {
+                return null;
+            }
+
+            public void ReadXml(XmlReader reader)
+            {
+                if (reader.IsEmptyElement)
+                    return;
+
+                XmlSerializer serializer = new XmlSerializer(typeof(KeyValue));
+
+                reader.Read();
+
+                while (reader.NodeType != XmlNodeType.EndElement)
+                {
+                    KeyValue kv = serializer.Deserialize(reader) as KeyValue;
+                    if (kv != null)
+                        Add(kv.Key, kv.Value);
+                }
+                reader.Read();
+            }
+
+            public void WriteXml(XmlWriter writer)
+            {
+                if (Keys.Count > 0)
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(KeyValue));
+                    foreach (var key in Keys)
+                    {
+                        serializer.Serialize(writer, new KeyValue(key, this[key]));
+                    }
+                }
+            }
+
+            public class KeyValue
+            {
+                public KeyValue() { }
+                public KeyValue(TKey key, TValue value)
+                {
+                    Key = key;
+                    Value = value;
+                }
+
+                public TKey Key { get; set; }
+                public TValue Value { get; set; }
+            }
+        }
+
+        public const string LoadingError_T = "Failed To Load Config";
+        public const string LoadingError_M = "Unknown error has occured.\r\nPlease go to Config -> General" + 
+            " and press Reset Config button to recreate config file.";
 
         private Config()
         {
-            Path.GettingValueFunction = PathFunc;
+            InitMembers();
         }
 
-        public static Config Current { get; private set; } = new Config();
+        private static void InitMembers()
+        {
+            if(cnf != null)
+            {
+                cnf.Path.GettingValueFunction = PathFunc;
+            }
+        }
+
+        private static Config cnf = new Config();
+        public static Config Current
+        {
+            get { return cnf; }
+            private set
+            {
+                cnf = value;
+                InitMembers();
+            }
+        }
 
         public ConfigDictionary<Enums.Path, string> Path { get; set; } = new ConfigDictionary<Enums.Path, string>();
 
@@ -143,6 +184,7 @@ namespace LAP
 
         public static void Load(string Path)
         {
+            Path = PathFunc(Path);
             if (File.Exists(Path))
             {
                 try
@@ -154,7 +196,7 @@ namespace LAP
                 catch (Exception)
                 {
                     ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.OKOnly,
-                        Localize.Get(LoadingError_T), Localize.Get(LoadingError_M));
+                        LoadingError_T, LoadingError_M);
                     Current = new Config();
                 }
             }
@@ -174,7 +216,7 @@ namespace LAP
                 ser.Serialize(sw, Current);
         }
 
-        private string PathFunc(string Value)
+        private static string PathFunc(string Value)
         {
             Value = Value.Replace("$LAP$",
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\LAP\");

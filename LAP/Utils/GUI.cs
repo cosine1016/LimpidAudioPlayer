@@ -387,6 +387,7 @@ namespace LAP.Utils
             if (e.Item == OpenItem)
             {
                 OpenFileDialog ofd = new OpenFileDialog();
+                ofd.Title = Localize.Get(Strings.Open);
                 if (ofd.ShowDialog() == DialogResult.OK)
                     MW.DirectPlay(ofd.FileName);
             }
