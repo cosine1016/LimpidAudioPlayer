@@ -395,12 +395,32 @@ namespace LAP.Utils
 
             if (e.Item == ConfigItem)
             {
-                new LAP.Dialogs.Config(MW).Show();
+                string[] cats_Str = Config.Current.sArrayValue[Enums.sArrayValue.ConfigCategories];
+                List<LAPP.Setting.ISettingItem> Cats = new List<LAPP.Setting.ISettingItem>();
+                for(int i = 0;cats_Str.Length > i; i++)
+                {
+                    switch (cats_Str[i])
+                    {
+                        case "General":
+                            Cats.Add(new Classes.GeneralCategory());
+                            break;
+                        case "Output":
+                            Cats.Add(new Classes.OutputCategory());
+                            break;
+                        case "Plugin":
+                            Cats.Add(new Classes.Plugin());
+                            break;
+                    }
+                }
+
+                Cats.AddRange(PluginManager.GetSettings());
+
+                new Dialogs.Config(MW, Cats.ToArray()).Show();
             }
 
             if (e.Item == CreatorItem)
             {
-                new LAP.Dialogs.Creator().ShowDialog();
+                new Dialogs.Creator().ShowDialog();
             }
 
             if (e.Item == ExitItem)

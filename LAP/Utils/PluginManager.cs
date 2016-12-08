@@ -55,6 +55,19 @@ namespace LAP.Utils
             return pages;
         }
 
+        internal static LAPP.Setting.ISettingItem[] GetSettings()
+        {
+            List<LAPP.Setting.ISettingItem> sets = new List<LAPP.Setting.ISettingItem>();
+
+            for (int i = 0; InitializedPlugin.Count > i; i++)
+            {
+                if (InitializedPlugin[i].Enabled)
+                    sets.AddRange(InitializedPlugin[i].Instance.SettingItems);
+            }
+
+            return sets.ToArray();
+        }
+
         internal static LAPP.DisposableItemCollection<LAPP.Wave.WaveStreamPlugin> GetWaveStreams()
         {
             LAPP.DisposableItemCollection<LAPP.Wave.WaveStreamPlugin> streams
@@ -67,25 +80,6 @@ namespace LAP.Utils
             }
 
             return streams;
-        }
-
-        internal static Collection<LAPP.Setting.ISettingItem> GetSettings()
-        {
-            Collection<LAPP.Setting.ISettingItem> sets
-                = new Collection<LAPP.Setting.ISettingItem>();
-
-            for (int i = 0; InitializedPlugin.Count > i; i++)
-            {
-                if (InitializedPlugin[i].Enabled)
-                {
-                    for(int j = 0;InitializedPlugin[i].Instance.SettingItems.Count > j; j++)
-                    {
-                        sets.Add(InitializedPlugin[i].Instance.SettingItems[j]);
-                    }
-                }
-            }
-
-            return sets;
         }
 
         internal static Collection<NWrapper.IManagableProvider> GetProviders()
@@ -222,6 +216,7 @@ namespace LAP.Utils
                     if (Instance != null)
                     {
                         Dialogs.LogWindow.Append("Plugin loaded : " + Path);
+                        return;
                     }
                 }
             }

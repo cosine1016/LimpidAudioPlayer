@@ -130,6 +130,7 @@ namespace ClearUC
         {
             if (bar.Value == bar.Maximum)
             {
+                SetValue(StateProperty, true);
                 ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
@@ -143,6 +144,7 @@ namespace ClearUC
             {
                 bar.Value = bar.Maximum;
             }
+            SetValue(StateProperty, true);
             ToggleStateChanged?.Invoke(this, new EventArgs());
         }
 
@@ -150,7 +152,7 @@ namespace ClearUC
         {
             if (bar.Value == bar.Minimum)
             {
-                State = false;
+                SetValue(StateProperty, false);
                 ToggleStateChanged?.Invoke(this, new EventArgs());
                 return;
             }
@@ -159,13 +161,12 @@ namespace ClearUC
             {
                 Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
                 da.Animate(bar.Value, bar.Minimum, AnimationDuration, null, SeekBar.ValueProperty, bar);
-                State = false;
             }
             else
             {
                 bar.Value = bar.Minimum;
-                State = false;
             }
+            SetValue(StateProperty, false);
             ToggleStateChanged?.Invoke(this, new EventArgs());
         }
     }

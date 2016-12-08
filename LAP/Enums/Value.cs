@@ -27,6 +27,9 @@ namespace LAP.Enums
     public enum sArrayValue
     {
         [Config(new string[] { "Plugin" })]
-        Pages
+        Pages,
+
+        [Config(new string[] { "General", "Output", "Plugin" })]
+        ConfigCategories
     }
 }
