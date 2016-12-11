@@ -128,44 +128,14 @@ namespace ClearUC
 
         private void ToOn()
         {
-            if (bar.Value == bar.Maximum)
-            {
-                SetValue(StateProperty, true);
-                ToggleStateChanged?.Invoke(this, new EventArgs());
-                return;
-            }
-
-            if (Animate == true)
-            {
-                Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
-                da.Animate(bar.Value, bar.Maximum, AnimationDuration, null, SeekBar.ValueProperty, bar);
-            }
-            else
-            {
-                bar.Value = bar.Maximum;
-            }
+            bar.Value = bar.Maximum;
             SetValue(StateProperty, true);
             ToggleStateChanged?.Invoke(this, new EventArgs());
         }
 
         private void ToOff()
         {
-            if (bar.Value == bar.Minimum)
-            {
-                SetValue(StateProperty, false);
-                ToggleStateChanged?.Invoke(this, new EventArgs());
-                return;
-            }
-
-            if (Animate == true)
-            {
-                Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
-                da.Animate(bar.Value, bar.Minimum, AnimationDuration, null, SeekBar.ValueProperty, bar);
-            }
-            else
-            {
-                bar.Value = bar.Minimum;
-            }
+            bar.Value = bar.Minimum;
             SetValue(StateProperty, false);
             ToggleStateChanged?.Invoke(this, new EventArgs());
         }

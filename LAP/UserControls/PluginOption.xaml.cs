@@ -24,22 +24,23 @@ namespace LAP.UserControls
         {
             InitializeComponent();
             UpdateTab();
-
-            EnableL.Content = Localize.Get("ENABLE");
         }
 
         public void UpdateTab()
         {
             PluginT.Items.Clear();
 
-            Utils.PluginManager.Plugin[] plgs = Utils.PluginManager.GetPlugins();
+            Utils.PluginManager.Plugin[] plgs = Utils.PluginManager.GetPlugins(false);
             for (int i = 0; plgs.Length > i; i++)
                 PluginT.Items.Add(new ClearUC.Tab.TabItem(plgs[i].Instance.Title));
             InfoGrid.Visibility = Visibility.Hidden;
+            EnableL.Content = Localize.Get("ENABLE");
         }
 
         private void PluginT_ActiveItemChanged(object sender, EventArgs e)
         {
+            EnableB.ToggleStateChanged -= EnableB_ToggleStateChanged;
+
             Utils.PluginManager.Plugin plg = GetActiveItem();
             if(plg == null)
             {
@@ -52,6 +53,8 @@ namespace LAP.UserControls
             DescL.Content = plg.Instance.Description;
             AuthorL.Content = plg.Instance.Author + " - " + plg.Instance.Version.ToString();
 
+            EnableB.ToggleStateChanged += EnableB_ToggleStateChanged;
+
             if (string.IsNullOrEmpty(plg.Instance.URL))
                 URLB.Visibility = Visibility.Hidden;
             else
@@ -63,10 +66,10 @@ namespace LAP.UserControls
             InfoGrid.Visibility = Visibility.Visible;
         }
 
-        private LAP.Utils.PluginManager.Plugin GetActiveItem()
+        private Utils.PluginManager.Plugin GetActiveItem()
         {
             if (PluginT.ActiveIndex < 0) return null;
-            return Utils.PluginManager.GetPlugins()[PluginT.ActiveIndex];
+            return Utils.PluginManager.GetPlugins(false)[PluginT.ActiveIndex];
         }
 
         private void URLB_Click(object sender, RoutedEventArgs e)

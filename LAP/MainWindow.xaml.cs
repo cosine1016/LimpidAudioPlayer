@@ -52,14 +52,6 @@ namespace LAP
             RaiseEvent(LAPP.Player.Receiver.Action.Boot);
         }
 
-        private void PluginManager_PluginChanged(object sender, EventArgs e)
-        {
-            if(Renderer != null)
-            {
-                ReRenderFile(true, true);
-            }
-        }
-
         private void Manager_RunFile(object sender, LAPP.RunFileEventArgs e)
         {
             if (e.Item.Playable)
@@ -376,7 +368,6 @@ namespace LAP
                 
                 Manager.RunFile += Manager_RunFile;
                 Manager.Stop += Manager_Stop;
-                Utils.PluginManager.PluginChanged += PluginManager_PluginChanged;
             }));
         }
 

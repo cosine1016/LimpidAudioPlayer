@@ -30,8 +30,6 @@ namespace LAP.Utils
 
     public class PluginManager
     {
-        public static event EventHandler<PluginChangedEventArgs> PluginChanged;
-
         static PluginManager()
         {
             if (!Directory.Exists(Config.Current.Path[Enums.Path.PluginDirectory]))
@@ -77,7 +75,6 @@ namespace LAP.Utils
             {
                 string title = InitializedPlugin[i].Instance.Title;
                 InitializedPlugin[i].Instance.Dispose();
-                InitializedPlugin[i].EnableChanged -= Plg_EnableChanged;
                 InitializedPlugin[i].Enabled = false;
                 LAP.Dialogs.LogWindow.Append(title + " : Disposed");
             }
@@ -100,17 +97,9 @@ namespace LAP.Utils
             catch (Exception) { InfoCollection = new Plugins(); }
         }
 
-        public static void UnloadPlugin(Plugin Plugin)
-        {
-            if (InitializedPlugin.Remove(Plugin))
-            {
-                PluginChanged?.Invoke(null, new PluginChangedEventArgs(Plugin, true));
-            }
-        }
-
         internal static void SetFile(LAPP.IO.MediaFile File)
         {
-            Plugin[] pls = GetPlugins();
+            Plugin[] pls = GetPlugins(true);
             for(int i = 0;pls.Length > i; i++)
             {
                 pls[i].Instance.SetFile(File);
@@ -126,17 +115,12 @@ namespace LAP.Utils
                 string t_str = BaseItems[i].GetType().ToString();
                 if (InfoCollection.Types.ContainsKey(t_str))
                 {
-                    if (InfoCollection.Types[t_str].Enabled)
+                    if (InfoCollection.Types[t_str])
                         items.Add(BaseItems[i]);
                 }
                 else
                 {
-                    InfoCollection.Types[t_str] = new StateOfType()
-                    {
-                        Enabled = true,
-                        Type = BaseItems[i].GetType()
-                    };
-
+                    InfoCollection.Types[t_str] = true;
                     items.Add(BaseItems[i]);
                 }
             }
@@ -175,12 +159,17 @@ namespace LAP.Utils
             return new LAPP.PageCollection(false, GetEnabledItem(pages.ToArray()));
         }
 
-        internal static Plugin[] GetPlugins()
+        internal static Plugin[] GetPlugins(bool RemoveDisabledItem)
         {
-            List<Plugin> pls = new List<Plugin>();
-            for (int i = 0; InitializedPlugin.Count > i; i++)
-                if (InitializedPlugin[i].Enabled) pls.Add(InitializedPlugin[i]);
-            return pls.ToArray();
+            if (RemoveDisabledItem)
+            {
+                List<Plugin> pls = new List<Plugin>();
+                for (int i = 0; InitializedPlugin.Count > i; i++)
+                    if (InitializedPlugin[i].Enabled) pls.Add(InitializedPlugin[i]);
+                return pls.ToArray();
+            }
+            else
+                return InitializedPlugin.ToArray();
         }
 
         internal static Collection<NWrapper.IManagableProvider> GetProviders()
@@ -239,16 +228,31 @@ namespace LAP.Utils
                 Plugin plg = new Plugin(files[i]);
                 if (plg.Instance != null)
                 {
-                    plg.EnableChanged += Plg_EnableChanged;
                     InitializedPlugin.Add(plg);
+                    PluginInfo pi = UpdatePluginEnabled(plg);
+
+                    plg.EnableChanged += (sender, e) =>
+                    {
+                        pi.Enabled = plg.Enabled;
+                    };
                 }
             }
         }
 
-        private static void Plg_EnableChanged(object sender, EventArgs e)
+        private static PluginInfo UpdatePluginEnabled(Plugin Plugin)
         {
-            Plugin plg = (Plugin)sender;
-            PluginChanged?.Invoke(sender, new PluginChangedEventArgs(plg));
+            PluginInfo pi = new PluginInfo(Plugin.Asm, Config.Current.bValue[Enums.bValue.UseNewPlugin]);
+            for(int i = 0;InfoCollection.Info.Count > i; i++)
+            {
+                if (pi.AssemblyGuid == InfoCollection.Info[i].AssemblyGuid)
+                {
+                    Plugin.Enabled = InfoCollection.Info[i].Enabled;
+                    return InfoCollection.Info[i];
+                }
+            }
+            
+            InfoCollection.Info.Add(pi);
+            return pi;
         }
 
         public class Plugin
@@ -326,7 +330,7 @@ namespace LAP.Utils
 
         public class Plugins
         {
-            public SerializableDictionary<string, StateOfType> Types = new SerializableDictionary<string, StateOfType>();
+            public SerializableDictionary<string, bool> Types { get; set; } = new SerializableDictionary<string, bool>();
             public Collection<PluginInfo> Info { get; set; } = new Collection<PluginInfo>();
         }
 
@@ -374,43 +378,6 @@ namespace LAP.Utils
             {
                 public TKey Key;
                 public TValue Value;
-            }
-        }
-
-        public class StateOfType : IXmlSerializable
-        {
-            public bool Enabled { get; set; } = true;
-            public Type Type { get; set; }
-
-            public XmlSchema GetSchema()
-            {
-                return null;
-            }
-
-            public void ReadXml(XmlReader reader)
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(TypeSerializable));
-                if (reader.IsEmptyElement)
-                    return;
-
-                TypeSerializable ser = serializer.Deserialize(reader) as TypeSerializable;
-                if (ser != null)
-                {
-                    Type = Type.GetType(ser.TypeName);
-                    Enabled = ser.Enabled;
-                }
-            }
-
-            public void WriteXml(XmlWriter writer)
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(TypeSerializable));
-                serializer.Serialize(writer, new TypeSerializable() { TypeName = Type.ToString(), Enabled = Enabled });
-            }
-
-            public class TypeSerializable
-            {
-                public bool Enabled { get; set; }
-                public string TypeName { get; set; }
             }
         }
     }

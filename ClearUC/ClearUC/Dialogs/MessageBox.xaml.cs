@@ -5,7 +5,7 @@ namespace ClearUC.Dialogs
     /// <summary>
     /// MessageBox.xaml の相互作用ロジック
     /// </summary>
-    public partial class MessageBox : Window
+    internal partial class MessageBox : Window
     {
         public MessageBox()
         {

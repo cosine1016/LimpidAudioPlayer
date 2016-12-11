@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ClearUC="clr-namespace:ClearUC" xmlns:local="clr-namespace:ClearUC.Dialogs"
-        mc:Ignorable="d"
+        mc:Ignorable="d" x:ClassModifier="internal"
         Title="MessageBox" ResizeMode="NoResize" MaxWidth="500" MinHeight="110" Height="59.1" Width="481.5" WindowStartupLocation="CenterOwner" SizeToContent="Height" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Grid Background="#FF323232" Height="Auto" Width="Auto">
         <Grid.RowDefinitions>
@@ -13,7 +13,7 @@
             <RowDefinition Height="60" />
         </Grid.RowDefinitions>
         <Label x:Name="TL" Content="Title" Margin="10,0" FontSize="18.667" FontWeight="Thin" VerticalContentAlignment="Center" Foreground="White" Grid.Row="0" Width="Auto" Height="Auto" />
-        <TextBlock x:Name="ML" TextWrapping="Wrap" Foreground="#FFD6D6D6" FontSize="14.667" FontWeight="Thin" Margin="10,0" Grid.Row="1" Width="Auto" Height="Auto" />
+        <TextBlock x:Name="ML" TextWrapping="Wrap" Foreground="#FFD6D6D6" FontSize="14.667" FontWeight="Thin" Margin="15,0,10,0" Grid.Row="1" Width="Auto" Height="Auto" />
         <ClearUC:Button x:Name="LB" Content="Left" Margin="0,0,117,20" BorderThickness="0" FontWeight="Thin" Click="LB_Click" HorizontalAlignment="Right" Width="102" Height="27" VerticalAlignment="Bottom" Grid.Row="2" />
         <ClearUC:Button x:Name="RB" Content="Right" HorizontalAlignment="Right" Margin="0,0,10,20" Width="102" BorderThickness="0" FontWeight="Thin" Click="RB_Click" Height="27" VerticalAlignment="Bottom" Grid.Row="2" />
     </Grid>

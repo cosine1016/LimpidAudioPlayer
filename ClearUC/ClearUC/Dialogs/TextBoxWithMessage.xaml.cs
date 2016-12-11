@@ -5,21 +5,8 @@ namespace ClearUC.Dialogs
     /// <summary>
     /// TextBoxWithMessage.xaml の相互作用ロジック
     /// </summary>
-    public partial class TextBoxWithMessage : Window
+    internal partial class TextBoxWithMessage : Window
     {
-        public class ResultData
-        {
-            public ResultData(Dialog.ClickedButton ClickedButton, int Number)
-            {
-                this.ClickedButton = ClickedButton;
-                this.Number = Number;
-            }
-
-            public Dialog.ClickedButton ClickedButton = Dialog.ClickedButton.OK;
-
-            public int Number { get; set; } = -1;
-        }
-
         public TextBoxWithMessage()
         {
             InitializeComponent();

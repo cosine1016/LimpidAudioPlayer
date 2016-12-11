@@ -112,7 +112,6 @@ namespace LAP.Utils
         private void AssociateEvents()
         {
             Program.NotImplementedException += Program_NotImplementedException;
-            PluginManager.PluginChanged += PluginManager_PluginChanged;
 
             LAPP.Events.Notice += Events_Noticed;
 
@@ -170,21 +169,6 @@ namespace LAP.Utils
             Notification notif = new Notification(MW.ParentGrid, e.Text, e.FillBrush);
             LAP.Dialogs.LogWindow.Append("[" + e.Assembly.GetName() + "] : " + e.Text);
             notif.ShowMessage();
-        }
-
-        private bool mirmcf = false;
-
-        private void PluginManager_PluginChanged(object sender, PluginChangedEventArgs e)
-        {
-            if(e.Plugin.Instance.Pages != null)
-            {
-                for(int i = 0;e.Plugin.Instance.Pages.Count > i; i++)
-                {
-                    MW.Manager.Pages.Remove(e.Plugin.Instance.Pages[i]);
-                }
-            }
-
-            MW.Tab.ActiveIndex = -1;
         }
 
         private void RewButton_Rewind(object sender, EventArgs e)

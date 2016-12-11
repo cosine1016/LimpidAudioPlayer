@@ -33,7 +33,7 @@ namespace LAP.Dialogs
                 {
                     this.Category[i].UIControl.Visibility = Visibility.Hidden;
 
-                    TabContent.Children.Add(this.Category[i].UIControl);
+                    TabContent.Children.Add(Category[i].UIControl);
                     Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
                 }
             }
@@ -65,10 +65,13 @@ namespace LAP.Dialogs
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            bool Restart = false, CloseDlg = false, Rerender = false;
+            bool Restart = false, CloseDlg = false, Rerender = false, ForceRestart = false;
             for (int i = 0; Category.Length > i; i++)
             {
                 ApplyInfo ai = Category[i].Apply();
+
+                if (ai.ForceRestartApp)
+                    ForceRestart = true;
 
                 if (ai.RestartApp)
                     Restart = true;
@@ -82,11 +85,18 @@ namespace LAP.Dialogs
 
             cnf.Save(cnf.Current.Path[Enums.Path.SettingFile]);
 
+            if (ForceRestart)
+            {
+                RestartApp();
+            }
+
             if (Restart)
             {
-                Application.Current.Shutdown();
-                System.Windows.Forms.Application.Restart();
-                return;
+                if(ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.YesNo,
+                    Localize.Get("RESTART_T"), Localize.Get("RESTART_M"), false) == ClearUC.Dialogs.Dialog.ClickedButton.Yes)
+                {
+                    RestartApp();
+                }
             }
 
             if (CloseDlg)
@@ -100,8 +110,15 @@ namespace LAP.Dialogs
             }
         }
 
+        private void RestartApp()
+        {
+            System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+            Application.Current.Shutdown();
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            TabContent.Children.Clear();
             for (int i = 0; Category.Length > i; i++)
             {
                 Category[i].Dispose();

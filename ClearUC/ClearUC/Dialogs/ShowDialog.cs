@@ -1,5 +1,18 @@
 ﻿namespace ClearUC.Dialogs
 {
+    public class ResultData
+    {
+        public ResultData(Dialog.ClickedButton ClickedButton, int Number)
+        {
+            this.ClickedButton = ClickedButton;
+            this.Number = Number;
+        }
+
+        public Dialog.ClickedButton ClickedButton = Dialog.ClickedButton.OK;
+
+        public int Number { get; set; } = -1;
+    }
+
     public class Dialog
     {
         public class DialogEventArgs : System.EventArgs
@@ -46,7 +59,7 @@
 
         public static System.Windows.Media.ImageSource DialogIcon { get; set; }
 
-        public static TextBoxWithMessage.ResultData ShowMessageBoxWithNumeric(string Title, string Message, int DefaultValue, bool ShowInTaskbar = true)
+        public static ResultData ShowMessageBoxWithNumeric(string Title, string Message, int DefaultValue, bool ShowInTaskbar = true)
         {
             TextBoxWithMessage Box = new TextBoxWithMessage();
             Box.TL.Content = Title;

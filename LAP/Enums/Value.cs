@@ -21,7 +21,10 @@ namespace LAP.Enums
     public enum bValue
     {
         [Config(true)]
-        AutoUpdate
+        AutoUpdate,
+
+        [Config(true)]
+        UseNewPlugin
     }
 
     public enum sArrayValue

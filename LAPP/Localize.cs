@@ -14,7 +14,7 @@ namespace LAPP
             get
             {
                 if (ContainsKey(Key))
-                    return base[Key];
+                    return base[Key].Replace(@"\r", "\r").Replace(@"\n", "\n");
                 else
                     return Key;
             }

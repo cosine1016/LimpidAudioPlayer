@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:ClearUC"
              mc:Ignorable="d" Height="50" Width="100">
     <Grid>
-        <local:SeekBar x:Name="bar" ValueChanged="SeekBar_ValueChanged" MouseLeftButtonUp="bar_MouseLeftButtonUp" MouseLeftButtonDown="bar_MouseLeftButtonDown" MouseMove="bar_MouseMove" />
+        <local:SeekBar x:Name="bar" ValueChanged="SeekBar_ValueChanged" MouseLeftButtonUp="bar_MouseLeftButtonUp" MouseLeftButtonDown="bar_MouseLeftButtonDown" MouseMove="bar_MouseMove" Maximum="1"/>
     </Grid>
 </UserControl>

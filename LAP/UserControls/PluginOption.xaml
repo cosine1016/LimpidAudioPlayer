@@ -11,7 +11,7 @@
 
         <ClearUC:Tab x:Name="PluginT" VerticalAlignment="Top" Height="44" Width="Auto" ActiveItemChanged="PluginT_ActiveItemChanged"/>
         <Grid x:Name="InfoGrid" Height="256" VerticalAlignment="Bottom">
-            <ClearUC:ToggleButton x:Name="EnableB" HorizontalAlignment="Left" Margin="73,10,0,0" VerticalAlignment="Top" Height="29" Width="47" State="True" ToggleStateChanged="EnableB_ToggleStateChanged"/>
+            <ClearUC:ToggleButton x:Name="EnableB" HorizontalAlignment="Left" Margin="73,10,0,0" VerticalAlignment="Top" Height="29" Width="47" State="True"/>
             <Label x:Name="EnableL" Content="Enable" VerticalAlignment="Top" Height="29" Foreground="White" FontSize="14" FontWeight="Thin" VerticalContentAlignment="Center" Margin="0,10,0,0" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="73"/>
             <Label x:Name="TitleL" Content="Title" VerticalAlignment="Top" Height="34" Foreground="White" FontSize="18" FontWeight="Thin" VerticalContentAlignment="Center" Margin="0,44,0,0"/>
             <Label x:Name="DescL" Content="Description" Margin="0,83,0,80" Foreground="White" FontSize="18" FontWeight="Thin"/>

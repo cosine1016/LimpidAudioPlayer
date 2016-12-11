@@ -24,11 +24,14 @@ namespace LAPP.Setting
             this.RestartApp = RestartApp;
             this.CloseDialog = CloseDialog;
             this.RerenderFile = RerenderFile;
+            ForceRestartApp = false;
         }
 
         public bool Success { get; }
 
         public bool RestartApp { get; }
+
+        public bool ForceRestartApp { get; }
 
         public bool CloseDialog { get; }
 

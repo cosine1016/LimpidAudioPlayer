@@ -140,7 +140,9 @@ namespace LAP.Utils
 
             public ApplyInfo Apply()
             {
-                ApplyInfo ai = new ApplyInfo(true);
+                ApplyInfo ai = new ApplyInfo(true, true, false, false);
+
+                PluginManager.SaveInfo();
 
                 return ai;
             }
