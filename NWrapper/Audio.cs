@@ -50,7 +50,7 @@ namespace NWrapper
 
         public void AddRange(IManagableProvider[] items)
         {
-            for(int i = 0;Count > i; i++)
+            for(int i = 0;items.Length > i; i++)
             {
                 Add(items[i]);
             }

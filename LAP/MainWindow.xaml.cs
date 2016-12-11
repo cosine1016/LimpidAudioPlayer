@@ -83,7 +83,7 @@ namespace LAP
         {
             try
             {
-                InitializeRenderer(File.Path);
+                InitializeRenderer(File);
 
                 TitleT.Content = File.Title;
                 ArtistT.Content = File.Artist;
@@ -139,6 +139,13 @@ namespace LAP
 
             if (AutoRun) RunFile();
 
+            PluginPanel.Children.Clear();
+            FrameworkElement[] elements = Utils.PluginManager.GetMediaPanelItems().ToArray();
+            for(int i = 0;elements.Length > i; i++)
+            {
+                PluginPanel.Children.Add(elements[i]);
+            }
+
             return true;
         }
 
@@ -162,7 +169,7 @@ namespace LAP
             Renderer.StreamStatus = Audio.Status.Stopped;
             try
             {
-                InitializeRenderer(PlayingFile.Path);
+                InitializeRenderer(PlayingFile);
             }
             catch (Audio.ASIOException)
             {
@@ -237,17 +244,21 @@ namespace LAP
             RaiseEvent(LAPP.Player.Receiver.Action.RendererDisposed);
         }
 
-        private void InitializeRenderer(string FilePath)
+        private void InitializeRenderer(LAPP.IO.MediaFile File)
         {
             if (Renderer != null) DisposeRenderer();
+
+            Utils.PluginManager.SetFile(File);
 
             RaiseEvent(LAPP.Player.Receiver.Action.Render);
             Renderer = new Audio();
 
-            Renderer.OpenFile(FilePath,
-                new Utils.Classes.AudioFileReader(FilePath), Utils.Utility.CreateSoundDevice());
+            Renderer.Providers.AddRange(Utils.PluginManager.GetProviders().ToArray());
 
-            Dialogs.LogWindow.Append("File Open : " + FilePath);
+            Renderer.OpenFile(File.Path,
+                new Utils.Classes.AudioFileReader(File.Path), Utils.Utility.CreateSoundDevice());
+
+            Dialogs.LogWindow.Append("File Open : " + File.Path);
 
             RaiseEvent(LAPP.Player.Receiver.Action.Rendered);
 

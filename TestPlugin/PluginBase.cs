@@ -62,7 +62,7 @@ namespace TestPlugin
             }
         }
 
-        public override void SetFilePath(string FilePath)
+        public override void SetFile(LAPP.IO.MediaFile File)
         {
         }
     }

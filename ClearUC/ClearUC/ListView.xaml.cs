@@ -409,7 +409,7 @@ namespace ClearUC
 
         private void RemoveAnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
         {
-            ListItem li = e.AnimatedObject as ListItem;
+            ListItem li = e.AnimatedElement as ListItem;
             if (li != null)
             {
                 parent.Children.Remove(li);

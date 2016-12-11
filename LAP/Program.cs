@@ -153,6 +153,9 @@ namespace LAP
                 Dialogs.LogWindow.Append("LAP Initialized");
 
                 App.Run();
+
+                Utils.PluginManager.SaveInfo();
+                Config.Save(Config.Current.Path[Enums.Path.SettingFile]);
             }
         }
 

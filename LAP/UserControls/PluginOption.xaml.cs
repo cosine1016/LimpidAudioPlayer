@@ -66,7 +66,7 @@ namespace LAP.UserControls
         private LAP.Utils.PluginManager.Plugin GetActiveItem()
         {
             if (PluginT.ActiveIndex < 0) return null;
-            return Utils.PluginManager.GetPlugin(PluginT.ActiveIndex);
+            return Utils.PluginManager.GetPlugins()[PluginT.ActiveIndex];
         }
 
         private void URLB_Click(object sender, RoutedEventArgs e)

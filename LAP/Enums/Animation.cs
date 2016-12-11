@@ -15,6 +15,9 @@ namespace LAP.Enums
         Notification,
 
         [Config(300)]
-        BackgroundImage
+        BackgroundImage,
+
+        [Config(200)]
+        MediaPanel
     }
 }

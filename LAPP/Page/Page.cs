@@ -243,6 +243,11 @@ namespace LAPP
             this.LeaveOpen = LeaveOpen;
         }
 
+        public PageCollection(bool LeaveOpen, Page[] Items) : this(LeaveOpen)
+        {
+            AddRange(Items);
+        }
+
         public Page this[int i]
         {
             get { return pages[i]; }

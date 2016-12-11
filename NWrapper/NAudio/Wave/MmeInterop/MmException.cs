@@ -34,8 +34,8 @@ namespace NAudio
         /// <param name="function">The API function name</param>
         public static void Try(MmResult result, string function)
         {
-            if (result != MmResult.NoError)
-                throw new MmException(result, function);
+            //if (result != MmResult.NoError)
+            //    throw new MmException(result, function);
         }
 
         /// <summary>

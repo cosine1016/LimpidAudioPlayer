@@ -12,6 +12,9 @@ namespace ClearUC
     /// </summary>
     public partial class NotificationBar : UserControl
     {
+        private const int dur = 300;
+        private const double EnterOpacity = 0.8, ClickOpacity = 1.0;
+
         public event EventHandler Click;
 
         public event EventHandler MessageMaximized;
@@ -66,57 +69,21 @@ namespace ClearUC
             set { EnterLabel.Content = value; }
         }
 
-        public double EnterOpacity { get; set; } = 0.9;
-
-        public double ClickOpacity { get; set; } = 1;
-
-        public bool ShowEnterLabel { get; set; } = true;
-
-        public bool Animate { get; set; } = true;
-
-        public double AnimationDuration { get; set; } = 200;
-
-        public int ShowingDuration { get; set; } = 2000;
+        public bool VisibleEnterLabel { get; set; } = true;
 
         public Thickness MaximizedMargin { get; set; } = new Thickness(0);
 
-        public async void ShowMessage()
+        public void ShowMessage()
         {
-            if (Animate == false)
-            {
-                Maximize();
-
-                await Task.Run(() =>
-                {
-                    System.Threading.Thread.Sleep(ShowingDuration);
-                    if (entering == true)
-                    {
-                        while (entering == true) { }
-                    }
-                });
-
-                Minimize();
-            }
-            else
-            {
-                Maximize();
-            }
+            Maximize();
         }
 
         public void Minimize()
         {
-            if (Animate == true)
-            {
-                Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
-                ta.AnimationCompleted += Ta_AnimationCompleted;
-                ta.Animate(Margin, new Thickness(Margin.Left, Margin.Top - Height, Margin.Right, Margin.Bottom),
-                    AnimationDuration, null, new PropertyPath(MarginProperty), this);
-            }
-            else
-            {
-                Margin = new Thickness(Margin.Left, Margin.Top - Height, Margin.Right, Margin.Bottom);
-                if (MessageMinimized != null) MessageMinimized(this, new EventArgs());
-            }
+            Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
+            ta.AnimationCompleted += Ta_AnimationCompleted;
+            ta.Animate(Margin, new Thickness(Margin.Left, Margin.Top - Height, Margin.Right, Margin.Bottom),
+                dur, null, new PropertyPath(MarginProperty), this);
         }
 
         private void Ta_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
@@ -126,26 +93,18 @@ namespace ClearUC
 
         public void Maximize()
         {
-            if (Animate == true)
-            {
-                Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
-                ta.AnimationCompleted += AnimationCompleted;
-                ta.Animate(Margin, MaximizedMargin, AnimationDuration, null, new PropertyPath(MarginProperty), this);
-            }
-            else
-            {
-                Margin = MaximizedMargin;
-                MessageMaximized?.Invoke(this, new EventArgs());
-            }
+            Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
+            ta.AnimationCompleted += AnimationCompleted;
+            ta.Animate(Margin, MaximizedMargin, dur, null, new PropertyPath(MarginProperty), this);
         }
 
         private async void AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
         {
-            if (MessageMaximized != null) MessageMaximized(this, new EventArgs());
+            MessageMaximized?.Invoke(this, new EventArgs());
 
             await Task.Run(() =>
             {
-                System.Threading.Thread.Sleep(ShowingDuration);
+                System.Threading.Thread.Sleep(dur);
                 if (entering == true)
                 {
                     while (entering == true) { }
@@ -159,7 +118,7 @@ namespace ClearUC
 
         private void drain_MouseEnter(object sender, MouseEventArgs e)
         {
-            if (ShowEnterLabel == true) EnterLabel.Visibility = Visibility.Visible;
+            if (VisibleEnterLabel == true) EnterLabel.Visibility = Visibility.Visible;
             bg.Opacity = EnterOpacity;
             entering = true;
         }

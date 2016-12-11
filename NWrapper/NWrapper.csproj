@@ -482,7 +482,6 @@
     <Compile Include="NAudio\Wave\WaveStreams\WaveStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSE\Algorithm.cs" />
-    <Compile Include="SampleProvider\SampleAggregator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

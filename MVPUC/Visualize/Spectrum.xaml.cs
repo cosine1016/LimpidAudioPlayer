@@ -128,7 +128,7 @@ namespace MVPUC.Visualize
 
         private void Da_AnimationCompleted(object sender, ClearUC.Utils.AnimationHelper.AnimationEventArgs e)
         {
-            Rectangle rec = (Rectangle)e.AnimatedObject;
+            Rectangle rec = (Rectangle)e.AnimatedElement;
             parent.Children.Remove(rec);
         }
 

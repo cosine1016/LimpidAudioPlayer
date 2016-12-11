@@ -228,10 +228,8 @@ namespace NAudio.Wave
                 {
                     result = WaveInterop.waveOutReset(hWaveOut);
                 }
-                if (result != MmResult.NoError)
-                {
-                    throw new MmException(result, "waveOutReset");
-                }
+
+                MmException.Try(result, "waveOutReset");
 
                 // with function callbacks, waveOutReset will call OnDone,
                 // and so PlaybackStopped must not be raised from the handler

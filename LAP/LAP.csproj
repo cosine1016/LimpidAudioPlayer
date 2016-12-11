@@ -145,15 +145,15 @@
     <Compile Include="UserControls\General.xaml.cs">
       <DependentUpon>General.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MediaPanel.xaml.cs">
+      <DependentUpon>MediaPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\PluginOption.xaml.cs">
       <DependentUpon>PluginOption.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\GUI.cs" />
     <Compile Include="Utils\PluginManager.cs" />
     <Compile Include="Utils\Update.cs" />
-    <Compile Include="Visualize\Spectrum.xaml.cs">
-      <DependentUpon>Spectrum.xaml</DependentUpon>
-    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -240,6 +240,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\MediaPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\PlayingStatus.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -249,10 +253,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Utils\Shapes.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Visualize\Spectrum.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -294,6 +294,7 @@
   <ItemGroup>
     <Folder Include="Components\" />
     <Folder Include="DebugWindow\" />
+    <Folder Include="Visualize\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Properties\Limpid Audio Player.ico" />

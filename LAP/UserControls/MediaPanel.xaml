@@ -1,0 +1,17 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LAP.UserControls"
+             xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" x:Class="LAP.UserControls.MediaPanel"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" ClipToBounds="True">
+    <Grid>
+
+        <Grid x:Name="Parent"/>
+        <ClearUC:Button x:Name="Next" Opacity="0.01" Content="4" Height="Auto" Width="40" HorizontalAlignment="Right" FontFamily="Marlett" Background="#CC000000" BorderThickness="0" MouseEnter="Next_MouseEnter" MouseLeave="Next_MouseLeave" Click="Next_Click"/>
+        <ClearUC:Button x:Name="Back" Opacity="0.01" Content="3" Height="Auto" Width="40" FontFamily="Marlett" Background="#CC000000" HorizontalAlignment="Left" BorderThickness="0" MouseEnter="Back_MouseEnter" MouseLeave="Back_MouseLeave" Click="Back_Click"/>
+
+    </Grid>
+</UserControl>

@@ -8,6 +8,7 @@ namespace ClearUC.ListViewItems
     /// </summary>
     public partial class ListAnimativeItem : ListItem
     {
+        private const int dur = 200;
         public ListAnimativeItem(bool IncludeSearchTarget) : base(IncludeSearchTarget, true)
         {
             InitializeComponent();
@@ -110,7 +111,7 @@ namespace ClearUC.ListViewItems
             set
             {
                 item = value;
-                ShowItem(Animate);
+                ShowItem();
             }
         }
 
@@ -125,53 +126,33 @@ namespace ClearUC.ListViewItems
                 FrontItem = Item.First;
             }
 
-            ShowItem(Animate);
+            ShowItem();
         }
 
         public MouseButton SwitchButton { get; set; } = MouseButton.Right;
 
-        public bool Animate { get; set; } = true;
-
-        public double AnimationDuration { get; set; } = 200;
-
         private void SwitchItem()
         {
-            ShowItem(false);
+            ShowItem();
         }
 
-        private void ShowItem(bool Anim)
+        private void ShowItem()
         {
-            if (Anim == true)
+            Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
+            Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
+            if (FrontItem == Item.First)
             {
-                Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
-                Utils.AnimationHelper.Double da = new Utils.AnimationHelper.Double();
-                if (FrontItem == Item.First)
-                {
-                    back.Visibility = Visibility.Visible;
-                    front.Visibility = Visibility.Visible;
-                    ta.Animate(front.Margin, new Thickness(0, 0, 0, 0), AnimationDuration, null, new PropertyPath(MarginProperty), fir);
-                    da.Animate(back.Opacity, 0, AnimationDuration, null, OpacityProperty, sec);
-                }
-                else if (FrontItem == Item.Second)
-                {
-                    back.Visibility = Visibility.Visible;
-                    front.Visibility = Visibility.Visible;
-                    ta.Animate(front.Margin, new Thickness(0, sec.Height, 0, 0), AnimationDuration, null, new PropertyPath(MarginProperty), fir);
-                    da.Animate(back.Opacity, 1, AnimationDuration, null, OpacityProperty, sec);
-                }
+                back.Visibility = Visibility.Visible;
+                front.Visibility = Visibility.Visible;
+                ta.Animate(front.Margin, new Thickness(0, 0, 0, 0), dur, null, new PropertyPath(MarginProperty), fir);
+                da.Animate(back.Opacity, 0, dur, null, OpacityProperty, sec);
             }
-            else
+            else if (FrontItem == Item.Second)
             {
-                if (FrontItem == Item.First)
-                {
-                    back.Visibility = Visibility.Hidden;
-                    front.Visibility = Visibility.Visible;
-                }
-                else if (FrontItem == Item.Second)
-                {
-                    front.Visibility = Visibility.Hidden;
-                    back.Visibility = Visibility.Visible;
-                }
+                back.Visibility = Visibility.Visible;
+                front.Visibility = Visibility.Visible;
+                ta.Animate(front.Margin, new Thickness(0, sec.Height, 0, 0), dur, null, new PropertyPath(MarginProperty), fir);
+                da.Animate(back.Opacity, 1, dur, null, OpacityProperty, sec);
             }
         }
     }

@@ -25,16 +25,13 @@ namespace LAP.Utils
             NB = new NotificationBar();
             P = Parent;
             NB.BackgroundBrush = BackgroundBrush;
-            NB.Animate = false;
-            NB.ShowEnterLabel = true;
+            NB.VisibleEnterLabel = true;
             NB.EnterLabelText = EnterLabelText;
             NB.HorizontalAlignment = HorizontalAlignment.Stretch;
             NB.VerticalAlignment = VerticalAlignment.Top;
             P.Children.Add(NB);
-            NB.Minimize();
+
             NB.Message = Message;
-            NB.AnimationDuration = Config.Current.Animation[Enums.Animation.Notification];
-            NB.ShowingDuration = Config.Current.Animation[Enums.Animation.Notification];
             NB.Click += NB_Click;
         }
 

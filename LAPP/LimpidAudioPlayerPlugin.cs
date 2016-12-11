@@ -31,6 +31,9 @@ namespace LAPP
         public virtual Collection<NWrapper.IManagableProvider> Providers { get; set; }
             = new Collection<NWrapper.IManagableProvider>();
 
+        public virtual Collection<System.Windows.FrameworkElement> MediaPanelItems { get; set; }
+            = new Collection<System.Windows.FrameworkElement>();
+
         /// <summary>
         /// プラグインに割り当てられたフォルダパスを取得します。このフォルダを利用するかどうかは自由です
         /// </summary>
@@ -44,10 +47,8 @@ namespace LAPP
 
         /// <summary>
         /// ファイルがレンダリングされる前に実行されます。
-        /// プラグイン製作者はこのメソッド内で必要なWaveStreamPluginを追加する必要があります。
         /// </summary>
-        /// <param name="FilePath">レンダリング予定のファイルパス</param>
-        public abstract void SetFilePath(string FilePath);
+        public abstract void SetFile(IO.MediaFile File);
         
         public virtual void Dispose()
         {
@@ -77,6 +78,12 @@ namespace LAPP
 
     public class DisposableItemCollection<T> : Collection<T> where T : IDisposable
     {
+        public DisposableItemCollection() { }
+        public DisposableItemCollection(T[] Items)
+        {
+            AddRange(Items);
+        }
+
         public void Clear(bool Dispose)
         {
             if (Dispose)

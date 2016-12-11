@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LAP" xmlns:ListViewItems="clr-namespace:ClearUC.ListViewItems;assembly=ClearUC"  xmlns:Buttons="clr-namespace:MVPUC.Buttons;assembly=MVPUC"
-        xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" xmlns:UserControls="clr-namespace:LAP.UserControls" xmlns:ListViewItems1="clr-namespace:LAP.UserControls.ListViewItems" xmlns:SeekBar="clr-namespace:MVPUC.SeekBar;assembly=MVPUC" xmlns:Toggles="clr-namespace:MVPUC.Toggles;assembly=MVPUC" xmlns:Visualize="clr-namespace:LAP.Visualize" x:Class="LAP.MainWindow"
+        xmlns:ClearUC="clr-namespace:ClearUC;assembly=ClearUC" xmlns:UserControls="clr-namespace:LAP.UserControls" xmlns:ListViewItems1="clr-namespace:LAP.UserControls.ListViewItems" xmlns:SeekBar="clr-namespace:MVPUC.SeekBar;assembly=MVPUC" xmlns:Toggles="clr-namespace:MVPUC.Toggles;assembly=MVPUC" x:Class="LAP.MainWindow"
         mc:Ignorable="d"
         Title="Limpid Audio Player" Height="586.241" Width="1019.03" Background="#FF282828" MinWidth="500" MinHeight="300" Foreground="#FFAAAAAA" Loaded="Window_Loaded" StateChanged="Window_StateChanged" Icon="Properties/Limpid Audio Player.ico">
     <WindowChrome.WindowChrome>
@@ -21,18 +21,13 @@
         </Grid>
         <Grid x:Name="ParentGrid" Margin="0,35,0,110" ClipToBounds="True">
             <Grid x:Name="MediaInformationRoot">
-
-                <Visualize:Spectrum x:Name="Spectrum" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" />
-
                 <Rectangle x:Name="MIBg" Fill="#4C000000" Stroke="Black" StrokeThickness="0" />
                 <Label x:Name="TitleT" Height="55" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="21.333" HorizontalContentAlignment="Center" Foreground="White" FontWeight="Thin" />
                 <Label x:Name="AlbumT" Content="Album" Height="40" Margin="0,60,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" HorizontalContentAlignment="Center" Foreground="White" FontWeight="Thin" />
                 <Label x:Name="ArtistT" Content="Artist" Height="40" Margin="0,105,0,0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" HorizontalContentAlignment="Center" Foreground="White" FontWeight="Thin" />
-                <Grid x:Name="PluginPanel" Margin="0,150,0,0">
-                    <Grid x:Name="SidePanel" HorizontalAlignment="Left" Width="264"/>
-                </Grid>
+                <UserControls:MediaPanel x:Name="PluginPanel" Margin="0,150,0,0"/>
             </Grid>
-            <Grid x:Name="LibraryRoot">
+            <Grid x:Name="LibraryRoot" d:IsHidden="True">
                 <ClearUC:ListView x:Name="library" Margin="0,0,0,57" />
                 <ClearUC:Tab x:Name="Tab" Height="57" VerticalAlignment="Bottom" Width="Auto" Background="#B2000000" />
             </Grid>

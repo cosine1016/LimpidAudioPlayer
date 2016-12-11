@@ -293,12 +293,12 @@ namespace ClearUC
 
             public class AnimationEventArgs : EventArgs
             {
-                public AnimationEventArgs(object AnimatedObject)
+                public AnimationEventArgs(FrameworkElement AnimatedElement)
                 {
-                    this.AnimatedObject = AnimatedObject;
+                    this.AnimatedElement = AnimatedElement;
                 }
 
-                public object AnimatedObject;
+                public FrameworkElement AnimatedElement;
             }
 
             public class Brush
@@ -385,13 +385,13 @@ namespace ClearUC
 
                 protected virtual void OnAnimationCompleted(AnimationEventArgs e)
                 {
-                    if (AnimationCompleted != null) AnimationCompleted(this, e);
+                    AnimationCompleted?.Invoke(this, e);
                 }
 
                 private System.Windows.Thickness af;
                 private FrameworkElement cnr;
 
-                public void Animate(System.Windows.Thickness Before, System.Windows.Thickness After, double Duration, IEasingFunction Easing, PropertyPath Property, FrameworkElement Item)
+                public void Animate(System.Windows.Thickness Before, System.Windows.Thickness After, int Duration, IEasingFunction Easing, PropertyPath Property, FrameworkElement Item)
                 {
                     if (Before == null || After == null) return;
                     if (Duration == 0 || Before == After)
@@ -434,7 +434,7 @@ namespace ClearUC
 
                 protected virtual void OnAnimationCompleted(AnimationEventArgs e)
                 {
-                    if (AnimationCompleted != null) AnimationCompleted(this, e);
+                    AnimationCompleted?.Invoke(this, e);
                 }
 
                 private DependencyProperty dp;

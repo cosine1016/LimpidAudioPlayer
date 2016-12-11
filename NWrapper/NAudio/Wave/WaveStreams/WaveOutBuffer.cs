@@ -148,10 +148,8 @@ namespace NAudio.Wave
             {
                 result = WaveInterop.waveOutWrite(hWaveOut, header, Marshal.SizeOf(header));
             }
-            if (result != MmResult.NoError)
-            {
-                throw new MmException(result, "waveOutWrite");
-            }
+
+            MmException.Try(result, "waveOutWrite");
 
             GC.KeepAlive(this);
         }

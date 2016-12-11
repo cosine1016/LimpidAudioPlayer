@@ -330,7 +330,6 @@ namespace LAP.Utils
             MW.StopFile(true);
             MW.Manager.Dispose();
 
-            Config.Save(Config.Current.Path[Enums.Path.SettingFile]);
             RaiseEvent(LAPP.Player.Receiver.Action.WindowClosing);
         }
 
