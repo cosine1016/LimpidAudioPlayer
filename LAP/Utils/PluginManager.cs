@@ -172,6 +172,11 @@ namespace LAP.Utils
                 return InitializedPlugin.ToArray();
         }
 
+        internal static SerializableDictionary<string, bool> GetFunctions()
+        {
+            return InfoCollection.Types;
+        }
+
         internal static Collection<NWrapper.IManagableProvider> GetProviders()
         {
             Collection<NWrapper.IManagableProvider> pros

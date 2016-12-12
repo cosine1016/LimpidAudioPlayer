@@ -22,6 +22,7 @@ namespace LAP.UserControls
     {
         List<Utils.PluginManager.Plugin> CurrentPlugins = new List<Utils.PluginManager.Plugin>();
         List<bool> PluginEnabled = new List<bool>();
+        ClearUC.Tab.TabItem FunctionItem = new ClearUC.Tab.TabItem("");
 
         public PluginOption()
         {
@@ -45,35 +46,50 @@ namespace LAP.UserControls
         {
             InfoGrid.Visibility = Visibility.Hidden;
             EnableL.Content = Localize.Get("ENABLE");
+            FunctionItem.Title = Localize.Get("FUNCTION");
         }
 
         private void PluginT_ActiveItemChanged(object sender, EventArgs e)
         {
             EnableB.ToggleStateChanged -= EnableB_ToggleStateChanged;
 
-            Utils.PluginManager.Plugin plg = GetActiveItem();
-            if(plg == null)
+            if(PluginT.ActiveItem == FunctionItem)
             {
                 InfoGrid.Visibility = Visibility.Hidden;
-                return;
+
+                for(int i = 0;Utils.PluginManager.GetFunctions().Count > i; i++)
+                {
+                    
+                }
             }
-
-            EnableB.State = plg.Enabled;
-            TitleL.Content = plg.Instance.Title;
-            DescL.Content = plg.Instance.Description;
-            AuthorL.Content = plg.Instance.Author + " - " + plg.Instance.Version.ToString();
-
-            EnableB.ToggleStateChanged += EnableB_ToggleStateChanged;
-
-            if (string.IsNullOrEmpty(plg.Instance.URL))
-                URLB.Visibility = Visibility.Hidden;
             else
             {
-                URLB.Visibility = Visibility.Visible;
-                URLB.Content = plg.Instance.URL;
-            }
+                FunctionControl.Visibility = Visibility.Hidden;
 
-            InfoGrid.Visibility = Visibility.Visible;
+                Utils.PluginManager.Plugin plg = GetActiveItem();
+                if (plg == null)
+                {
+                    InfoGrid.Visibility = Visibility.Hidden;
+                    return;
+                }
+
+                EnableB.State = plg.Enabled;
+                TitleL.Content = plg.Instance.Title;
+                DescL.Content = plg.Instance.Description;
+                AuthorL.Content = plg.Instance.Author + " - " + plg.Instance.Version.ToString();
+
+                EnableB.ToggleStateChanged += EnableB_ToggleStateChanged;
+
+                if (string.IsNullOrEmpty(plg.Instance.URL))
+                    URLB.Visibility = Visibility.Hidden;
+                else
+                {
+                    URLB.Visibility = Visibility.Visible;
+                    URLB.Content = plg.Instance.URL;
+                }
+
+                InfoGrid.Visibility = Visibility.Visible;
+            }
         }
 
         private Utils.PluginManager.Plugin GetActiveItem()

@@ -317,6 +317,23 @@ namespace ClearUC
             }
         }
 
+        public TabItem ActiveItem
+        {
+            get
+            {
+                if (ActiveIndex > -1)
+                    return Items[ActiveIndex];
+                else
+                    return null;
+            }
+            set
+            {
+                int index = Items.IndexOf(value);
+                if (index > -1)
+                    ActiveIndex = index;
+            }
+        }
+
         public TabItemCollection Items { get; set; } = new TabItemCollection();
     }
 }

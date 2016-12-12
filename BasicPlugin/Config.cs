@@ -30,7 +30,6 @@ namespace BasicPlugin
 
         public static void Load(string Path)
         {
-            Path = PathFunc(Path);
             if (File.Exists(Path))
             {
                 try
@@ -59,7 +58,10 @@ namespace BasicPlugin
                 ser.Serialize(sw, Current);
         }
 
-        public static ConfigDictionary<Enums.Path, string> Path
+        public ConfigDictionary<Enums.Path, string> Path
             = new ConfigDictionary<Enums.Path, string>();
+
+        public ConfigDictionary<Enums.bValue, bool> bValue
+            = new ConfigDictionary<Enums.bValue, bool>();
     }
 }

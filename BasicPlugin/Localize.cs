@@ -7,13 +7,6 @@ using System.IO;
 
 namespace BasicPlugin
 {
-    public enum Strings
-    {
-        Title, Open, Config, Creator, Log, Exit, Unknown,
-        Play, Pause, Stop, Next, Back,
-        Version, Plugin
-    }
-
     internal class Localize
     {
         private static List<Action> ChangedActions = new List<Action>();
@@ -44,55 +37,6 @@ namespace BasicPlugin
                 LAPP.Utils.Log.Append("Key Was Not Found : " + Key);
 
             return str;
-        }
-
-        public static string Get(Strings ID)
-        {
-            string ids = "UNKNOWN";
-            switch (ID)
-            {
-                case Strings.Open:
-                    ids = "0_OPEN";
-                    break;
-                case Strings.Config:
-                    ids = "0_CONFIG";
-                    break;
-                case Strings.Log:
-                    ids = "0_LOG";
-                    break;
-                case Strings.Creator:
-                    ids = "0_CREATOR";
-                    break;
-                case Strings.Exit:
-                    ids = "0_EXIT";
-                    break;
-                case Strings.Unknown:
-                    ids = "0_UNKNOWN";
-                    break;
-                case Strings.Play:
-                    ids = "1_PLAY";
-                    break;
-                case Strings.Pause:
-                    ids = "1_PAUSE";
-                    break;
-                case Strings.Stop:
-                    ids = "1_STOP";
-                    break;
-                case Strings.Next:
-                    ids = "1_NEXT";
-                    break;
-                case Strings.Back:
-                    ids = "1_BACK";
-                    break;
-                case Strings.Version:
-                    ids = "2_VERSION";
-                    break;
-                case Strings.Plugin:
-                    ids = "2_PLUGIN";
-                    break;
-            }
-
-            return Get(ids);
         }
 
         public static LAPP.Management.Localize Current { get; private set; }

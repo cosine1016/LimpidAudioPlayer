@@ -9,6 +9,7 @@ namespace BasicPlugin.Enums
 {
     public enum bValue
     {
-
+        [Config(false)]
+        Spectrum
     }
 }
