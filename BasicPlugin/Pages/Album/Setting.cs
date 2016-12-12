@@ -12,6 +12,5 @@ namespace BasicPlugin.Pages.Album
         internal const string AlbumSettingFileName = "Album.cnf";
         internal const string AlbumExtension = ".limpidal";
         public string AlbumDirectory { get; set; } = @"Album";//TODO Set Dir name
-        public string CreateAlbumStr { get; set; } = "Create Album";
     }
 }

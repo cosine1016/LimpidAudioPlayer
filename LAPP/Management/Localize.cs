@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace LAPP
+namespace LAPP.Management
 {
-    public class LocalizeDictionary : Dictionary<string, string>
+    public sealed class LocalizeDictionary : Dictionary<string, string>
     {
         public new string this[string Key]
         {
@@ -25,7 +25,7 @@ namespace LAPP
         }
     }
 
-    public class Localize
+    public sealed class Localize
     {
         public LocalizeDictionary Info { get; set; } = new LocalizeDictionary();
         public LocalizeDictionary Strings { get; set; } = new LocalizeDictionary();

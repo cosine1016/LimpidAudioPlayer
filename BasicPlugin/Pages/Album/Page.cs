@@ -180,7 +180,7 @@ namespace BasicPlugin.Pages.Album
             }
 
             CreateAlbumItem.ItemClicked += CreateAlbumItem_ItemClicked;
-            CreateAlbumItem.MainLabelText = Setting.Current.CreateAlbumStr;
+            CreateAlbumItem.MainLabelText = Localize.Get("CREATE_ALBUM");
             CreateAlbumItem.SubLabelVisibility = Visibility.Hidden;
             TopItems.Add(CreateAlbumItem);
         }

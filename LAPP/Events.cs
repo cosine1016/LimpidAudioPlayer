@@ -18,6 +18,13 @@ namespace LAPP
             AppendLog?.Invoke(null, new LogEventArgs(Msg));
         }
 
+        internal static int LastLCID = 0;
+        public static void LanguageUpdated(int LCID)
+        {
+            LastLCID = LCID;
+            LanguageChanged?.Invoke(null, new Utils.TypeEventArgs<int>(LCID));
+        }
+
         internal static void DoNotice(NotificationEventArgs e)
         {
             Notice?.Invoke(null, e);
@@ -25,6 +32,7 @@ namespace LAPP
 
         public static event EventHandler<LogEventArgs> AppendLog;
         public static event EventHandler<NotificationEventArgs> Notice;
+        internal static event EventHandler<Utils.TypeEventArgs<int>> LanguageChanged;
 
         public class LogEventArgs : EventArgs
         {

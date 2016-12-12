@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace LAP
+namespace BasicPlugin
 {
     public enum Strings
     {
@@ -38,27 +38,12 @@ namespace LAP
 
         public static string Get(string Key)
         {
-            if (!Current.Strings.Keys.Contains(Key))
-            {
-                Dialogs.LogWindow.Append("Key Was Not Found : " + Key);
-            }
-            return Current.Strings[Key];
-        }
+            string str = Current.Strings[Key];
 
-        public static int LCID
-        {
-            get
-            {
-                const string LCID = "LCID";
-                if (Current.Strings.Keys.Contains(LCID))
-                {
-                    string str = Current.Strings[LCID];
-                    int lcid = int.Parse(str);
-                    return lcid;
-                }
-                else
-                    return 0;
-            }
+            if (Key == str)
+                LAPP.Utils.Log.Append("Key Was Not Found : " + Key);
+
+            return str;
         }
 
         public static string Get(Strings ID)
@@ -118,23 +103,12 @@ namespace LAP
         {
             try
             {
-                if (Utils.InstanceData.OverrideLanguage)
-                {
-                    Dialogs.LogWindow.Append("Language was overridden");
-                    Current = LAPP.Management.Localize.Load(Utils.InstanceData.LocalizeFilePath);
-                    CurrentFilePath = Utils.InstanceData.LocalizeFilePath;
-                }
-                else
-                {
-                    Current = LAPP.Management.Localize.Load(Path);
-                    CurrentFilePath = Path;
-                }
-
+                Current = LAPP.Management.Localize.Load(Path);
+                CurrentFilePath = Path;
                 ChangeLanguage();
             }
             catch (Exception)
             {
-                Dialogs.LogWindow.Append("Failed to loading localize file");
                 Current = new LAPP.Management.Localize();
                 CurrentFilePath = null;
                 ChangeLanguage();
@@ -149,9 +123,8 @@ namespace LAP
                 {
                     ChangedActions[i]();
                 }
-                catch (Exception) { Dialogs.LogWindow.Append("Applying Language Failed"); }
+                catch (Exception) { }
             }
-            LAPP.Events.LanguageUpdated(LCID);
         }
     }
 }

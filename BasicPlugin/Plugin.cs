@@ -12,8 +12,17 @@ namespace BasicPlugin
 
         public Plugin()
         {
+            Config.Path.GettingValueFunction = PathFunc;
+            Config.Load()
             InitializePages();
             InitializeFunctions();
+        }
+
+        internal string PathFunc(string Path)
+        {
+            Path = Path.Replace("$DIR$", GetConfigPath() +@"\");
+
+            return Path;
         }
 
         private void InitializePages()
@@ -70,6 +79,10 @@ namespace BasicPlugin
         {
             InitializeMediaPanel(File);
             InitializeProviders(File);
+        }
+
+        protected override void LanguageChanged(int LCID)
+        {
         }
     }
 }

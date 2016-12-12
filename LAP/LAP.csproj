@@ -127,7 +127,6 @@
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums\Brushes.cs" />
-    <Compile Include="Enums\HelperClass.cs" />
     <Compile Include="Enums\Path.cs" />
     <Compile Include="Enums\Animation.cs" />
     <Compile Include="Enums\Value.cs" />

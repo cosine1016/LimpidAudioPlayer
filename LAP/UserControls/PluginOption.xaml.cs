@@ -20,19 +20,29 @@ namespace LAP.UserControls
     /// </summary>
     public partial class PluginOption : UserControl
     {
+        List<Utils.PluginManager.Plugin> CurrentPlugins = new List<Utils.PluginManager.Plugin>();
+        List<bool> PluginEnabled = new List<bool>();
+
         public PluginOption()
         {
             InitializeComponent();
             UpdateTab();
+
+            PluginT.Items.Clear();
+
+            CurrentPlugins.Clear();
+            PluginEnabled.Clear();
+
+            CurrentPlugins.AddRange(Utils.PluginManager.GetPlugins(false));
+            for (int i = 0; CurrentPlugins.Count > i; i++)
+            {
+                PluginEnabled.Add(CurrentPlugins[i].Enabled);
+                PluginT.Items.Add(new ClearUC.Tab.TabItem(CurrentPlugins[i].Instance.Title));
+            }
         }
 
         public void UpdateTab()
         {
-            PluginT.Items.Clear();
-
-            Utils.PluginManager.Plugin[] plgs = Utils.PluginManager.GetPlugins(false);
-            for (int i = 0; plgs.Length > i; i++)
-                PluginT.Items.Add(new ClearUC.Tab.TabItem(plgs[i].Instance.Title));
             InfoGrid.Visibility = Visibility.Hidden;
             EnableL.Content = Localize.Get("ENABLE");
         }
@@ -77,10 +87,24 @@ namespace LAP.UserControls
             System.Diagnostics.Process.Start(GetActiveItem().Instance.URL);
         }
 
+        internal bool Apply()
+        {
+            bool restart = false;
+            for (int i = 0; CurrentPlugins.Count > i; i++)
+            {
+                if (CurrentPlugins[i].Enabled != PluginEnabled[i])
+                    restart = true;
+
+                CurrentPlugins[i].Enabled = PluginEnabled[i];
+            }
+
+            return restart;
+        }
+
         private void EnableB_ToggleStateChanged(object sender, EventArgs e)
         {
-            if (GetActiveItem() == null) return;
-            GetActiveItem().Enabled = EnableB.State;
+            int index = CurrentPlugins.IndexOf(GetActiveItem());
+            PluginEnabled[index] = EnableB.State;
         }
     }
 }

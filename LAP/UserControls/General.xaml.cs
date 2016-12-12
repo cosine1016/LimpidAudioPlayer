@@ -21,7 +21,7 @@ namespace LAP.UserControls
     public partial class General : UserControl, IDisposable
     {
         bool CloseDialog = false;
-        LAPP.Localize[] Langs;
+        LAPP.Management.Localize[] Langs;
         string[] LangFiles;
 
         public General()
@@ -48,12 +48,12 @@ namespace LAP.UserControls
             {
                 string[] files = Directory.GetFiles(Config.Current.Path[Enums.Path.LanguageDirectory],
                     "*.loc").Where(item => Path.GetExtension(item).ToLower() == ".loc").ToArray();
-                Langs = new LAPP.Localize[files.Length];
+                Langs = new LAPP.Management.Localize[files.Length];
 
                 for (int i = 0; files.Length > i; i++)
                 {
                     string name = Path.GetFileName(files[i]);
-                    LAPP.Localize loc = LAPP.Localize.Load(files[i]);
+                    LAPP.Management.Localize loc = LAPP.Management.Localize.Load(files[i]);
                     Langs[i] = loc;
 
                     if (loc.Info.ContainsKey("Language"))

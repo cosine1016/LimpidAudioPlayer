@@ -65,5 +65,9 @@ namespace TestPlugin
         public override void SetFile(LAPP.IO.MediaFile File)
         {
         }
+
+        protected override void LanguageChanged(int LCID)
+        {
+        }
     }
 }

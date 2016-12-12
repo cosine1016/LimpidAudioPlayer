@@ -140,11 +140,8 @@ namespace LAP.Utils
 
             public ApplyInfo Apply()
             {
-                ApplyInfo ai = new ApplyInfo(true, true, false, false);
-
-                PluginManager.SaveInfo();
-
-                return ai;
+                bool restart = ((UserControls.PluginOption)UIControl).Apply();
+                return new ApplyInfo(true, restart, false, false);
             }
 
             public void Dispose()

@@ -54,7 +54,8 @@
   <ItemGroup>
     <Compile Include="Events.cs" />
     <Compile Include="IO\Async.cs" />
-    <Compile Include="Localize.cs" />
+    <Compile Include="Management\Config.cs" />
+    <Compile Include="Management\Localize.cs" />
     <Compile Include="Player\Receiver.cs" />
     <Compile Include="Setting\Setting.cs" />
     <Compile Include="IO\File.cs" />

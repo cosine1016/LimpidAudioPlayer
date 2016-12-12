@@ -17,6 +17,11 @@ namespace LAPP
         public LimpidAudioPlayerPlugin()
         {
             if (string.IsNullOrEmpty(Title)) throw new Exception("タイトルがありません");
+            Events.LanguageChanged += (sender, e) =>
+            {
+                LanguageChanged(e.Value);
+            };
+            LanguageChanged(Events.LastLCID);
         }
 
         public virtual PageCollection Pages { get; set; }
@@ -74,6 +79,8 @@ namespace LAPP
         public abstract string URL { get; }
 
         public abstract string Author { get; }
+
+        protected abstract void LanguageChanged(int LCID);
     }
 
     public class DisposableItemCollection<T> : Collection<T> where T : IDisposable
