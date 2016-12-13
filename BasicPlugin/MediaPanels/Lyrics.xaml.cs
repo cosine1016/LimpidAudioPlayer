@@ -24,5 +24,10 @@ namespace BasicPlugin.MediaPanels
         {
             InitializeComponent();
         }
+
+        public override string ToString()
+        {
+            return "Lyrics";
+        }
     }
 }

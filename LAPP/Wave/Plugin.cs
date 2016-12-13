@@ -1,7 +1,6 @@
 ﻿using NAudio.Wave;
 using System.IO;
 using System.Linq;
-using NAudio.Wave;
 
 namespace LAPP.Wave
 {

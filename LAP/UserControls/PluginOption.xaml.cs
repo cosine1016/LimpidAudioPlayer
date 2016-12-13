@@ -21,6 +21,7 @@ namespace LAP.UserControls
     public partial class PluginOption : UserControl
     {
         List<Utils.PluginManager.Plugin> CurrentPlugins = new List<Utils.PluginManager.Plugin>();
+        List<Utils.PluginManager.PluginFunction> CurrentFunctions = new List<Utils.PluginManager.PluginFunction>();
         List<bool> PluginEnabled = new List<bool>();
         ClearUC.Tab.TabItem FunctionItem = new ClearUC.Tab.TabItem("");
 
@@ -34,7 +35,10 @@ namespace LAP.UserControls
             CurrentPlugins.Clear();
             PluginEnabled.Clear();
 
+            CurrentFunctions.Clear();
+
             CurrentPlugins.AddRange(Utils.PluginManager.GetPlugins(false));
+            CurrentFunctions.AddRange(Utils.PluginManager.GetFunctions());
             for (int i = 0; CurrentPlugins.Count > i; i++)
             {
                 PluginEnabled.Add(CurrentPlugins[i].Enabled);
@@ -123,6 +127,15 @@ namespace LAP.UserControls
                     restart = true;
 
                 CurrentPlugins[i].Enabled = PluginEnabled[i];
+            }
+
+            for(int i = 0; CurrentFunctions.Count > i; i++)
+            {
+                ClearUC.ListViewItems.ListToggleItem lti = (ClearUC.ListViewItems.ListToggleItem)FunctionList.Items[i];
+                if (lti.ToggleButton.State != CurrentFunctions[i].Enabled)
+                    restart = true;
+
+                CurrentFunctions[i].Enabled = lti.ToggleButton.State;
             }
 
             return restart;

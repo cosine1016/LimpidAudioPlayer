@@ -60,5 +60,10 @@ namespace BasicPlugin.MediaPanels
             ClearUC.Utils.AnimationHelper.Visible va = new ClearUC.Utils.AnimationHelper.Visible();
             va.Animate(300, LabelParent, Visibility.Hidden);
         }
+
+        public override string ToString()
+        {
+            return "Artwork";
+        }
     }
 }

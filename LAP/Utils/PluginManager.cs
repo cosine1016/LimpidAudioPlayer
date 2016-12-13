@@ -69,6 +69,32 @@ namespace LAP.Utils
             }
         }
 
+        public static void CleanUp()
+        {
+            Dictionary<string, bool> existc = new Dictionary<string, bool>();
+            for(int i = 0;InfoCollection.Functions.Count > i; i++)
+            {
+                bool rem = false;
+                if (!existc.ContainsKey(InfoCollection.Functions[i].Path))
+                {
+                    existc[InfoCollection.Functions[i].Path] =
+                        File.Exists(InfoCollection.Functions[i].Path);
+                }
+
+                rem = existc[InfoCollection.Functions[i].Path];
+
+                if (rem)
+                {
+                    InfoCollection.Functions.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    InfoCollection.Functions[i].LastWriteDate = File.GetLastWriteTime(InfoCollection.Functions[i].Path);
+                }
+            }
+        }
+
         public static void ReLoadPlugin()
         {
             for (int i = 0; InitializedPlugin.Count > i; i++)
@@ -76,7 +102,7 @@ namespace LAP.Utils
                 string title = InitializedPlugin[i].Instance.Title;
                 InitializedPlugin[i].Instance.Dispose();
                 InitializedPlugin[i].Enabled = false;
-                LAP.Dialogs.LogWindow.Append(title + " : Disposed");
+                Dialogs.LogWindow.Append(title + " : Disposed");
             }
 
             InitializedPlugin.Clear();
@@ -362,52 +388,13 @@ namespace LAP.Utils
             public Collection<PluginInfo> Informations { get; set; } = new Collection<PluginInfo>();
         }
 
-        public class PluginFunction : IXmlSerializable
+        public class PluginFunction
         {
             public string TypeName { get; set; }
             public string Title { get; set; }
             public DateTime LastWriteDate { get; set; }
             public string Path { get; set; }
             public bool Enabled { get; set; }
-
-            public XmlSchema GetSchema()
-            {
-                return null;
-            }
-
-            public void ReadXml(XmlReader reader)
-            {
-                reader.Read();
-
-                XmlSerializer ser = new XmlSerializer(typeof(PluginFunction));
-
-                TypeName = (string)ser.Deserialize(reader);
-                Title = (string)ser.Deserialize(reader);
-                LastWriteDate = (DateTime)ser.Deserialize(reader);
-                Path = (string)ser.Deserialize(reader);
-                Enabled = (bool)ser.Deserialize(reader);
-
-                reader.ReadEndElement();
-            }
-
-            public void WriteXml(XmlWriter writer)
-            {
-                bool serialize = false;
-                if (string.IsNullOrEmpty(Path))
-                    serialize = true;
-                else
-                {
-                    if (File.Exists(Path))
-                        serialize = true;
-                }
-
-                if (serialize)
-                {
-                    XmlSerializer ser = new XmlSerializer(typeof(PluginFunction));
-
-                    ser.Serialize(writer, TypeName);
-                }
-            }
         }
     }
 }
