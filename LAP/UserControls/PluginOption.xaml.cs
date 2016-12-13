@@ -40,11 +40,13 @@ namespace LAP.UserControls
                 PluginEnabled.Add(CurrentPlugins[i].Enabled);
                 PluginT.Items.Add(new ClearUC.Tab.TabItem(CurrentPlugins[i].Instance.Title));
             }
+            PluginT.Items.Add(FunctionItem);
         }
 
         public void UpdateTab()
         {
             InfoGrid.Visibility = Visibility.Hidden;
+            FunctionList.Visibility = Visibility.Hidden;
             EnableL.Content = Localize.Get("ENABLE");
             FunctionItem.Title = Localize.Get("FUNCTION");
         }
@@ -56,15 +58,24 @@ namespace LAP.UserControls
             if(PluginT.ActiveItem == FunctionItem)
             {
                 InfoGrid.Visibility = Visibility.Hidden;
+                FunctionList.Visibility = Visibility.Visible;
 
-                for(int i = 0;Utils.PluginManager.GetFunctions().Count > i; i++)
+                FunctionList.Items.Clear();
+                System.Collections.ObjectModel.Collection<Utils.PluginManager.PluginFunction> funcs
+                    = Utils.PluginManager.GetFunctions();
+
+                for(int i = 0;funcs.Count > i; i++)
                 {
-                    
+                    ClearUC.ListViewItems.ListToggleItem lti = new ClearUC.ListViewItems.ListToggleItem();
+                    lti.ListItem.MainLabelText = funcs[i].Title;
+                    lti.ToggleButton.State = funcs[i].Enabled;
+
+                    FunctionList.Items.Add(lti);
                 }
             }
             else
             {
-                FunctionControl.Visibility = Visibility.Hidden;
+                FunctionList.Visibility = Visibility.Hidden;
 
                 Utils.PluginManager.Plugin plg = GetActiveItem();
                 if (plg == null)

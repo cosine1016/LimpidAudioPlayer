@@ -112,20 +112,43 @@ namespace LAP.Utils
 
             for (int i = 0; BaseItems.Length > i; i++)
             {
-                string t_str = BaseItems[i].GetType().ToString();
-                if (InfoCollection.Types.ContainsKey(t_str))
-                {
-                    if (InfoCollection.Types[t_str])
-                        items.Add(BaseItems[i]);
-                }
-                else
-                {
-                    InfoCollection.Types[t_str] = true;
+                if (IsEnabledFunction(BaseItems[i]))
                     items.Add(BaseItems[i]);
-                }
             }
 
             return items.ToArray();
+        }
+
+        internal static bool IsEnabledFunction<T>(T Function)
+        {
+            for (int i = 0; InfoCollection.Functions.Count > i; i++)
+            {
+                PluginFunction pf = InfoCollection.Functions[i];
+                string type_str = Function.GetType().ToString();
+
+                if(pf.TypeName == type_str)
+                {
+                    if(pf.LastWriteDate != File.GetLastWriteTime(pf.Path))
+                    {
+                        pf.LastWriteDate = File.GetLastWriteTime(pf.Path);
+                        pf.TypeName = Function.GetType().ToString();
+                        pf.Title = Function.ToString();
+                    }
+
+                    return pf.Enabled;
+                }
+            }
+
+            Assembly asm = Function.GetType().Assembly;
+            PluginFunction npf = new PluginFunction();
+            npf.LastWriteDate = File.GetLastWriteTime(asm.Location);
+            npf.Enabled = Config.Current.bValue[Enums.bValue.UseNewPlugin];
+            npf.TypeName = Function.GetType().ToString();
+            npf.Path = asm.Location;
+            npf.Title = Function.ToString();
+            InfoCollection.Functions.Add(npf);
+
+            return npf.Enabled;
         }
 
         internal static Collection<System.Windows.FrameworkElement> GetMediaPanelItems()
@@ -172,9 +195,9 @@ namespace LAP.Utils
                 return InitializedPlugin.ToArray();
         }
 
-        internal static SerializableDictionary<string, bool> GetFunctions()
+        internal static Collection<PluginFunction> GetFunctions()
         {
-            return InfoCollection.Types;
+            return InfoCollection.Functions;
         }
 
         internal static Collection<NWrapper.IManagableProvider> GetProviders()
@@ -247,16 +270,16 @@ namespace LAP.Utils
         private static PluginInfo UpdatePluginEnabled(Plugin Plugin)
         {
             PluginInfo pi = new PluginInfo(Plugin.Asm, Config.Current.bValue[Enums.bValue.UseNewPlugin]);
-            for(int i = 0;InfoCollection.Info.Count > i; i++)
+            for(int i = 0;InfoCollection.Informations.Count > i; i++)
             {
-                if (pi.AssemblyGuid == InfoCollection.Info[i].AssemblyGuid)
+                if (pi.AssemblyGuid == InfoCollection.Informations[i].AssemblyGuid)
                 {
-                    Plugin.Enabled = InfoCollection.Info[i].Enabled;
-                    return InfoCollection.Info[i];
+                    Plugin.Enabled = InfoCollection.Informations[i].Enabled;
+                    return InfoCollection.Informations[i];
                 }
             }
             
-            InfoCollection.Info.Add(pi);
+            InfoCollection.Informations.Add(pi);
             return pi;
         }
 
@@ -335,54 +358,55 @@ namespace LAP.Utils
 
         public class Plugins
         {
-            public SerializableDictionary<string, bool> Types { get; set; } = new SerializableDictionary<string, bool>();
-            public Collection<PluginInfo> Info { get; set; } = new Collection<PluginInfo>();
+            public Collection<PluginFunction> Functions { get; set; } = new Collection<PluginFunction>();
+            public Collection<PluginInfo> Informations { get; set; } = new Collection<PluginInfo>();
         }
 
-        public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+        public class PluginFunction : IXmlSerializable
         {
-            XmlSchema IXmlSerializable.GetSchema()
+            public string TypeName { get; set; }
+            public string Title { get; set; }
+            public DateTime LastWriteDate { get; set; }
+            public string Path { get; set; }
+            public bool Enabled { get; set; }
+
+            public XmlSchema GetSchema()
             {
                 return null;
             }
 
-            void IXmlSerializable.ReadXml(XmlReader reader)
+            public void ReadXml(XmlReader reader)
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(KeyValueItem));
-                reader.ReadStartElement();
-                try
-                {
-                    while (reader.NodeType != XmlNodeType.EndElement)
-                    {
-                        KeyValueItem item = (KeyValueItem)serializer.Deserialize(reader);
-                        Add(item.Key, item.Value);
-                    }
-                }
-                finally
-                {
-                    reader.ReadEndElement();
-                }
+                reader.Read();
+
+                XmlSerializer ser = new XmlSerializer(typeof(PluginFunction));
+
+                TypeName = (string)ser.Deserialize(reader);
+                Title = (string)ser.Deserialize(reader);
+                LastWriteDate = (DateTime)ser.Deserialize(reader);
+                Path = (string)ser.Deserialize(reader);
+                Enabled = (bool)ser.Deserialize(reader);
+
+                reader.ReadEndElement();
             }
 
-            void IXmlSerializable.WriteXml(XmlWriter writer)
+            public void WriteXml(XmlWriter writer)
             {
-                var ns = new XmlSerializerNamespaces();
-                ns.Add(String.Empty, String.Empty);
-                XmlSerializer serializer = new XmlSerializer(typeof(KeyValueItem));
-                foreach (var key in Keys)
+                bool serialize = false;
+                if (string.IsNullOrEmpty(Path))
+                    serialize = true;
+                else
                 {
-                    KeyValueItem item = new KeyValueItem();
-                    item.Key = key;
-                    item.Value = this[key];
-                    serializer.Serialize(writer, item, ns);
+                    if (File.Exists(Path))
+                        serialize = true;
                 }
-            }
 
-            [XmlRoot("KeyValue")]
-            public class KeyValueItem
-            {
-                public TKey Key;
-                public TValue Value;
+                if (serialize)
+                {
+                    XmlSerializer ser = new XmlSerializer(typeof(PluginFunction));
+
+                    ser.Serialize(writer, TypeName);
+                }
             }
         }
     }
