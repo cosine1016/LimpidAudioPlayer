@@ -127,6 +127,7 @@
       <DependentUpon>UnhandledExceptionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Enums\Brushes.cs" />
+    <Compile Include="Enums\Devices.cs" />
     <Compile Include="Enums\Path.cs" />
     <Compile Include="Enums\Animation.cs" />
     <Compile Include="Enums\Value.cs" />
@@ -138,9 +139,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourceServices.cs" />
-    <Compile Include="UserControls\AudioOutSelector.xaml.cs">
-      <DependentUpon>AudioOutSelector.xaml</DependentUpon>
-    </Compile>
     <Compile Include="UserControls\General.xaml.cs">
       <DependentUpon>General.xaml</DependentUpon>
     </Compile>
@@ -219,10 +217,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UserControls\AudioOutSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UserControls\Caption.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

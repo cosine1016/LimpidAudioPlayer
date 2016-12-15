@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="CommonSetting.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="WaveOutputs\NAudio.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dialogs\" />

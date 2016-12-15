@@ -36,6 +36,9 @@ namespace LAPP
         public virtual Collection<NWrapper.IManagableProvider> Providers { get; set; }
             = new Collection<NWrapper.IManagableProvider>();
 
+        public virtual Collection<Wave.IWaveOutPlugin> WaveOutputs { get; set; }
+            = new Collection<Wave.IWaveOutPlugin>();
+
         public virtual Collection<System.Windows.FrameworkElement> MediaPanelItems { get; set; }
             = new Collection<System.Windows.FrameworkElement>();
 

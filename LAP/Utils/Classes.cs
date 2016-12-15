@@ -73,50 +73,6 @@ namespace LAP.Utils
             }
         }
 
-        internal class OutputCategory : ISettingItem
-        {
-            public OutputCategory()
-            {
-                Action = new Action(() =>
-                {
-                    Header = Localize.Get("CONFIG_OUTPUT");
-                });
-                Localize.AddLanguageChangedAction(Action);
-
-                UIControl = aos;
-            }
-
-            private Action Action;
-
-            public Border Border { get; set; }
-
-            public string Header { get; set; }
-
-            public UIElement UIControl { get; set; }
-
-            private UserControls.AudioOutSelector aos = new UserControls.AudioOutSelector();
-
-            public ApplyInfo Apply()
-            {
-                try
-                {
-                    Config.Current.Output.OutputDevice = aos.SelectedDevice;
-                    Config.Current.Output.ASIO = aos.ASIOConfig;
-                    Config.Current.Output.WASAPI = aos.WASAPIConfig;
-                    Config.Current.Output.DirectSound = aos.DSConfig;
-                    Config.Current.Output.Amplify = (float)aos.AmplifyN.Value / 100;
-
-                    return new ApplyInfo(true, false, false, aos.RerenderFile);
-                }
-                catch (Exception) { return new ApplyInfo(false); }
-            }
-
-            public void Dispose()
-            {
-                Localize.RemoveLanguageChangedAction(Action);
-            }
-        }
-
         internal class Plugin : ISettingItem
         {
             public Plugin()

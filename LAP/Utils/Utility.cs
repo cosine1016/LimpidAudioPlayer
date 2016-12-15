@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media;
 using System.Runtime.InteropServices;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Interop;
 
 namespace LAP.Utils
@@ -129,53 +130,28 @@ namespace LAP.Utils
             }
         }
 
-        internal static IWavePlayer CreateSoundDevice()
+        internal static IWavePlayer CreateSoundDevice(LAPP.IO.MediaFile File)
         {
-            Config.WaveOut.Devices device = Config.Current.Output.OutputDevice;
-            if (InstanceData.OverrideOutput)
+            LAPP.Wave.IWaveOutPlugin[] outs = PluginManager.GetWaveOutputs().ToArray();
+
+            if (outs.Length > 0)
             {
-                device = InstanceData.OverrideDevice;
-                LAP.Dialogs.LogWindow.Append("Output Device Overridden : " + device.ToString());
-            }
-
-
-            LAP.Dialogs.LogWindow.Append("Output : " + device.ToString());
-
-            switch (device)
-            {
-                case Config.WaveOut.Devices.ASIO:
-                    if (string.IsNullOrEmpty(Config.Current.Output.ASIO.DriverName))
-                        return new AsioOut();
-                    else
-                        return new AsioOut(Config.Current.Output.ASIO.DriverName);
-
-                case Config.WaveOut.Devices.DirectSound:
-                    return new DirectSoundOut(Config.Current.Output.DirectSound.Latency);
-
-                case Config.WaveOut.Devices.Wave:
-                    return new NAudio.Wave.WaveOut();
-
-                case Config.WaveOut.Devices.WASAPI:
-                    Config.Current.Output.WASAPI.ShareMode = AudioClientShareMode.Exclusive;
-                    if (string.IsNullOrEmpty(Config.Current.Output.WASAPI.DeviceFriendlyName))
-                        return new WasapiOut(Config.Current.Output.WASAPI.ShareMode, false, Config.Current.Output.WASAPI.Latency);
-                    else
+                for (int i = 0; outs.Length > i; i++)
+                {
+                    if (outs[i].Title == Config.Current.sValue[Enums.sValue.WaveOutput])
                     {
-                        MMDeviceCollection col = new MMDeviceEnumerator().EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
-                        MMDevice dev = new MMDeviceEnumerator().GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-                        for (int i = 0; col.Count > i; i++)
-                            if (col[i].FriendlyName == Config.Current.Output.WASAPI.DeviceFriendlyName)
-                            {
-                                dev = col[i];
-                                break;
-                            }
-
-                        return new WasapiOut(dev, Config.Current.Output.WASAPI.ShareMode, false, Config.Current.Output.WASAPI.Latency);
+                        try
+                        {
+                            return outs[i].CreateWavePlayer(File);
+                        }
+                        catch (Exception) { }
                     }
+                }
 
-                default:
-                    return new DirectSoundOut();
+                return outs[0].CreateWavePlayer(File);
             }
+            else
+                return null;
         }
 
         private static MMDevice dev = null;

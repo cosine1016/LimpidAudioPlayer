@@ -23,4 +23,10 @@ namespace LAPP.Wave
         public abstract void Initialize(ISampleProvider BaseProvider);
         public abstract int Read(float[] buffer, int offset, int count);
     }
+
+    public interface IWaveOutPlugin
+    {
+        string Title { get; }
+        IWavePlayer CreateWavePlayer(IO.MediaFile File);
+    }
 }

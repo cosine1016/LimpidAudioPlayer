@@ -142,8 +142,6 @@ namespace NWrapper
         public Audio() { }
         public Audio(IManagableProvider[] Providers) { this.Providers.AddRange(Providers); }
 
-        public class ASIOException : Exception { }
-
         public event EventHandler<StoppedEventArgs> PlaybackStopped;
 
         public enum Status { Unknown, Playing, Paused, Stopped }

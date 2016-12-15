@@ -110,10 +110,6 @@ namespace LAP
                             Utils.InstanceData.LogExp = true;
                             Utils.InstanceData.LogExpPath = Arg;
                         }
-                        else if (Arg.StartsWith("-Output"))
-                        {
-                            OutputParser(Arg);
-                        }
                         else if (Arg.StartsWith("-Loc"))
                         {
                             Utils.InstanceData.OverrideLanguage = true;
@@ -163,35 +159,6 @@ namespace LAP
         {
             Config.Load(Config.Current.Path[Enums.Path.SettingFile]);
             Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
-        }
-
-        private static void OutputParser(string Arg)
-        {
-            Arg = Arg.ToLower();
-            Arg = Arg.Replace("-output:", "");
-
-            Utils.InstanceData.OverrideOutput = true;
-
-            switch (Arg)
-            {
-                case "wave":
-                case "wav":
-                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.Wave;
-                    break;
-                case "directsound":
-                case "ds":
-                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.DirectSound;
-                    break;
-                case "wasapi":
-                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.WASAPI;
-                    break;
-                case "asio":
-                    Utils.InstanceData.OverrideDevice = Config.WaveOut.Devices.ASIO;
-                    break;
-                default:
-                    Utils.InstanceData.OverrideOutput = false;
-                    break;
-            }
         }
 
         private static void Events_AppendLog(object sender, LAPP.Events.LogEventArgs e)

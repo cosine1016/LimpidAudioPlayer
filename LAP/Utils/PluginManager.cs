@@ -226,6 +226,25 @@ namespace LAP.Utils
             return InfoCollection.Functions;
         }
 
+        internal static Collection<LAPP.Wave.IWaveOutPlugin> GetWaveOutputs()
+        {
+            Collection<LAPP.Wave.IWaveOutPlugin> outs
+                = new Collection<LAPP.Wave.IWaveOutPlugin>();
+
+            for (int i = 0; InitializedPlugin.Count > i; i++)
+            {
+                if (InitializedPlugin[i].Enabled)
+                {
+                    for (int j = 0; InitializedPlugin[i].Instance.Providers.Count > j; j++)
+                    {
+                        outs.Add(InitializedPlugin[i].Instance.WaveOutputs[i]);
+                    }
+                }
+            }
+            
+            return new Collection<LAPP.Wave.IWaveOutPlugin>(GetEnabledItem(outs.ToArray()));
+        }
+
         internal static Collection<NWrapper.IManagableProvider> GetProviders()
         {
             Collection<NWrapper.IManagableProvider> pros

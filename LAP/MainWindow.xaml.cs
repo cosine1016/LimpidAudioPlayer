@@ -82,14 +82,6 @@ namespace LAP
                 AlbumT.Content = File.Album;
                 //TODO Plugin Events
             }
-            catch (Audio.ASIOException)
-            {
-                StopFile(true);
-                Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Localize.Get("ASIO_EXCEPTION"), Constants.ErrorBrush);
-                na.ShowMessage();
-                return false;
-            }
             catch (Exception ex)
             {
                 Dialogs.LogWindow.Append(ex.Message);
@@ -162,14 +154,6 @@ namespace LAP
             try
             {
                 InitializeRenderer(PlayingFile);
-            }
-            catch (Audio.ASIOException)
-            {
-                StopFile(true);
-                Utils.Notification na = new Utils.Notification(ParentGrid,
-                    Localize.Get("ASIO_EXCEPTION"), Constants.ErrorBrush);
-                na.ShowMessage();
-                return;
             }
             catch (Exception ex)
             {
@@ -248,7 +232,7 @@ namespace LAP
             Renderer.Providers.AddRange(Utils.PluginManager.GetProviders().ToArray());
 
             Renderer.OpenFile(File.Path,
-                new Utils.Classes.AudioFileReader(File.Path), Utils.Utility.CreateSoundDevice());
+                new Utils.Classes.AudioFileReader(File.Path), Utils.Utility.CreateSoundDevice(File));
 
             Dialogs.LogWindow.Append("File Open : " + File.Path);
 

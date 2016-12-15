@@ -18,6 +18,7 @@ namespace BasicPlugin
             Localize.Load(Config.Current.Path[Enums.Path.LanguageFile]);
             InitializePages();
             InitializeFunctions();
+            InitializeWaveOuts();
         }
 
         ~Plugin()
@@ -77,6 +78,14 @@ namespace BasicPlugin
                 spectrum.SampleAggreator = sa;
                 Providers.Add(sa);
             }
+        }
+
+        private void InitializeWaveOuts()
+        {
+            WaveOutputs.Clear();
+
+            WaveOutputs.Add(new WaveOutputs.WASAPI());
+            WaveOutputs.Add(new WaveOutputs.ASIO());
         }
 
         public override string Author { get; } = "Kaisei Sunaga";

@@ -387,9 +387,6 @@ namespace LAP.Utils
                         case "General":
                             Cats.Add(new Classes.GeneralCategory());
                             break;
-                        case "Output":
-                            Cats.Add(new Classes.OutputCategory());
-                            break;
                         case "Plugin":
                             Cats.Add(new Classes.Plugin());
                             break;

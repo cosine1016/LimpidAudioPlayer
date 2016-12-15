@@ -129,13 +129,16 @@ namespace LAP.UserControls
                 CurrentPlugins[i].Enabled = PluginEnabled[i];
             }
 
-            for(int i = 0; CurrentFunctions.Count > i; i++)
+            if(FunctionList.Items.Count >= CurrentFunctions.Count)
             {
-                ClearUC.ListViewItems.ListToggleItem lti = (ClearUC.ListViewItems.ListToggleItem)FunctionList.Items[i];
-                if (lti.ToggleButton.State != CurrentFunctions[i].Enabled)
-                    restart = true;
+                for (int i = 0; CurrentFunctions.Count > i; i++)
+                {
+                    ClearUC.ListViewItems.ListToggleItem lti = (ClearUC.ListViewItems.ListToggleItem)FunctionList.Items[i];
+                    if (lti.ToggleButton.State != CurrentFunctions[i].Enabled)
+                        restart = true;
 
-                CurrentFunctions[i].Enabled = lti.ToggleButton.State;
+                    CurrentFunctions[i].Enabled = lti.ToggleButton.State;
+                }
             }
 
             return restart;

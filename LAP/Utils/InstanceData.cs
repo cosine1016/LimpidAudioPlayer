@@ -27,10 +27,6 @@ namespace LAP.Utils
 
         public static bool UpdateMode { get; set; } = false;
 
-        public static Config.WaveOut.Devices OverrideDevice { get; set; }
-
-        public static bool OverrideOutput { get; set; } = false;
-
         public static bool OverrideLanguage { get; set; } = false;
 
         public static string LocalizeFilePath { get; set; }

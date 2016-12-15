@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using LAPP.Management;
 
-namespace BasicPlugin.Enums
+namespace LAP.Enums
 {
-    public enum bValue
+    public enum WaveOut
     {
-        [Config(true)]
-        Spectrum
+        Wave, DirectShow, WASAPI_Exclusive, WASAPI_Shared, ASIO
     }
 }

@@ -16,7 +16,10 @@ namespace LAP.Enums
     public enum sValue
     {
         [Config("")]
-        MicDeviceName
+        MicDeviceName,
+
+        [Config("")]
+        WaveOutput
     }
 
     public enum bValue
