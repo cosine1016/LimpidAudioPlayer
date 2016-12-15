@@ -72,16 +72,24 @@ namespace LAP.Utils
         public static void CleanUp()
         {
             Dictionary<string, bool> existc = new Dictionary<string, bool>();
+
             for(int i = 0;InfoCollection.Functions.Count > i; i++)
             {
                 bool rem = false;
                 if (!existc.ContainsKey(InfoCollection.Functions[i].Path))
                 {
                     existc[InfoCollection.Functions[i].Path] =
-                        File.Exists(InfoCollection.Functions[i].Path);
+                        !File.Exists(InfoCollection.Functions[i].Path);
                 }
 
                 rem = existc[InfoCollection.Functions[i].Path];
+
+                if (!rem)
+                {
+                    Type type = Type.GetType(InfoCollection.Functions[i].TypeName, false);
+                    if (type == null)
+                        rem = true;
+                }
 
                 if (rem)
                 {
@@ -158,6 +166,7 @@ namespace LAP.Utils
                     {
                         pf.LastWriteDate = File.GetLastWriteTime(pf.Path);
                         pf.TypeName = Function.GetType().ToString();
+                        pf.AssemblyQualifiedName = Function.GetType().AssemblyQualifiedName;
                         pf.Title = Function.ToString();
                     }
 
@@ -170,6 +179,7 @@ namespace LAP.Utils
             npf.LastWriteDate = File.GetLastWriteTime(asm.Location);
             npf.Enabled = Config.Current.bValue[Enums.bValue.UseNewPlugin];
             npf.TypeName = Function.GetType().ToString();
+            npf.AssemblyQualifiedName = Function.GetType().AssemblyQualifiedName;
             npf.Path = asm.Location;
             npf.Title = Function.ToString();
             InfoCollection.Functions.Add(npf);
@@ -410,6 +420,7 @@ namespace LAP.Utils
         public class PluginFunction
         {
             public string TypeName { get; set; }
+            public string AssemblyQualifiedName { get; set; }
             public string Title { get; set; }
             public DateTime LastWriteDate { get; set; }
             public string Path { get; set; }

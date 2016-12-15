@@ -25,10 +25,17 @@ namespace LAP.Utils
             NB = new NotificationBar();
             P = Parent;
             NB.BackgroundBrush = BackgroundBrush;
-            NB.VisibleEnterLabel = true;
-            NB.EnterLabelText = EnterLabelText;
+            NB.MaximizedMargin = new Thickness(0, 0, 0, 0);
+
+            if (!string.IsNullOrEmpty(EnterLabelText))
+            {
+                NB.VisibleEnterLabel = true;
+                NB.EnterLabelText = EnterLabelText;
+            }
+
             NB.HorizontalAlignment = HorizontalAlignment.Stretch;
             NB.VerticalAlignment = VerticalAlignment.Top;
+            NB.Margin = new Thickness(0, -NB.Height, 0, 0);
             P.Children.Add(NB);
 
             NB.Message = Message;

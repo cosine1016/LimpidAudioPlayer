@@ -24,6 +24,7 @@ namespace LAP.UserControls
         List<Utils.PluginManager.PluginFunction> CurrentFunctions = new List<Utils.PluginManager.PluginFunction>();
         List<bool> PluginEnabled = new List<bool>();
         ClearUC.Tab.TabItem FunctionItem = new ClearUC.Tab.TabItem("");
+        ClearUC.ListViewItems.ListSubItem CleanUpItem = new ClearUC.ListViewItems.ListSubItem() { SubLabelVisibility = Visibility.Hidden };
 
         public PluginOption()
         {
@@ -45,14 +46,22 @@ namespace LAP.UserControls
                 PluginT.Items.Add(new ClearUC.Tab.TabItem(CurrentPlugins[i].Instance.Title));
             }
             PluginT.Items.Add(FunctionItem);
+
+            CleanUpItem.ItemClicked += CleanUpItem_ItemClicked;
+        }
+
+        private void CleanUpItem_ItemClicked(object sender, ClearUC.ItemClickedEventArgs e)
+        {
+            Utils.PluginManager.CleanUp();
         }
 
         public void UpdateTab()
         {
             InfoGrid.Visibility = Visibility.Hidden;
-            FunctionList.Visibility = Visibility.Hidden;
+            FunctionGrid.Visibility = Visibility.Hidden;
             EnableL.Content = Localize.Get("ENABLE");
             FunctionItem.Title = Localize.Get("FUNCTION");
+            CleanUpItem.MainLabelText = Localize.Get("CLEANUP");
         }
 
         private void PluginT_ActiveItemChanged(object sender, EventArgs e)
@@ -62,9 +71,12 @@ namespace LAP.UserControls
             if(PluginT.ActiveItem == FunctionItem)
             {
                 InfoGrid.Visibility = Visibility.Hidden;
-                FunctionList.Visibility = Visibility.Visible;
+                FunctionGrid.Visibility = Visibility.Visible;
 
                 FunctionList.Items.Clear();
+
+                FunctionList.Items.Add(CleanUpItem);
+
                 System.Collections.ObjectModel.Collection<Utils.PluginManager.PluginFunction> funcs
                     = Utils.PluginManager.GetFunctions();
 
@@ -79,7 +91,7 @@ namespace LAP.UserControls
             }
             else
             {
-                FunctionList.Visibility = Visibility.Hidden;
+                FunctionGrid.Visibility = Visibility.Hidden;
 
                 Utils.PluginManager.Plugin plg = GetActiveItem();
                 if (plg == null)
@@ -133,11 +145,14 @@ namespace LAP.UserControls
             {
                 for (int i = 0; CurrentFunctions.Count > i; i++)
                 {
-                    ClearUC.ListViewItems.ListToggleItem lti = (ClearUC.ListViewItems.ListToggleItem)FunctionList.Items[i];
-                    if (lti.ToggleButton.State != CurrentFunctions[i].Enabled)
-                        restart = true;
+                    if(FunctionList.Items[i] != CleanUpItem)
+                    {
+                        ClearUC.ListViewItems.ListToggleItem lti = (ClearUC.ListViewItems.ListToggleItem)FunctionList.Items[i];
+                        if (lti.ToggleButton.State != CurrentFunctions[i].Enabled)
+                            restart = true;
 
-                    CurrentFunctions[i].Enabled = lti.ToggleButton.State;
+                        CurrentFunctions[i].Enabled = lti.ToggleButton.State;
+                    }
                 }
             }
 

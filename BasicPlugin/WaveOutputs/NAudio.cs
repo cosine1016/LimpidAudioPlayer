@@ -22,6 +22,11 @@ namespace BasicPlugin.WaveOutputs
             else
                 return new AsioOut(DriverName);
         }
+
+        public override string ToString()
+        {
+            return Title;
+        }
     }
 
     public class WASAPI : LAPP.Wave.IWaveOutPlugin
@@ -51,6 +56,45 @@ namespace BasicPlugin.WaveOutputs
                 return new WasapiOut(dev, AudioClientShareMode.Shared, EventSync, Latency);
             else
                 return new WasapiOut(dev, AudioClientShareMode.Exclusive, EventSync, Latency);
+        }
+
+        public override string ToString()
+        {
+            return Title;
+        }
+    }
+
+    public class Wave : LAPP.Wave.IWaveOutPlugin
+    {
+        public string Title { get; } = "Wave";
+
+        public IWavePlayer CreateWavePlayer(MediaFile File)
+        {
+            return new WaveOut();
+        }
+
+        public override string ToString()
+        {
+            return Title;
+        }
+    }
+
+    public class DirectSound : LAPP.Wave.IWaveOutPlugin
+    {
+        public string Title { get; } = "DirectSound";
+
+        public Guid Device { get; set; } = Guid.Empty;
+
+        public int Latency { get; set; } = 300;
+
+        public IWavePlayer CreateWavePlayer(MediaFile File)
+        {
+            return new DirectSoundOut(Device, Latency);
+        }
+
+        public override string ToString()
+        {
+            return Title;
         }
     }
 }

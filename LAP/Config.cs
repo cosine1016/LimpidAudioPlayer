@@ -16,8 +16,7 @@ namespace LAP
     public class Config
     {
         public const string LoadingError_T = "Failed To Load Config";
-        public const string LoadingError_M = "Unknown error has occured.\r\nPlease go to Config -> General" + 
-            " and press Reset Config button to recreate config file.";
+        public const string LoadingError_M = "Unknown error has occured.\r\nSetting file has been removed.";
 
         private Config()
         {
@@ -70,6 +69,7 @@ namespace LAP
                 }
                 catch (Exception)
                 {
+                    File.Delete(Path);
                     ClearUC.Dialogs.Dialog.ShowMessageBox(ClearUC.Dialogs.Dialog.Buttons.OKOnly,
                         LoadingError_T, LoadingError_M);
                     Current = new Config();

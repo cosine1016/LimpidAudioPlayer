@@ -32,7 +32,6 @@ namespace LAP.Dialogs
                 if (this.Category[i] != null)
                 {
                     this.Category[i].UIControl.Visibility = Visibility.Hidden;
-
                     TabContent.Children.Add(Category[i].UIControl);
                     Tab.Items.Add(new ClearUC.Tab.TabItem(this.Category[i].Header, this.Category[i].Border));
                 }

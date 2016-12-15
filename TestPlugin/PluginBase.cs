@@ -13,13 +13,12 @@ namespace TestPlugin
         {
             Pages.Add(new DirectoryPage());
             WaveStreams.Add(new WaveStreamPlugin());
-            SettingItems.Add(new SettingItem());
             LAPP.Player.Receiver.EventReceived += Player_EventReceived;
         }
 
         private void Player_EventReceived(object sender, LAPP.Player.Receiver.EventReceiveArgs e)
         {
-            //Console.WriteLine(e.Action.ToString());
+            Console.WriteLine(e.Action.ToString());
         }
 
         public override string Author

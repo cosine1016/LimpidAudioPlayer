@@ -12,7 +12,8 @@ namespace ClearUC
     /// </summary>
     public partial class NotificationBar : UserControl
     {
-        private const int dur = 300;
+        private const int visible_d = 300;
+        private const int wait_d = 1000;
         private const double EnterOpacity = 0.8, ClickOpacity = 1.0;
 
         public event EventHandler Click;
@@ -83,7 +84,7 @@ namespace ClearUC
             Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
             ta.AnimationCompleted += Ta_AnimationCompleted;
             ta.Animate(Margin, new Thickness(Margin.Left, Margin.Top - Height, Margin.Right, Margin.Bottom),
-                dur, null, new PropertyPath(MarginProperty), this);
+                visible_d, null, new PropertyPath(MarginProperty), this);
         }
 
         private void Ta_AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
@@ -95,23 +96,19 @@ namespace ClearUC
         {
             Utils.AnimationHelper.Thickness ta = new Utils.AnimationHelper.Thickness();
             ta.AnimationCompleted += AnimationCompleted;
-            ta.Animate(Margin, MaximizedMargin, dur, null, new PropertyPath(MarginProperty), this);
+            ta.Animate(Margin, MaximizedMargin, visible_d, null, new PropertyPath(MarginProperty), this);
         }
 
-        private async void AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
+        private void AnimationCompleted(object sender, Utils.AnimationHelper.AnimationEventArgs e)
         {
             MessageMaximized?.Invoke(this, new EventArgs());
 
-            await Task.Run(() =>
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                System.Threading.Thread.Sleep(dur);
-                if (entering == true)
-                {
-                    while (entering == true) { }
-                }
-            });
-
-            Minimize();
+                System.Threading.Thread.Sleep(wait_d);
+                while (entering == true) { }
+                Minimize();
+            }));
         }
 
         private bool entering = false;

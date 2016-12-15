@@ -47,7 +47,6 @@
     <Compile Include="PagePlugin.cs" />
     <Compile Include="PluginBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingItem.cs" />
     <Compile Include="WaveStreamPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
