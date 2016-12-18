@@ -169,20 +169,10 @@ namespace ClearUC
         {
             if (Item.ItemStatus == ListItem.State.Removing)
                 throw new Exception("既に利用されている項目です");
-            Item.Width = parent.ActualWidth;
+
             Item.HorizontalAlignment = HorizontalAlignment.Stretch;
             Item.VerticalAlignment = VerticalAlignment.Top;
             Item.Width = double.NaN;
-
-            if (Items.Count > 5)
-            {
-                Item.Margin = CalcMargin(Items.Count);
-            }
-            else
-            {
-                Thickness tk = CalcMargin(Items.Count);
-                Item.Margin = new Thickness(parent.ActualWidth / Items.Count, tk.Top, tk.Right, tk.Bottom);
-            }
 
             Item.ItemStatus = ListItem.State.Adding;
             Item.ItemClicked += Item_ItemClicked;
@@ -226,7 +216,7 @@ namespace ClearUC
                             }
                             else
                             {
-                                if(!double.IsNaN(Items[i].Height))
+                                if (!double.IsNaN(Items[i].Height))
                                     t += Items[i].Height;
                             }
                         }
@@ -301,7 +291,7 @@ namespace ClearUC
 
             Item.HorizontalAlignment = HorizontalAlignment.Stretch;
             Item.VerticalAlignment = VerticalAlignment.Top;
-            
+
             Item.Width = double.NaN;
             Item.Index = Items.Count;
 

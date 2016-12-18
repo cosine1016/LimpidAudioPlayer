@@ -358,6 +358,7 @@ namespace LAPP
     public abstract class Page : BasePage<PageItem, ItemSelectedEventArgs, PageItemCollection>, INotifyPropertyChanged
     {
         public const string SearchableProperty = "Searchable";
+        public const string VerticalSBVisibiliryPeoperty = "VerticalScrollBarVisibility";
         public event EventHandler<RunFileEventArgs> RunFile;
         public event EventHandler OrderEnded;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -397,6 +398,18 @@ namespace LAPP
                 OnPropertyChanged(SearchableProperty);
             }
         }
+
+        ScrollBarVisibility _vertsbv = ScrollBarVisibility.Auto;
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get { return _vertsbv; }
+            set
+            {
+                _vertsbv = value;
+                OnPropertyChanged(VerticalSBVisibiliryPeoperty);
+            }
+        }
+
         public bool UpdateImage { get; protected set; } = true;
 
         public void PlayAnyFile()

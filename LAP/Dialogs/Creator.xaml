@@ -16,6 +16,6 @@
         <ClearUC:Tab x:Name="LicenseTab" Margin="0,138,0,0" Height="40" Width="Auto" VerticalAlignment="Top" />
         <Label x:Name="CreatorL" Content="Creator：Kaisei Sunaga" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,40,0,0" Height="45" Width="257" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
         <Label x:Name="VersionL" Content="Version : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="272,40,0,0" Height="45" Width="265" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
-        <ClearUC:LinkLabel x:Name="ContactL" Content="Contact : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,85,0,0" Height="45" Width="257" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
+        <ClearUC:ExtendedLabel x:Name="ContactL" Content="Contact : " HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,85,0,0" Height="45" Width="257" Foreground="White" VerticalContentAlignment="Center" FontSize="16" FontWeight="Thin"/>
     </Grid>
 </Window>

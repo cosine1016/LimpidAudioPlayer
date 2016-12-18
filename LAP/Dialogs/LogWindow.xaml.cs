@@ -26,7 +26,7 @@ namespace LAP.Dialogs
         internal static void Append(string Msg)
         {
             if (Msg.EndsWith("\n") == false) Msg += "\n";
-            LogStr += Msg;
+            LogStr += "[" + DateTime.Now.ToString("HH:mm:ss.fff") + "] " + Msg;
             LogChanged?.Invoke(null, null);
         }
 
@@ -120,7 +120,7 @@ namespace LAP.Dialogs
             switch (WindowState)
             {
                 case WindowState.Maximized:
-                    Root.Margin = new Thickness(8);
+                    Root.Margin = new Thickness(6);
                     break;
 
                 default:

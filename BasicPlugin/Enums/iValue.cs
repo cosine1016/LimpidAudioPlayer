@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LAPP.Management;
 using System.Threading.Tasks;
+using LAPP.Management;
 
 namespace BasicPlugin.Enums
 {
-    public enum Path
+    public enum iValue
     {
-        [Config("$DIR$English.loc")]
-        LanguageFile,
+        [Config(100)]
+        DefaultAnimation,
 
-        [Config(@"$DIR$Album\")]
-        AlbumDirectory
+        [Config(300)]
+        AlbumVisibleAnimation
     }
 }

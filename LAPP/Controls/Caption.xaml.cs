@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LAP.UserControls
+namespace LAPP.Controls
 {
     /// <summary>
     /// Caption.xaml の相互作用ロジック
@@ -53,41 +53,10 @@ namespace LAP.UserControls
             set { CloseButtonV(value); }
         }
 
-        public bool OptionalButtonVisible
-        {
-            get { return GetOptionalButtonVisible(); }
-            set
-            {
-                switch (value)
-                {
-                    case true:
-                        Optional.Visibility = Visibility.Visible;
-                        TitleL.Margin = new Thickness(Optional.Width, 0, Close.Width + Maximize.Width + Minimize.Width, 0);
-                        break;
-                    case false:
-                        Optional.Visibility = Visibility.Hidden;
-                        TitleL.Margin = new Thickness(0, 0, Close.Width + Maximize.Width + Minimize.Width, 0);
-                        break;
-                }
-            }
-        }
-
         public object Title
         {
             get { return TitleL.Content; }
             set { TitleL.Content = value; }
-        }
-
-        public bool GetOptionalButtonVisible()
-        {
-            switch (Optional.Visibility)
-            {
-                case Visibility.Visible:
-                    return true;
-                case Visibility.Hidden:
-                    return false;
-            }
-            return false;
         }
 
         bool minv = true;

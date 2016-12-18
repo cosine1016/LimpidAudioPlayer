@@ -12,14 +12,12 @@ namespace ClearUC.ListViewItems
         public ListMenuItem()
         {
             InitializeComponent();
-
-            ImageIndexChanged += ListMenuItem_ImageIndexChanged;
         }
 
-        private void ListMenuItem_ImageIndexChanged(object sender, EventArgs e)
+        public ImageSource Image
         {
-            if (ImageIndex > -1) image.Source = ImageSources[ImageIndex];
-            else image.Source = null;
+            get { return image.Source; }
+            set { image.Source = value; }
         }
 
         public Brush MainLabelBrush

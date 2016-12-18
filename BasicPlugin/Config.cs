@@ -63,5 +63,8 @@ namespace BasicPlugin
 
         public ConfigDictionary<Enums.bValue, bool> bValue
             = new ConfigDictionary<Enums.bValue, bool>();
+
+        public ConfigDictionary<Enums.iValue, int> iValue
+            = new ConfigDictionary<Enums.iValue, int>();
     }
 }

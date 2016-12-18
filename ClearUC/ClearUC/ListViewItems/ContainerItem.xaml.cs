@@ -45,7 +45,7 @@ namespace ClearUC.ListViewItems
                 ParentGrid = (Grid)Parent;
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Height = ParentGrid.ActualHeight;
+                    Height = double.NaN;
                     VerticalAlignment = VerticalAlignment.Stretch;
                     HorizontalAlignment = HorizontalAlignment.Stretch;
                 }));
@@ -64,7 +64,7 @@ namespace ClearUC.ListViewItems
                 ParentGrid = (Grid)Parent;
                 Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    Height = ParentGrid.ActualHeight;
+                    Height = double.NaN;
                     VerticalAlignment = VerticalAlignment.Stretch;
                     HorizontalAlignment = HorizontalAlignment.Stretch;
                 }));

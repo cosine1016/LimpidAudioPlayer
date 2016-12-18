@@ -59,6 +59,9 @@ namespace LAP.Page
                 case LAPP.Page.SearchableProperty:
                     LV.SearchBoxVisible = page.Searchable;
                     break;
+                case LAPP.Page.VerticalSBVisibiliryPeoperty:
+                    LV.VerticalScrollBarVisibility = page.VerticalScrollBarVisibility;
+                    break;
             }
         }
 
@@ -126,6 +129,7 @@ namespace LAP.Page
                 if (items != null)
                 {
                     LV.SearchBoxVisible = Pages[Tab.ActiveIndex].Searchable;
+                    LV.VerticalScrollBarVisibility = Pages[Tab.ActiveIndex].VerticalScrollBarVisibility;
                     LV.Items.AddRange(items.GetListItems());
                     items.ItemClicked += (obj, args) =>
                     {

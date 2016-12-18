@@ -5,20 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BasicPlugin.Pages.Album"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="200" d:DesignWidth="200">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="50*"/>
-            <RowDefinition Height="2*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="50*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-        <Image x:Name="image" Grid.Column="1" Grid.Row="1"/>
-        <Label x:Name="label" Content="Title" Grid.Column="1" Grid.Row="1" Background="#B2000000" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" FontWeight="Thin" Height="71" VerticalAlignment="Bottom"/>
+        <Image x:Name="image"/>
+        <Label x:Name="label" Content="Title" Background="#B2000000" Foreground="White" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" FontWeight="Thin"/>
+        <Rectangle x:Name="rect" Fill="Black" StrokeThickness="0" MouseEnter="Rectangle_MouseEnter" MouseLeave="Rectangle_MouseLeave" Opacity="0.1" MouseLeftButtonDown="rect_MouseLeftButtonDown" MouseLeftButtonUp="rect_MouseLeftButtonUp"/>
 
     </Grid>
 </UserControl>

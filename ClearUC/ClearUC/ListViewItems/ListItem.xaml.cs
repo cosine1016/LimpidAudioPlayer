@@ -12,8 +12,6 @@ namespace ClearUC.ListViewItems
     /// </summary>
     public abstract partial class ListItem : Grid
     {
-        public event EventHandler ImageIndexChanged;
-
         public event EventHandler IndexChanged;
 
         public event EventHandler<ItemClickedEventArgs> ItemClicked;
@@ -28,17 +26,12 @@ namespace ClearUC.ListViewItems
         {
             this.IncludeSearchTarget = IncludeSearchTarget;
             this.ExcludeResult = ExcludeResult;
-            Init(null);
+            Init();
         }
 
         public ListItem()
         {
-            Init(null);
-        }
-
-        public ListItem(ImageSourceList ImageSources)
-        {
-            Init(ImageSources);
+            Init();
         }
 
         public enum State
@@ -47,18 +40,6 @@ namespace ClearUC.ListViewItems
         }
 
         public bool ExcludeResult { get; set; } = true;
-
-        public int ImageIndex
-        {
-            get { return ii; }
-            set
-            {
-                ii = value;
-                OnImageIndexChanged(new EventArgs());
-            }
-        }
-
-        public ImageSourceList ImageSources { get; set; } = null;
 
         public bool IncludeSearchTarget { get; set; } = false;
 
@@ -75,11 +56,6 @@ namespace ClearUC.ListViewItems
         public State ItemStatus { get; set; } = State.Instance;
 
         public string SearchText { get; set; } = "";
-
-        protected virtual void OnImageIndexChanged(EventArgs e)
-        {
-            ImageIndexChanged?.Invoke(this, e);
-        }
 
         protected virtual void OnIndexChanged(EventArgs e)
         {
@@ -105,13 +81,12 @@ namespace ClearUC.ListViewItems
             base.OnPropertyChanged(e);
         }
 
-        private void Init(ImageSourceList ImageSources)
+        private void Init()
         {
             MouseLeave += ListItem_MouseLeave;
             MouseDown += ListItem_MouseDown;
             MouseUp += ListItem_MouseUp;
             ItemStatus = State.Instance;
-            this.ImageSources = ImageSources;
         }
 
         private void ListItem_MouseDown(object sender, MouseButtonEventArgs e)
@@ -132,6 +107,5 @@ namespace ClearUC.ListViewItems
                 downf = false;
             }
         }
-
-        public class ImageSourceList : List<ImageSource> { }    }
+    }
 }

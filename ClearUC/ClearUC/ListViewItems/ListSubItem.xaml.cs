@@ -29,7 +29,7 @@ namespace ClearUC.ListViewItems
 
         private Shape lefts = null;
 
-        private LeftItems litem = LeftItems.Nothing;
+        private SideItems litem = SideItems.Nothing;
 
         private bool tl = false;
 
@@ -41,8 +41,7 @@ namespace ClearUC.ListViewItems
             mainL.Content = null;
             subL.Content = null;
             staL.Content = null;
-            LeftItem = litem;
-            ImageIndexChanged += ListSubItem_ImageIndexChanged;
+            SideItem = litem;
         }
 
         public ListSubItem(bool IncludeSearchTarget, bool ExcludeResult) : base(IncludeSearchTarget, ExcludeResult)
@@ -53,11 +52,10 @@ namespace ClearUC.ListViewItems
             mainL.Content = null;
             subL.Content = null;
             staL.Content = null;
-            LeftItem = litem;
-            ImageIndexChanged += ListSubItem_ImageIndexChanged;
+            SideItem = litem;
         }
 
-        public enum LeftItems { Image, Number, Shape, Nothing }
+        public enum SideItems { Image, Number, Shape, Nothing }
 
         public double BackgroundFillOpacity
         {
@@ -73,14 +71,14 @@ namespace ClearUC.ListViewItems
 
         public bool ChangeStroke { get; set; } = true;
 
-        public LeftItems LeftItem
+        public SideItems SideItem
         {
             get { return litem; }
             set
             {
                 litem = value;
 
-                if (litem == LeftItems.Image || litem == LeftItems.Number || litem == LeftItems.Shape)
+                if (litem == SideItems.Image || litem == SideItems.Number || litem == SideItems.Shape)
                 {
                     mainLsubH.Margin = new Thickness(55, mainLsubH.Margin.Top, 0, 0);
                     mainL.Margin = new Thickness(55, mainL.Margin.Top, 0, 0);
@@ -95,6 +93,12 @@ namespace ClearUC.ListViewItems
 
                 ChangeMainLabel();
             }
+        }
+
+        public ImageSource Image
+        {
+            get { return image.Source; }
+            set { image.Source = value; }
         }
 
         public double LeftItemHeight { get { return shapecontainer.Height; } }
@@ -319,33 +323,27 @@ namespace ClearUC.ListViewItems
 
                 switch (litem)
                 {
-                    case LeftItems.Image:
+                    case SideItems.Image:
                         numL.Visibility = Visibility.Hidden;
                         image.Visibility = Visibility.Visible;
                         break;
 
-                    case LeftItems.Number:
+                    case SideItems.Number:
                         image.Visibility = Visibility.Hidden;
                         numL.Visibility = Visibility.Visible;
                         break;
 
-                    case LeftItems.Shape:
+                    case SideItems.Shape:
                         image.Visibility = Visibility.Hidden;
                         numL.Visibility = Visibility.Hidden;
                         break;
 
-                    case LeftItems.Nothing:
+                    case SideItems.Nothing:
                         numL.Visibility = Visibility.Hidden;
                         image.Visibility = Visibility.Hidden;
                         break;
                 }
             }
-        }
-
-        private void ListSubItem_ImageIndexChanged(object sender, EventArgs e)
-        {
-            if (ImageIndex > -1) image.Source = ImageSources[ImageIndex];
-            else image.Source = null;
         }
 
         private void S_Completed(object sender, EventArgs e)
