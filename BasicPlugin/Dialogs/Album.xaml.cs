@@ -21,6 +21,7 @@ namespace BasicPlugin.Dialogs
     {
         bool TitleEdited = false;
         bool EditMode = false;
+        string FilePath = null;
 
         System.Windows.Forms.OpenFileDialog ofd = new System.Windows.Forms.OpenFileDialog();
         ClearUC.ListViewItems.ListSubItem AddItem = new ClearUC.ListViewItems.ListSubItem();
@@ -57,18 +58,29 @@ namespace BasicPlugin.Dialogs
 
         public void Initialize(Pages.Album.AlbumData Data, string FilePath)
         {
+            this.FilePath = FilePath;
             EditMode = true;
             InitItems();
 
             for(int i = 0;Data.Tracks.Length > i; i++)
             {
-                
+                LAPP.IO.FileItem item = CreateItem(new LAPP.IO.MediaFile(Data.Tracks[i].Path));
+                items.Add(item);
+                FileView.Items.Add(item.ListItem);
+
+                if(i == Data.ArtworkIndex)
+                {
+                    image.Source = item.File.Artwork;
+                }
             }
+
+            editableLabel.Text = Data.Album;
         }
 
         public void InitItems()
         {
             FileView.Items.Clear();
+            items.Clear();
 
             ofd.Multiselect = true;
 
@@ -160,17 +172,23 @@ namespace BasicPlugin.Dialogs
             Random rnd = new Random();
             
             string saveP = "";
-            string tempP = Config.Current.Path[Enums.Path.AlbumDirectory] + rnd.Next(99999).ToString().PadLeft(5, '0') + ".xml";
-            while (true)
+
+            if (string.IsNullOrEmpty(FilePath))
             {
-                if (!System.IO.File.Exists(tempP))
+                string tempP = Config.Current.Path[Enums.Path.AlbumDirectory] + rnd.Next(99999).ToString().PadLeft(5, '0') + ".xml";
+                while (true)
                 {
-                    saveP = tempP;
-                    break;
+                    if (!System.IO.File.Exists(tempP))
+                    {
+                        saveP = tempP;
+                        break;
+                    }
+                    else
+                        tempP = Config.Current.Path[Enums.Path.AlbumDirectory] + rnd.Next(99999).ToString().PadLeft(5, '0') + ".xml";
                 }
-                else
-                    tempP = Config.Current.Path[Enums.Path.AlbumDirectory] + rnd.Next(99999).ToString().PadLeft(5, '0') + ".xml";
             }
+            else
+                saveP = FilePath;
 
             Pages.Album.AlbumData.Write(saveP, data);
 

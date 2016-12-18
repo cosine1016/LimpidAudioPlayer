@@ -18,7 +18,8 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
             <Grid x:Name="ItemGrid"/>
         </ScrollViewer>
-        <ClearUC:ListView x:Name="TrackView" Grid.Column="1" ItemClicked="TrackView_ItemClicked" Grid.Row="1"/>
-        <ClearUC:ExtendedLabel x:Name="AddLabel" Content="Add" HorizontalAlignment="Left" Width="Auto" MouseClick="AddLabel_MouseClick"/>
+        <ClearUC:ListView x:Name="TrackView" Grid.Column="1" ItemClicked="TrackView_ItemClicked" Grid.Row="1" Opacity="0"/>
+        <ClearUC:ExtendedLabel x:Name="AddLabel" Content="Add" MouseClick="AddLabel_MouseClick" HorizontalAlignment="Left" Width="150"/>
+        <ClearUC:ExtendedLabel x:Name="EditLabel" Content="Edit" MouseClick="EditLabel_MouseClick" Grid.Column="1" HorizontalContentAlignment="Right" Margin="0,0,2,0" HorizontalAlignment="Right" Width="148"/>
     </Grid>
 </UserControl>

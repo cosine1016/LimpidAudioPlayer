@@ -83,19 +83,21 @@ namespace BasicPlugin.Pages.Album
                 CurrentItems.Add(fi);
             }
 
-            Current = alb.Data;
-
             ClearUC.Utils.AnimationHelper.Visible va = new ClearUC.Utils.AnimationHelper.Visible();
             int ind = Children.IndexOf(alb);
             if (ind == VisibleIndex)
             {
                 VisibleIndex = -1;
+                Current = null;
                 va.Animate(Config.Current.iValue[Enums.iValue.AlbumVisibleAnimation], TrackView, Visibility.Hidden);
+                EditLabel.Visibility = Visibility.Hidden;
             }
             else
             {
                 VisibleIndex = ind;
+                Current = alb.Data;
                 va.Animate(Config.Current.iValue[Enums.iValue.AlbumVisibleAnimation], TrackView, Visibility.Visible);
+                EditLabel.Visibility = Visibility.Visible;
             }
         }
 
@@ -182,6 +184,19 @@ namespace BasicPlugin.Pages.Album
             alb.ShowDialog();
 
             UpdateRequest?.Invoke(this, new EventArgs());
+        }
+
+        private void EditLabel_MouseClick(object sender, EventArgs e)
+        {
+            if(Current != null)
+            {
+                Dialogs.Album alb = new Dialogs.Album();
+                alb.Initialize(Current, Current.Path);
+
+                alb.ShowDialog();
+
+                UpdateRequest?.Invoke(this, new EventArgs());
+            }
         }
     }
 
