@@ -94,6 +94,7 @@ namespace BasicPlugin.Pages.Album
         
         public Page()
         {
+            Searchable = false;
             Items.Add(new PageItem(ci));
             av.UpdateRequest += Av_UpdateRequest;
             av.PlayFile += Av_PlayFile;
@@ -115,6 +116,7 @@ namespace BasicPlugin.Pages.Album
         private void UpdateChildren()
         {
             av.Children.Clear();
+            Directory.CreateDirectory(Config.Current.Path[Enums.Path.AlbumDirectory]);
             string[] files = Directory.GetFiles(Config.Current.Path[Enums.Path.AlbumDirectory], "*.xml");
             for(int i = 0;files.Length > i; i++)
             {

@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Rectangle x:Name="bg" Fill="#7F000000" Stroke="#7F000000" />
-        <ScrollViewer x:Name="sc" Foreground="#00000000" PanningMode="VerticalOnly">
+        <ScrollViewer x:Name="sc" Foreground="#00000000" PanningMode="VerticalOnly" VerticalScrollBarVisibility="Auto">
             <Grid x:Name="parent" RenderTransformOrigin="0.5,0.5">
                 <Grid.RenderTransform>
                     <TransformGroup>
