@@ -132,7 +132,7 @@ namespace LAP
                     Dialogs.LogWindow.Append(Arg + " : Processed");
             }
 
-            if (Utils.InstanceData.DoNotInitialize == false)
+            if (!Utils.InstanceData.DoNotInitialize)
             {
                 Initialize();
 

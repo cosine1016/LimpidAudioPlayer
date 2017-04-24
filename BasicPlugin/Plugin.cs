@@ -73,10 +73,10 @@ namespace BasicPlugin
 
             if (Config.Current.bValue[Enums.bValue.Spectrum])
             {
-                Providers.SampleAggregator sa = new Providers.SampleAggregator();
-                sa.SetFFT(new Providers.SampleAggregator.FFTInfo() { Enable = false, Length = 256 });
-                spectrum.SampleAggreator = sa;
-                Providers.Add(sa);
+                //Providers.SampleAggregator sa = new Providers.SampleAggregator();
+                //sa.SetFFT(new Providers.SampleAggregator.FFTInfo() { Enable = false, Length = 256 });
+                //spectrum.SampleAggreator = sa;
+                //Providers.Add(sa);
             }
         }
 

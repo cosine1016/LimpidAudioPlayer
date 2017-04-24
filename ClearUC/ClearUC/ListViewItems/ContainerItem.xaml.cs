@@ -38,12 +38,12 @@ namespace ClearUC.ListViewItems
             }
         }
 
-        private void ContainerItem_Loaded(object sender, RoutedEventArgs e)
+        private async void ContainerItem_Loaded(object sender, RoutedEventArgs e)
         {
             if(Parent != null)
             {
                 ParentGrid = (Grid)Parent;
-                Dispatcher.BeginInvoke(new Action(() =>
+                await Dispatcher.BeginInvoke(new Action(() =>
                 {
                     Height = double.NaN;
                     VerticalAlignment = VerticalAlignment.Stretch;

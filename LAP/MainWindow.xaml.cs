@@ -7,6 +7,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Threading.Tasks;
+using NetworkKit.UDP;
+using NetworkKit;
 
 namespace LAP
 {
@@ -343,9 +345,9 @@ namespace LAP
             TimeL.Content = Remain.ToString(@"mm\:ss") + " / " + Duration.ToString(@"mm\:ss");
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Dispatcher.BeginInvoke(new Action(() =>
+            await Dispatcher.BeginInvoke(new Action(() =>
             {
                 GUIMan = new Utils.GUI(this);
                 GUIMan.Initialize();
@@ -353,6 +355,17 @@ namespace LAP
                 Manager.RunFile += Manager_RunFile;
                 Manager.Stop += Manager_Stop;
             }));
+
+
+            Client client = new Client();
+            client.Received += Client_Received;
+            await client.StartListening("239.255.10.10", 11072);
+        }
+
+        private static void Client_Received(object sender, DataReceivedEventArgs e)
+        {
+            string text = System.Text.Encoding.UTF8.GetString(e.Data);
+            Console.WriteLine(text);
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
